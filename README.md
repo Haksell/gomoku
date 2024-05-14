@@ -2,6 +2,7 @@
 
 ## resources
 
+- [ ] https://github.com/DioxusLabs/dioxus
 - [ ] https://github.com/tauri-apps/tauri
 - [ ] https://github.com/bevyengine/bevy
 - [ ] https://github.com/cunarist/rinf
