@@ -3,6 +3,7 @@
 ## TODO
 
 - basic UI with correct rules
+- draw 9 dots + notation
 - unit test of rules
 - make the default UI as least as pretty as the one from alabalet
 - random bot

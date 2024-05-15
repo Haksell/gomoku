@@ -1,13 +1,15 @@
 use nannou::prelude::*;
 
-const BOARD_SIZE: usize = 19;
-const HALF_BOARD_SIZE: usize = BOARD_SIZE >> 1;
+const SQUARES: usize = 19;
+const HALF_SQUARES: usize = SQUARES >> 1;
 const WINDOW_SIZE: usize = 800;
-const CELL_SIZE: f32 = WINDOW_SIZE as f32 / BOARD_SIZE as f32;
+const BOARD_MARGIN: f32 = 60.0;
+const BOARD_SIZE: f32 = WINDOW_SIZE as f32 - 2.0 * BOARD_MARGIN;
+const CELL_SIZE: f32 = BOARD_SIZE / SQUARES as f32;
 
 #[test]
 fn board_is_odd() {
-    assert!(BOARD_SIZE & 1 == 1);
+    assert!(SQUARES & 1 == 1);
 }
 
 const COLOR_BACKGROUND: Srgb<u8> = Srgb {
@@ -25,7 +27,7 @@ enum Player {
 }
 
 struct Model {
-    board: [[Player; BOARD_SIZE]; BOARD_SIZE],
+    board: [[Player; SQUARES]; SQUARES],
     current_player: Player,
     winner: Player,
 }
@@ -42,7 +44,7 @@ fn model(app: &App) -> Model {
         .unwrap();
 
     Model {
-        board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
+        board: [[Player::None; SQUARES]; SQUARES],
         current_player: Player::Black,
         winner: Player::None,
     }
@@ -54,10 +56,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(COLOR_BACKGROUND);
 
-    for i in 0..BOARD_SIZE {
-        for j in 0..BOARD_SIZE {
-            let x = i as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
-            let y = j as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+    for i in 0..SQUARES {
+        for j in 0..SQUARES {
+            let x = i as f32 * CELL_SIZE - (SQUARES as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+            let y = j as f32 * CELL_SIZE - (SQUARES as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
 
             draw.rect()
                 .x_y(x, y)
@@ -90,13 +92,13 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         return;
     }
     let mouse_pos = app.mouse.position();
-    let i = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    let j = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    let i = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_SQUARES as isize;
+    let j = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_SQUARES as isize;
     if i < 0 || j < 0 {
         return;
     }
     let (i, j) = (i as usize, j as usize);
-    if i >= BOARD_SIZE || j >= BOARD_SIZE || model.board[i][j] != Player::None {
+    if i >= SQUARES || j >= SQUARES || model.board[i][j] != Player::None {
         return;
     }
 
@@ -114,12 +116,7 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
     }
 }
 
-fn check_winner(
-    board: &[[Player; BOARD_SIZE]; BOARD_SIZE],
-    x: usize,
-    y: usize,
-    player: &Player,
-) -> bool {
+fn check_winner(board: &[[Player; SQUARES]; SQUARES], x: usize, y: usize, player: &Player) -> bool {
     let directions = [(1, 0), (0, 1), (1, 1), (1, -1)];
 
     for (dx, dy) in directions.iter() {
@@ -128,7 +125,7 @@ fn check_winner(
         for step in 1..5 {
             let nx = x as isize + step * dx;
             let ny = y as isize + step * dy;
-            if nx < 0 || ny < 0 || nx >= BOARD_SIZE as isize || ny >= BOARD_SIZE as isize {
+            if nx < 0 || ny < 0 || nx >= SQUARES as isize || ny >= SQUARES as isize {
                 break;
             }
             if board[nx as usize][ny as usize] == *player {
@@ -141,7 +138,7 @@ fn check_winner(
         for step in 1..5 {
             let nx = x as isize - step * dx;
             let ny = y as isize - step * dy;
-            if nx < 0 || ny < 0 || nx >= BOARD_SIZE as isize || ny >= BOARD_SIZE as isize {
+            if nx < 0 || ny < 0 || nx >= SQUARES as isize || ny >= SQUARES as isize {
                 break;
             }
             if board[nx as usize][ny as usize] == *player {
