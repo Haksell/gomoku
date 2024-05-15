@@ -1,5 +1,13 @@
 # gomoku
 
+## TODO
+
+- basic UI with correct rules
+- unit test of rules
+- random bot
+- bot that likes center
+- arena with elo ranking
+
 ## resources
 
 - https://github.com/nannou-org/nannou (home + 42)

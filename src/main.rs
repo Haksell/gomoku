@@ -1,95 +1,143 @@
 use nannou::prelude::*;
-use nannou_egui::{self, egui, Egui};
 
-fn main() {
-    nannou::app(model).update(update).run();
-}
+const BOARD_SIZE: usize = 19;
+const WINDOW_SIZE: usize = 800;
+const CELL_SIZE: f32 = WINDOW_SIZE as f32 / BOARD_SIZE as f32;
 
-struct Settings {
-    resolution: u32,
-    scale: f32,
-    rotation: f32,
-    color: Srgb<u8>,
-    position: Vec2,
+#[derive(Copy, Clone, Debug, PartialEq)]
+enum Player {
+    None,
+    Black,
+    White,
 }
 
 struct Model {
-    settings: Settings,
-    egui: Egui,
+    board: [[Player; BOARD_SIZE]; BOARD_SIZE],
+    current_player: Player,
+    winner: Player,
+}
+
+fn main() {
+    nannou::app(model).update(update).view(view).run();
 }
 
 fn model(app: &App) -> Model {
-    // Create window
-    let window_id = app
-        .new_window()
-        .view(view)
-        .raw_event(raw_window_event)
+    app.new_window()
+        .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
+        .mouse_pressed(mouse_pressed)
         .build()
         .unwrap();
-    let window = app.window(window_id).unwrap();
-
-    let egui = Egui::from_window(&window);
 
     Model {
-        egui,
-        settings: Settings {
-            resolution: 10,
-            scale: 200.0,
-            rotation: 0.0,
-            color: WHITE,
-            position: vec2(0.0, 0.0),
-        },
+        board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
+        current_player: Player::Black,
+        winner: Player::None,
     }
 }
 
-fn update(_app: &App, model: &mut Model, update: Update) {
-    let egui = &mut model.egui;
-    let settings = &mut model.settings;
-
-    egui.set_elapsed_time(update.since_start);
-    let ctx = egui.begin_frame();
-
-    egui::Window::new("Settings").show(&ctx, |ui| {
-        // Resolution slider
-        ui.label("Resolution:");
-        ui.add(egui::Slider::new(&mut settings.resolution, 1..=40));
-
-        // Scale slider
-        ui.label("Scale:");
-        ui.add(egui::Slider::new(&mut settings.scale, 0.0..=1000.0));
-
-        // Rotation slider
-        ui.label("Rotation:");
-        ui.add(egui::Slider::new(&mut settings.rotation, 0.0..=360.0));
-
-        // Random color button
-        let clicked = ui.button("Random color").clicked();
-
-        if clicked {
-            settings.color = rgb(random(), random(), random());
-        }
-    });
-}
-
-fn raw_window_event(_app: &App, model: &mut Model, event: &nannou::winit::event::WindowEvent) {
-    // Let egui handle things like keyboard and mouse input.
-    model.egui.handle_raw_event(event);
-}
+fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
 fn view(app: &App, model: &Model, frame: Frame) {
-    let settings = &model.settings;
-
     let draw = app.draw();
-    draw.background().color(BLACK);
+    draw.background().color(WHITE);
 
-    let rotation_radians = deg_to_rad(settings.rotation);
-    draw.ellipse()
-        .resolution(settings.resolution as f32)
-        .xy(settings.position)
-        .color(settings.color)
-        .rotate(-rotation_radians)
-        .radius(settings.scale);
+    for i in 0..BOARD_SIZE {
+        for j in 0..BOARD_SIZE {
+            let x = i as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+            let y = j as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+
+            draw.rect()
+                .x_y(x, y)
+                .w_h(CELL_SIZE, CELL_SIZE)
+                .stroke(BLACK)
+                .stroke_weight(2.0)
+                .no_fill();
+
+            if model.board[i][j] == Player::Black {
+                draw.ellipse()
+                    .x_y(x, y)
+                    .w_h(CELL_SIZE * 0.8, CELL_SIZE * 0.8)
+                    .rgb(0.0, 0.0, 0.0);
+            } else if model.board[i][j] == Player::White {
+                draw.ellipse()
+                    .x_y(x, y)
+                    .w_h(CELL_SIZE * 0.8, CELL_SIZE * 0.8)
+                    .rgb(1.0, 1.0, 1.0)
+                    .stroke(BLACK)
+                    .stroke_weight(2.0);
+            }
+        }
+    }
 
     draw.to_frame(app, &frame).unwrap();
-    model.egui.draw_to_frame(&frame).unwrap();
+}
+
+fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
+    if model.winner != Player::None {
+        println!("{:?} already won.", model.winner);
+        return;
+    }
+
+    let mouse_pos = app.mouse.position();
+    let i = ((mouse_pos.x + (BOARD_SIZE as f32 * CELL_SIZE / 2.0)) / CELL_SIZE).floor() as usize;
+    let j = ((mouse_pos.y + (BOARD_SIZE as f32 * CELL_SIZE / 2.0)) / CELL_SIZE).floor() as usize;
+
+    if i < BOARD_SIZE && j < BOARD_SIZE && model.board[i][j] == Player::None {
+        model.board[i][j] = model.current_player.clone();
+
+        if check_winner(&model.board, i, j, &model.current_player) {
+            model.winner = model.current_player.clone();
+        } else {
+            model.current_player = if model.current_player == Player::Black {
+                Player::White
+            } else {
+                Player::Black
+            };
+        }
+    }
+}
+
+fn check_winner(
+    board: &[[Player; BOARD_SIZE]; BOARD_SIZE],
+    x: usize,
+    y: usize,
+    player: &Player,
+) -> bool {
+    let directions = [(1, 0), (0, 1), (1, 1), (1, -1)];
+
+    for (dx, dy) in directions.iter() {
+        let mut count = 1;
+
+        for step in 1..5 {
+            let nx = x as isize + step * dx;
+            let ny = y as isize + step * dy;
+            if nx < 0 || ny < 0 || nx >= BOARD_SIZE as isize || ny >= BOARD_SIZE as isize {
+                break;
+            }
+            if board[nx as usize][ny as usize] == *player {
+                count += 1;
+            } else {
+                break;
+            }
+        }
+
+        for step in 1..5 {
+            let nx = x as isize - step * dx;
+            let ny = y as isize - step * dy;
+            if nx < 0 || ny < 0 || nx >= BOARD_SIZE as isize || ny >= BOARD_SIZE as isize {
+                break;
+            }
+            if board[nx as usize][ny as usize] == *player {
+                count += 1;
+            } else {
+                break;
+            }
+        }
+
+        if count >= 5 {
+            return true;
+        }
+    }
+
+    false
 }
