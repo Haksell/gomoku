@@ -4,11 +4,12 @@
 
 - basic UI with correct rules
 - unit test of rules
+- make the UI as least as pretty as the one from alabalet
 - random bot
 - bot that likes center
 - arena with elo ranking
 
-## resources
+## libraries
 
 - https://github.com/nannou-org/nannou (home + 42)
 - https://github.com/DioxusLabs/dioxus (home)
