@@ -1,23 +1,8 @@
+mod constants;
+mod rules;
+
+use constants::{CELL_SIZE, COLOR_BACKGROUND, HALF_SQUARES, SQUARES, WINDOW_SIZE};
 use nannou::prelude::*;
-
-const SQUARES: usize = 19;
-const HALF_SQUARES: usize = SQUARES >> 1;
-const WINDOW_SIZE: usize = 800;
-const BOARD_MARGIN: f32 = 60.0;
-const BOARD_SIZE: f32 = WINDOW_SIZE as f32 - 2.0 * BOARD_MARGIN;
-const CELL_SIZE: f32 = BOARD_SIZE / SQUARES as f32;
-
-#[test]
-fn board_is_odd() {
-    assert!(SQUARES & 1 == 1);
-}
-
-const COLOR_BACKGROUND: Srgb<u8> = Srgb {
-    red: 237,
-    green: 208,
-    blue: 128,
-    standard: ::core::marker::PhantomData,
-};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 enum Player {
@@ -26,8 +11,10 @@ enum Player {
     White,
 }
 
+type Board = [[Player; SQUARES]; SQUARES];
+
 struct Model {
-    board: [[Player; SQUARES]; SQUARES],
+    board: Board,
     current_player: Player,
     winner: Player,
 }
@@ -104,7 +91,7 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
 
     model.board[i][j] = model.current_player;
 
-    if check_winner(&model.board, i, j, &model.current_player) {
+    if rules::check_winner(&model.board, model.current_player, i, j) {
         model.winner = model.current_player;
         println!("{:?} won.", model.winner);
     } else {
@@ -114,44 +101,4 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
             Player::Black
         };
     }
-}
-
-fn check_winner(board: &[[Player; SQUARES]; SQUARES], x: usize, y: usize, player: &Player) -> bool {
-    let directions = [(1, 0), (0, 1), (1, 1), (1, -1)];
-
-    for (dx, dy) in directions.iter() {
-        let mut count = 1;
-
-        for step in 1..5 {
-            let nx = x as isize + step * dx;
-            let ny = y as isize + step * dy;
-            if nx < 0 || ny < 0 || nx >= SQUARES as isize || ny >= SQUARES as isize {
-                break;
-            }
-            if board[nx as usize][ny as usize] == *player {
-                count += 1;
-            } else {
-                break;
-            }
-        }
-
-        for step in 1..5 {
-            let nx = x as isize - step * dx;
-            let ny = y as isize - step * dy;
-            if nx < 0 || ny < 0 || nx >= SQUARES as isize || ny >= SQUARES as isize {
-                break;
-            }
-            if board[nx as usize][ny as usize] == *player {
-                count += 1;
-            } else {
-                break;
-            }
-        }
-
-        if count >= 5 {
-            return true;
-        }
-    }
-
-    false
 }
