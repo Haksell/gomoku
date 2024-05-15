@@ -1,8 +1,21 @@
 use nannou::prelude::*;
 
 const BOARD_SIZE: usize = 19;
+const HALF_BOARD_SIZE: usize = BOARD_SIZE >> 1;
 const WINDOW_SIZE: usize = 800;
 const CELL_SIZE: f32 = WINDOW_SIZE as f32 / BOARD_SIZE as f32;
+
+#[test]
+fn board_is_odd() {
+    assert!(BOARD_SIZE & 1 == 1);
+}
+
+const COLOR_BACKGROUND: Srgb<u8> = Srgb {
+    red: 237,
+    green: 208,
+    blue: 128,
+    standard: ::core::marker::PhantomData,
+};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 enum Player {
@@ -39,7 +52,7 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    draw.background().color(WHITE);
+    draw.background().color(COLOR_BACKGROUND);
 
     for i in 0..BOARD_SIZE {
         for j in 0..BOARD_SIZE {
@@ -74,26 +87,30 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
 fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
     if model.winner != Player::None {
-        println!("{:?} already won.", model.winner);
+        return;
+    }
+    let mouse_pos = app.mouse.position();
+    let i = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    let j = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    if i < 0 || j < 0 {
+        return;
+    }
+    let (i, j) = (i as usize, j as usize);
+    if i >= BOARD_SIZE || j >= BOARD_SIZE || model.board[i][j] != Player::None {
         return;
     }
 
-    let mouse_pos = app.mouse.position();
-    let i = ((mouse_pos.x + (BOARD_SIZE as f32 * CELL_SIZE / 2.0)) / CELL_SIZE).floor() as usize;
-    let j = ((mouse_pos.y + (BOARD_SIZE as f32 * CELL_SIZE / 2.0)) / CELL_SIZE).floor() as usize;
+    model.board[i][j] = model.current_player;
 
-    if i < BOARD_SIZE && j < BOARD_SIZE && model.board[i][j] == Player::None {
-        model.board[i][j] = model.current_player.clone();
-
-        if check_winner(&model.board, i, j, &model.current_player) {
-            model.winner = model.current_player.clone();
+    if check_winner(&model.board, i, j, &model.current_player) {
+        model.winner = model.current_player;
+        println!("{:?} won.", model.winner);
+    } else {
+        model.current_player = if model.current_player == Player::Black {
+            Player::White
         } else {
-            model.current_player = if model.current_player == Player::Black {
-                Player::White
-            } else {
-                Player::Black
-            };
-        }
+            Player::Black
+        };
     }
 }
 

@@ -4,10 +4,11 @@
 
 - basic UI with correct rules
 - unit test of rules
-- make the UI as least as pretty as the one from alabalet
+- make the default UI as least as pretty as the one from alabalet
 - random bot
 - bot that likes center
 - arena with elo ranking
+- different themes
 
 ## libraries
 
