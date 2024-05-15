@@ -3,12 +3,15 @@
 ## TODO
 
 - basic UI with correct rules
-- draw 9 dots + notation
+- place the pieces on intersections
+- tooltip to show the player piece with some transparency
+- draw 9 dots
 - unit test of rules
-- make the default UI as least as pretty as the one from alabalet
 - random bot
 - bot that likes center
 - arena with elo ranking
+- draw notation
+- make the default UI as least as pretty as the one from alabalet
 - different themes
 
 ## libraries
