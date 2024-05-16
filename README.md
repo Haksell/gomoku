@@ -64,3 +64,12 @@
 - https://github.com/iced-rs/iced
 - https://github.com/Relm4/Relm4
 - https://github.com/emilk/egui (home + 42)
+
+## resources
+
+- https://www.chessprogramming.org/Iterative_Deepening
+- https://www.chessprogramming.org/Transposition_Table
+- https://stackoverflow.com/questions/41756443/how-to-implement-iterative-deepening-with-alpha-beta-pruning
+- https://en.wikipedia.org/wiki/Zobrist_hashing
+- https://www.chessprogramming.org/ProbCut
+- https://wiki.cs.pdx.edu/cs542-spring2013/papers/buro/probcut.pdf
