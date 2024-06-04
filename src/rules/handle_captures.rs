@@ -1,5 +1,5 @@
 use super::is_same_player;
-use crate::{constants::DIRECTIONS, Board, Model, Player};
+use crate::{constants::DIRECTIONS8, Board, Model, Player};
 
 fn is_capture(board: &mut Board, player: Player, x: usize, y: usize, dx: isize, dy: isize) -> bool {
     let (x, y) = (x as isize, y as isize);
@@ -19,12 +19,9 @@ fn is_capture(board: &mut Board, player: Player, x: usize, y: usize, dx: isize, 
 
 pub fn handle_captures(model: &mut Model, x: usize, y: usize) {
     let player = model.current_player;
-    let total_captures = DIRECTIONS
-        .into_iter()
-        .map(|(dx, dy)| {
-            is_capture(&mut model.board, player, x, y, dx, dy) as usize
-                + is_capture(&mut model.board, player, x, y, -dx, -dy) as usize
-        })
-        .sum();
+    let total_captures = DIRECTIONS8
+        .iter()
+        .filter(|(dx, dy)| is_capture(&mut model.board, player, x, y, *dx, *dy))
+        .count();
     player.increment_captures(model, total_captures);
 }

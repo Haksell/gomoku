@@ -41,6 +41,7 @@
 
 ## todo
 
+- force capturing pair if five in a row
 - finish implementing rules
 - handle draws
 - unit test of rules
