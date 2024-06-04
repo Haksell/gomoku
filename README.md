@@ -49,6 +49,7 @@
 - show coordinates of mouse
 - show number of captures
 - show winner (or draw)
+- show forbidden moves
 - random bot
 - bot that likes center
 - arena with elo ranking

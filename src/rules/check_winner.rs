@@ -1,15 +1,9 @@
+use super::is_same_player;
+
 use crate::{
-    constants::{BOARD_SIZE, DIRECTIONS, REQUIRED_CAPTURES},
+    constants::{DIRECTIONS, REQUIRED_CAPTURES},
     Board, Model, Player,
 };
-
-fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
-    x >= 0
-        && y >= 0
-        && x < BOARD_SIZE as isize
-        && y < BOARD_SIZE as isize
-        && board[y as usize][x as usize] == player
-}
 
 fn check_five_in_a_row(
     board: &Board,

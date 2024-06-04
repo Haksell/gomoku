@@ -6,7 +6,7 @@ mod view;
 use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
 use nannou::prelude::*;
 use player::Player;
-use rules::{check_winner, handle_captures};
+use rules::{check_double_three, check_winner, handle_captures};
 use view::view;
 
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
@@ -52,8 +52,11 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         return;
     }
     let (x, y) = (x as usize, y as usize);
-    // TODO: || check_double_three()
-    if x >= BOARD_SIZE || y >= BOARD_SIZE || model.board[y][x] != Player::None {
+    if x >= BOARD_SIZE
+        || y >= BOARD_SIZE
+        || model.board[y][x] != Player::None
+        || check_double_three(&model.board, model.current_player, x, y)
+    {
         return;
     }
 
