@@ -1,6 +1,7 @@
+mod check_winner;
 mod constants;
-mod rules;
 
+use check_winner::check_winner;
 use constants::{
     BOARD_SIZE, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
     WINDOW_SIZE,
@@ -140,7 +141,7 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
 
     model.board[y][x] = model.current_player;
 
-    if rules::check_winner(&model.board, model.current_player, x, y) {
+    if check_winner(&model.board, model.current_player, x, y) {
         model.winner = model.current_player;
         println!("{:?} won.", model.winner);
     } else {
