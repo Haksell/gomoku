@@ -1,5 +1,5 @@
 use crate::{
-    constants::{BOARD_SIZE, REQUIRED_CAPTURES},
+    constants::{BOARD_SIZE, DIRECTIONS, REQUIRED_CAPTURES},
     Board, Model, Player,
 };
 
@@ -51,9 +51,7 @@ fn check_five_in_a_row(
 }
 
 pub fn check_winner(model: &Model, x: usize, y: usize) -> bool {
-    static DIRECTIONS: [(isize, isize); 4] = [(1, 0), (0, 1), (1, 1), (1, -1)];
-
-    model.current_player.captures(model) == REQUIRED_CAPTURES
+    model.current_player.captures(model) >= REQUIRED_CAPTURES
         || DIRECTIONS
             .into_iter()
             .any(|(dx, dy)| check_five_in_a_row(&model.board, model.current_player, x, y, dx, dy))

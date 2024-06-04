@@ -1,12 +1,12 @@
 mod check_winner;
 mod constants;
-mod handle_capture;
+mod handle_captures;
 mod player;
 mod view;
 
 use check_winner::check_winner;
 use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
-use handle_capture::handle_capture;
+use handle_captures::handle_captures;
 use nannou::prelude::*;
 use player::Player;
 use view::view;
@@ -55,15 +55,17 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         return;
     }
     let (x, y) = (x as usize, y as usize);
-    // TODO: || check_forbidden()
+    // TODO: || check_double_three()
     if x >= BOARD_SIZE || y >= BOARD_SIZE || model.board[y][x] != Player::None {
         return;
     }
 
     model.board[y][x] = model.current_player;
+    handle_captures(model, x, y);
 
     if check_winner(model, x, y) {
         model.winner = model.current_player;
+        // model.current_player = Player::None; ???
         println!("{:?} won.", model.winner);
     } else {
         model.current_player = model.current_player.opponent();

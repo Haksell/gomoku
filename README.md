@@ -5,8 +5,7 @@
 - [x] Two players take turns placing stones of their color on an intersection of the board
 - [x] The game ends when one player manages to align 5 stones or more.
 - [x] Gomoku will be played on a 19x19 Goban, without limit to the number of stones.
-- [ ] You can capture a pair of your opponent's stones from the board by flanking them with your own stones.
-- [ ] A player cannot move into a capture.
+- [x] You can capture a pair of your opponent's stones from the board by flanking them with your own stones.
 - [ ] If you manage to capture 5 pairs of your opponent's stones, you win the game.
 - [ ] A player who manages to line up five stones wins only if the opponent cannot break this line by capturing a pair.
 - [ ] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture.
@@ -42,12 +41,14 @@
 
 ## todo
 
-- basic ui with correct rules
+- finish implementing rules
+- `src/rules/` directory
+- handle draws
+- unit test of rules
 - tooltip to show the player piece with some transparency
 - show coordinates of mouse
 - show number of captures
-- `src/rules/` directory
-- unit test of rules
+- show winner (or draw)
 - random bot
 - bot that likes center
 - arena with elo ranking
