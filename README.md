@@ -53,6 +53,7 @@
 - draw notation
 - make the default ui as least as pretty as the one from alabalet
 - different themes
+- make the code compile faster
 
 ## resources
 
