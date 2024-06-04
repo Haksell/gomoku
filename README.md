@@ -2,9 +2,9 @@
 
 ## general guidelines
 
-- [ ] Two players take turns placing stones of their color on an intersection of the board
+- [x] Two players take turns placing stones of their color on an intersection of the board
 - [x] The game ends when one player manages to align 5 stones or more.
-- [ ] Gomoku will be played on a 19x19 Goban, without limit to the number of stones.
+- [x] Gomoku will be played on a 19x19 Goban, without limit to the number of stones.
 - [ ] You can capture a pair of your opponent's stones from the board by flanking them with your own stones.
 - [ ] A player cannot move into a capture.
 - [ ] If you manage to capture 5 pairs of your opponent's stones, you win the game.
@@ -23,7 +23,7 @@
 
 ## mandatory part
 
-- [ ] The executable must be named Gomoku.
+- [ ] The executable must be named Gomoku. `ln -s target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player’s moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [ ] You have to use a Minimax algorithm, or a variant.
