@@ -6,6 +6,7 @@ pub const WINDOW_SIZE: usize = 800;
 pub const WINDOW_MARGIN: f32 = 35.0;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
 pub const DOT_SPACING: usize = 6;
+pub const REQUIRED_CAPTURES: usize = 5;
 
 #[test]
 fn test_board_size() {

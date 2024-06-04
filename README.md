@@ -46,6 +46,7 @@
 - tooltip to show the player piece with some transparency
 - show coordinates of mouse
 - show number of captures
+- `src/rules/` directory
 - unit test of rules
 - random bot
 - bot that likes center

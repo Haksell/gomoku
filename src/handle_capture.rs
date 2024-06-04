@@ -1,7 +1,4 @@
-use crate::{
-    constants::{BOARD_SIZE, REQUIRED_CAPTURES},
-    Board, Model, Player,
-};
+use crate::{constants::BOARD_SIZE, Board, Player};
 
 fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
     x >= 0
@@ -11,7 +8,7 @@ fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
         && board[y as usize][x as usize] == player
 }
 
-fn check_five_in_a_row(
+fn check_winner_in_direction(
     board: &Board,
     player: Player,
     x: usize,
@@ -50,11 +47,9 @@ fn check_five_in_a_row(
     count >= 5
 }
 
-pub fn check_winner(model: &Model, x: usize, y: usize) -> bool {
+pub fn handle_capture(board: &Board, player: Player, x: usize, y: usize) {
     static DIRECTIONS: [(isize, isize); 4] = [(1, 0), (0, 1), (1, 1), (1, -1)];
-
-    model.current_player.captures(model) == REQUIRED_CAPTURES
-        || DIRECTIONS
-            .into_iter()
-            .any(|(dx, dy)| check_five_in_a_row(&model.board, model.current_player, x, y, dx, dy))
+    DIRECTIONS
+        .into_iter()
+        .any(|(dx, dy)| check_winner_in_direction(board, player, x, y, dx, dy));
 }
