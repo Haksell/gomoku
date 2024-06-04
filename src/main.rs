@@ -17,6 +17,7 @@ struct Model {
     winner: Player,
     black_captures: usize,
     white_captures: usize,
+    last_move: (isize, isize),
 }
 
 fn main() {
@@ -29,6 +30,7 @@ fn model(app: &App) -> Model {
         .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
         .resizable(false)
         .mouse_pressed(mouse_pressed)
+        .key_pressed(key_pressed)
         .build()
         .unwrap();
 
@@ -38,10 +40,14 @@ fn model(app: &App) -> Model {
         winner: Player::None,
         black_captures: 0,
         white_captures: 0,
+        last_move: (-1, -1),
     }
 }
 
-fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
+fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
+    if button != MouseButton::Left {
+        return;
+    }
     if model.winner != Player::None {
         return;
     }
@@ -61,6 +67,7 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
     }
 
     model.board[y][x] = model.current_player;
+    model.last_move = (x as isize, y as isize);
     handle_captures(model, x, y);
 
     if check_winner(model, x, y) {
@@ -68,6 +75,14 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         // model.current_player = Player::None; ???
         println!("{:?} won.", model.winner);
     } else {
+        model.current_player = model.current_player.opponent();
+    }
+}
+
+fn key_pressed(_app: &App, model: &mut Model, _key: Key) {
+    if _key == Key::Back && model.last_move != (-1, -1) {
+        let (x, y) = model.last_move;
+        model.board[y as usize][x as usize] = Player::None;
         model.current_player = model.current_player.opponent();
     }
 }
