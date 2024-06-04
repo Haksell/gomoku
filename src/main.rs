@@ -31,7 +31,6 @@ fn model(app: &App) -> Model {
         .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
         .resizable(false)
         .mouse_pressed(mouse_pressed)
-        .msaa_samples(4)
         .build()
         .unwrap();
 
