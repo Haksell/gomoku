@@ -2,7 +2,8 @@ mod constants;
 mod rules;
 
 use constants::{
-    BOARD_SIZE, CELLS, CELL_SIZE, COLOR_BACKGROUND, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE,
+    BOARD_SIZE, CELLS, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
+    WINDOW_SIZE,
 };
 use nannou::prelude::*;
 
@@ -60,12 +61,36 @@ fn draw_grid(draw: &Draw) {
     }
 }
 
+fn get_intersection_position(x: usize, y: usize) -> Point2 {
+    fn physical_position(z: usize) -> f32 {
+        (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
+    }
+
+    pt2(physical_position(x), physical_position(y))
+}
+
+fn draw_dots(draw: &Draw) {
+    const DOT_SIZE: f32 = CELL_SIZE * 0.25;
+    for y in -1..=1 {
+        for x in -1..=1 {
+            let dot = get_intersection_position(
+                (HALF_BOARD_SIZE as isize + x * DOT_SPACING as isize) as usize,
+                (HALF_BOARD_SIZE as isize + y * DOT_SPACING as isize) as usize,
+            );
+            draw.ellipse()
+                .x_y(dot.x, dot.y)
+                .w_h(DOT_SIZE, DOT_SIZE)
+                .rgb(0.0, 0.0, 0.0);
+        }
+    }
+}
+
 // TODO: view.rs
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(COLOR_BACKGROUND);
     draw_grid(&draw);
-    // TODO: draw dots
+    draw_dots(&draw);
     // TODO: draw stones
 
     for y in 0..BOARD_SIZE {
