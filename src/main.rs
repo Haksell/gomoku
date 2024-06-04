@@ -23,6 +23,7 @@ fn main() {
 
 fn model(app: &App) -> Model {
     app.new_window()
+        .title("ligomoku.org")
         .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
         .resizable(false)
         .mouse_pressed(mouse_pressed)

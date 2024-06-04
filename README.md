@@ -11,8 +11,8 @@
 - [ ] A player who manages to line up five stones wins only if the opponent cannot break this line by capturing a pair.
 - [ ] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture.
 - [ ] If there is no possibility of this happening, there is no need to continue the game.
-- [ ] It is forbidden to play a move that introduces two free-three alignments, which would guarantee a win by alignment.
-- [ ] it is not forbidden to introduce a double-three by capturing a pair.
+- [ ] It is forbidden to play a move that introduces 2 free-three alignments, which would guarantee a win by alignment.
+- [ ] It is not forbidden to introduce a double-three by capturing a pair.
 - [ ] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [ ] You have to provide a Makefile which must produce your program. It must not relink.
 - [ ] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
