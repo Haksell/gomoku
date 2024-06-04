@@ -1,11 +1,11 @@
 use crate::{constants::SQUARES, Board, Player};
 
-fn check_is_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
+fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
     x >= 0
         && y >= 0
         && x < SQUARES as isize
         && y < SQUARES as isize
-        && board[x as usize][y as usize] == player
+        && board[y as usize][x as usize] == player
 }
 
 fn check_winner_in_direction(
@@ -19,7 +19,7 @@ fn check_winner_in_direction(
     let mut count = 1;
 
     for step in 1..5 {
-        if check_is_player(
+        if is_same_player(
             board,
             player,
             x as isize + step * dx,
@@ -32,7 +32,7 @@ fn check_winner_in_direction(
     }
 
     for step in 1..5 {
-        if check_is_player(
+        if is_same_player(
             board,
             player,
             x as isize - step * dx,

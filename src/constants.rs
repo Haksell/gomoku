@@ -16,5 +16,5 @@ pub const COLOR_BACKGROUND: Srgb<u8> = Srgb {
     red: 237,
     green: 208,
     blue: 128,
-    standard: ::core::marker::PhantomData,
+    standard: core::marker::PhantomData,
 };
