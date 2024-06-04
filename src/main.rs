@@ -79,6 +79,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     }
 }
 
+//TODO handle if there was a capture
 fn key_pressed(_app: &App, model: &mut Model, _key: Key) {
     if _key == Key::Back && model.last_move != (-1, -1) {
         let (x, y) = model.last_move;
