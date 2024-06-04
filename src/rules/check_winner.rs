@@ -1,10 +1,10 @@
-use crate::{constants::SQUARES, Board, Player};
+use crate::{constants::BOARD_SIZE, Board, Player};
 
 fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
     x >= 0
         && y >= 0
-        && x < SQUARES as isize
-        && y < SQUARES as isize
+        && x < BOARD_SIZE as isize
+        && y < BOARD_SIZE as isize
         && board[y as usize][x as usize] == player
 }
 

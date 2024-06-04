@@ -1,7 +1,7 @@
 mod constants;
 mod rules;
 
-use constants::{CELL_SIZE, COLOR_BACKGROUND, HALF_SQUARES, SQUARES, WINDOW_SIZE};
+use constants::{BOARD_SIZE, CELL_SIZE, COLOR_BACKGROUND, HALF_BOARD_SIZE, WINDOW_SIZE};
 use nannou::prelude::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -11,7 +11,7 @@ enum Player {
     White,
 }
 
-type Board = [[Player; SQUARES]; SQUARES];
+type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
 struct Model {
     board: Board,
@@ -31,7 +31,7 @@ fn model(app: &App) -> Model {
         .unwrap();
 
     Model {
-        board: [[Player::None; SQUARES]; SQUARES],
+        board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
         current_player: Player::Black,
         winner: Player::None,
     }
@@ -43,10 +43,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(COLOR_BACKGROUND);
 
-    for y in 0..SQUARES {
-        let py = y as f32 * CELL_SIZE - (SQUARES as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
-        for x in 0..SQUARES {
-            let px = x as f32 * CELL_SIZE - (SQUARES as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+    for y in 0..BOARD_SIZE {
+        let py = y as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
+        for x in 0..BOARD_SIZE {
+            let px = x as f32 * CELL_SIZE - (BOARD_SIZE as f32 * CELL_SIZE / 2.0) + CELL_SIZE / 2.0;
 
             draw.rect()
                 .x_y(px, py)
@@ -79,13 +79,13 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         return;
     }
     let mouse_pos = app.mouse.position();
-    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_SQUARES as isize;
-    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_SQUARES as isize;
+    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
     if x < 0 || y < 0 {
         return;
     }
     let (x, y) = (x as usize, y as usize);
-    if x >= SQUARES || y >= SQUARES || model.board[y][x] != Player::None {
+    if x >= BOARD_SIZE || y >= BOARD_SIZE || model.board[y][x] != Player::None {
         return;
     }
 
