@@ -2,11 +2,15 @@ mod constants;
 mod rules;
 
 use constants::{
-    BOARD_SIZE, CELLS, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
+    BOARD_SIZE, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
     WINDOW_SIZE,
 };
 use nannou::prelude::*;
 
+// TODO: player.rs
+// TODO: only two players, and winner is Some(Player)
+// TODO: .color()
+// TODO: .opponent()
 #[derive(Copy, Clone, Debug, PartialEq)]
 enum Player {
     None,
@@ -23,7 +27,6 @@ struct Model {
 }
 
 fn main() {
-    println!("{CELL_SIZE}");
     nannou::app(model).view(view).run();
 }
 
@@ -32,6 +35,7 @@ fn model(app: &App) -> Model {
         .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
         .resizable(false)
         .mouse_pressed(mouse_pressed)
+        .msaa_samples(4)
         .build()
         .unwrap();
 
@@ -80,7 +84,31 @@ fn draw_dots(draw: &Draw) {
             draw.ellipse()
                 .x_y(dot.x, dot.y)
                 .w_h(DOT_SIZE, DOT_SIZE)
-                .rgb(0.0, 0.0, 0.0);
+                .color(BLACK);
+        }
+    }
+}
+
+fn draw_stones(draw: &Draw, model: &Model) {
+    const STONE_SIZE: f32 = CELL_SIZE * 0.77;
+
+    fn draw_stone(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
+        let pos = get_intersection_position(x, y);
+        draw.ellipse()
+            .x_y(pos.x, pos.y)
+            .w_h(STONE_SIZE, STONE_SIZE)
+            .color(color)
+            .stroke(BLACK)
+            .stroke_weight(2.0);
+    }
+
+    for y in 0..BOARD_SIZE {
+        for x in 0..BOARD_SIZE {
+            match model.board[y][x] {
+                Player::None => {}
+                Player::Black => draw_stone(draw, x, y, BLACK),
+                Player::White => draw_stone(draw, x, y, WHITE),
+            }
         }
     }
 }
@@ -91,30 +119,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.background().color(COLOR_BACKGROUND);
     draw_grid(&draw);
     draw_dots(&draw);
-    // TODO: draw stones
-
-    for y in 0..BOARD_SIZE {
-        let py = y as f32 * CELL_SIZE as f32 - (CELLS as f32 * CELL_SIZE as f32 / 2.0)
-            + CELL_SIZE as f32 / 2.0;
-        for x in 0..BOARD_SIZE {
-            let px = x as f32 * CELL_SIZE as f32 - (CELLS as f32 * CELL_SIZE as f32 / 2.0)
-                + CELL_SIZE as f32 / 2.0;
-            if model.board[y][x] == Player::Black {
-                draw.ellipse()
-                    .x_y(px, py)
-                    .w_h(CELL_SIZE as f32 * 0.8, CELL_SIZE as f32 * 0.8)
-                    .rgb(0.0, 0.0, 0.0);
-            } else if model.board[y][x] == Player::White {
-                draw.ellipse()
-                    .x_y(px, py)
-                    .w_h(CELL_SIZE as f32 * 0.8, CELL_SIZE as f32 * 0.8)
-                    .rgb(1.0, 1.0, 1.0)
-                    .stroke(BLACK)
-                    .stroke_weight(2.0);
-            }
-        }
-    }
-
+    draw_stones(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -122,27 +127,27 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
     if model.winner != Player::None {
         return;
     }
-    // let mouse_pos = app.mouse.position();
-    // let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    // let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    // if x < 0 || y < 0 {
-    //     return;
-    // }
-    // let (x, y) = (x as usize, y as usize);
-    // if x >= BOARD_SIZE || y >= BOARD_SIZE || model.board[y][x] != Player::None {
-    //     return;
-    // }
+    let mouse_pos = app.mouse.position();
+    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
+    if x < 0 || y < 0 {
+        return;
+    }
+    let (x, y) = (x as usize, y as usize);
+    if x >= BOARD_SIZE || y >= BOARD_SIZE || model.board[y][x] != Player::None {
+        return;
+    }
 
-    // model.board[y][x] = model.current_player;
+    model.board[y][x] = model.current_player;
 
-    // if rules::check_winner(&model.board, model.current_player, x, y) {
-    //     model.winner = model.current_player;
-    //     println!("{:?} won.", model.winner);
-    // } else {
-    //     model.current_player = if model.current_player == Player::Black {
-    //         Player::White
-    //     } else {
-    //         Player::Black
-    //     };
-    // }
+    if rules::check_winner(&model.board, model.current_player, x, y) {
+        model.winner = model.current_player;
+        println!("{:?} won.", model.winner);
+    } else {
+        model.current_player = if model.current_player == Player::Black {
+            Player::White
+        } else {
+            Player::Black
+        };
+    }
 }
