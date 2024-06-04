@@ -51,6 +51,7 @@ fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, d
             && is_same_player(board, Player::None, xp4, yp4)
     };
 
+    // TODO: order by mosty common to optimize short-circuiting
     straight_border()
         || straight_center()
         || separated_alone()
@@ -61,8 +62,7 @@ fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, d
 pub fn check_double_three(board: &Board, player: Player, x: usize, y: usize) -> bool {
     DIRECTIONS
         .into_iter()
-        .map(|(dx, dy)| {
-            // TODO: optimize by calling only one
+        .filter(|&(dx, dy)| {
             is_open_three(board, player, x, y, dx, dy)
                 || is_open_three(board, player, x, y, -dx, -dy)
         })
