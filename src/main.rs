@@ -1,5 +1,6 @@
 mod check_winner;
 mod constants;
+mod player;
 
 use check_winner::check_winner;
 use constants::{
@@ -7,17 +8,7 @@ use constants::{
     WINDOW_SIZE,
 };
 use nannou::prelude::*;
-
-// TODO: player.rs
-// TODO: only two players, and winner is Some(Player)
-// TODO: .color()
-// TODO: .opponent()
-#[derive(Copy, Clone, Debug, PartialEq)]
-enum Player {
-    None,
-    Black,
-    White,
-}
+use player::Player;
 
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
@@ -105,10 +96,8 @@ fn draw_stones(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            match model.board[y][x] {
-                Player::None => {}
-                Player::Black => draw_stone(draw, x, y, BLACK),
-                Player::White => draw_stone(draw, x, y, WHITE),
+            if model.board[y][x] != Player::None {
+                draw_stone(draw, x, y, model.board[y][x].color());
             }
         }
     }
@@ -145,10 +134,6 @@ fn mouse_pressed(app: &App, model: &mut Model, _button: MouseButton) {
         model.winner = model.current_player;
         println!("{:?} won.", model.winner);
     } else {
-        model.current_player = if model.current_player == Player::Black {
-            Player::White
-        } else {
-            Player::Black
-        };
+        model.current_player = model.current_player.opponent();
     }
 }
