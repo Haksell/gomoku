@@ -44,7 +44,8 @@
 
 - basic ui with correct rules
 - tooltip to show the player piece with some transparency
-- draw 9 dots
+- show coordinates of mouse
+- show number of captures
 - unit test of rules
 - random bot
 - bot that likes center
