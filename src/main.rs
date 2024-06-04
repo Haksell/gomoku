@@ -20,7 +20,7 @@ struct Model {
 }
 
 fn main() {
-    nannou::app(model).update(update).view(view).run();
+    nannou::app(model).view(view).run();
 }
 
 fn model(app: &App) -> Model {
@@ -36,8 +36,6 @@ fn model(app: &App) -> Model {
         winner: Player::None,
     }
 }
-
-fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
