@@ -6,11 +6,15 @@ use crate::{
 };
 
 fn is_unbreakable(board: &Board, player: Player, new_x: isize, new_y: isize) -> bool {
-    !DIRECTIONS8.iter().any(|(dx, dy)| {
-        is_same_player(board, Player::None, new_x - dx, new_y - dy)
+    let check = !DIRECTIONS8.iter().any(|(dx, dy)| {
+        (is_same_player(board, Player::None, new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
-            && is_same_player(board, player.opponent(), new_x + 2 * dx, new_y + 2 * dy)
-    })
+            && is_same_player(board, player.opponent(), new_x + 2 * dx, new_y + 2 * dy))
+            || (is_same_player(board, player.opponent(), new_x - dx, new_y - dy)
+                && is_same_player(board, player, new_x + dx, new_y + dy)
+                && is_same_player(board, Player::None, new_x + 2 * dx, new_y + 2 * dy))
+    });
+    check
 }
 
 fn check_five_in_a_row(
@@ -49,8 +53,6 @@ fn check_five_in_a_row(
             break;
         }
     }
-
-    println!("{} {}", count, check_unbreakable);
 
     count >= 5 && (check_unbreakable || check_five_in_a_row(board, player, x, y, dx, dy, true))
 }
