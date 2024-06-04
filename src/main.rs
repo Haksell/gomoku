@@ -1,7 +1,9 @@
 mod constants;
 mod rules;
 
-use constants::{BOARD_SIZE, CELLS, CELL_SIZE, COLOR_BACKGROUND, HALF_BOARD_SIZE, WINDOW_SIZE};
+use constants::{
+    BOARD_SIZE, CELLS, CELL_SIZE, COLOR_BACKGROUND, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE,
+};
 use nannou::prelude::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -40,21 +42,22 @@ fn model(app: &App) -> Model {
 }
 
 fn draw_grid(draw: &Draw) {
-    for y in 0..BOARD_SIZE - 1 {
-        let py = y as f32 * CELL_SIZE as f32 - (CELLS as f32 * CELL_SIZE as f32 / 2.0)
-            + CELL_SIZE as f32 / 2.0;
-        for x in 0..BOARD_SIZE - 1 {
-            let px = x as f32 * CELL_SIZE as f32 - (CELLS as f32 * CELL_SIZE as f32 / 2.0)
-                + CELL_SIZE as f32 / 2.0;
-            draw.rect()
-                .x_y(px, py)
-                .w_h(CELL_SIZE as f32, CELL_SIZE as f32)
-                .stroke(BLACK)
-                .stroke_weight(2.0)
-                .no_fill();
-        }
+    const WEIGHT: f32 = 2.0;
+    const LIMIT: f32 = (WINDOW_SIZE as f32 + WEIGHT) / 2.0 - WINDOW_MARGIN;
+
+    fn draw_line(draw: &Draw, start: Point2, end: Point2) {
+        draw.line()
+            .start(start)
+            .end(end)
+            .weight(WEIGHT)
+            .color(BLACK);
     }
-    // TODO: draw dots
+
+    for i in 0..BOARD_SIZE as isize {
+        let pos = (i - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE;
+        draw_line(draw, pt2(pos, -LIMIT), pt2(pos, LIMIT));
+        draw_line(draw, pt2(-LIMIT, pos), pt2(LIMIT, pos));
+    }
 }
 
 // TODO: view.rs
@@ -62,6 +65,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(COLOR_BACKGROUND);
     draw_grid(&draw);
+    // TODO: draw dots
     // TODO: draw stones
 
     for y in 0..BOARD_SIZE {
