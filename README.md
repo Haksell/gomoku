@@ -43,7 +43,6 @@
 ## todo
 
 - basic ui with correct rules
-- place the pieces on intersections
 - tooltip to show the player piece with some transparency
 - draw 9 dots
 - unit test of rules
@@ -54,6 +53,7 @@
 - make the default ui as least as pretty as the one from alabalet
 - different themes
 - make the code compile faster
+- some margin between cells to avoid missclicks
 
 ## resources
 
