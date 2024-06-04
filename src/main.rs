@@ -1,14 +1,12 @@
-mod check_winner;
 mod constants;
-mod handle_captures;
 mod player;
+mod rules;
 mod view;
 
-use check_winner::check_winner;
 use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
-use handle_captures::handle_captures;
 use nannou::prelude::*;
 use player::Player;
+use rules::{check_winner, handle_captures};
 use view::view;
 
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
