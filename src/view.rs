@@ -35,24 +35,24 @@ fn draw_grid(draw: &Draw) {
     }
 }
 
-fn get_intersection_position(x: usize, y: usize) -> Point2 {
-    fn physical_position(z: usize) -> f32 {
+fn board_to_physical((x, y): (usize, usize)) -> (f32, f32) {
+    fn btp1d(z: usize) -> f32 {
         (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
     }
 
-    pt2(physical_position(x), physical_position(y))
+    (btp1d(x), btp1d(y))
 }
 
 fn draw_dots(draw: &Draw) {
     const DOT_SIZE: f32 = CELL_SIZE * 0.25;
     for y in -1..=1 {
         for x in -1..=1 {
-            let dot = get_intersection_position(
+            let (px, py) = board_to_physical((
                 (HALF_BOARD_SIZE as isize + x * DOT_SPACING as isize) as usize,
                 (HALF_BOARD_SIZE as isize + y * DOT_SPACING as isize) as usize,
-            );
+            ));
             draw.ellipse()
-                .x_y(dot.x, dot.y)
+                .x_y(px, py)
                 .w_h(DOT_SIZE, DOT_SIZE)
                 .color(BLACK);
         }
@@ -63,9 +63,9 @@ fn draw_stones(draw: &Draw, model: &Model) {
     const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
     fn draw_stone(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
-        let pos = get_intersection_position(x, y);
+        let (px, py) = board_to_physical((x, y));
         draw.ellipse()
-            .x_y(pos.x, pos.y)
+            .x_y(px, py)
             .w_h(STONE_SIZE, STONE_SIZE)
             .color(color)
             .stroke(BLACK)

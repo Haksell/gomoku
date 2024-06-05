@@ -1,6 +1,6 @@
 # gomoku
 
-## general guidelines
+## rules
 
 - [x] Two players take turns placing stones of their color on an intersection of the board
 - [x] The game ends when one player manages to align 5 stones or more.
@@ -12,6 +12,9 @@
 - [ ] If there is no possibility of this happening, there is no need to continue the game. (???)
 - [x] It is forbidden to play a move that introduces 2 free-three alignments, which would guarantee a win by alignment.
 - [ ] It is not forbidden to introduce a double-three by capturing a pair.
+
+## general guidelines
+
 - [ ] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [ ] You have to provide a Makefile which must produce your program. It must not relink.
 - [ ] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.

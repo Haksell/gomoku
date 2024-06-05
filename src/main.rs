@@ -22,7 +22,7 @@ struct Model {
 
 impl Model {
     fn start() -> Self {
-        Model {
+        Self {
             board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
             current_player: Player::Black,
             winner: Player::None,
