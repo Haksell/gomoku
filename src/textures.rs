@@ -22,7 +22,7 @@ fn init_texture(app: &App, texture_background: &OnceCell<Mutex<Texture>>, path: 
 }
 
 pub fn init_textures(app: &App) {
-    init_texture(app, &TEXTURE_BACKGROUND, "wood_vertical.png");
+    init_texture(app, &TEXTURE_BACKGROUND, "forum.png");
     init_texture(app, &TEXTURE_BLACK, "black.png");
     init_texture(app, &TEXTURE_WHITE, "white.png");
 }
