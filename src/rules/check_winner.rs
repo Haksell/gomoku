@@ -1,7 +1,7 @@
 use super::is_same_player;
 
 use crate::{
-    constants::{DIRECTIONS4, DIRECTIONS8, REQUIRED_CAPTURES},
+    constants::{DIRECTIONS4, DIRECTIONS8, REQUIRED_CAPTURES, STONES_IN_A_ROW},
     model::Board,
     Model, Player,
 };
@@ -31,7 +31,7 @@ fn check_five_in_a_row(
 
     // TODO: don't repeat loop. use brain
 
-    for step in 1..5 {
+    for step in 1..STONES_IN_A_ROW as isize {
         let new_x = x as isize + step * dx;
         let new_y = y as isize + step * dy;
         if is_same_player(board, player, new_x, new_y)
@@ -43,7 +43,7 @@ fn check_five_in_a_row(
         }
     }
 
-    for step in (1..5).map(|x| -x) {
+    for step in (1..STONES_IN_A_ROW as isize).map(|x| -x) {
         let new_x = x as isize + step * dx;
         let new_y = y as isize + step * dy;
         if is_same_player(board, player, new_x, new_y)
@@ -55,7 +55,8 @@ fn check_five_in_a_row(
         }
     }
 
-    count >= 5 && (check_unbreakable || check_five_in_a_row(board, player, x, y, dx, dy, true))
+    count >= STONES_IN_A_ROW
+        && (check_unbreakable || check_five_in_a_row(board, player, x, y, dx, dy, true))
 }
 
 pub fn check_winner(model: &Model, x: usize, y: usize) -> bool {

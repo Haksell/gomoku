@@ -16,7 +16,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 }
 
 fn draw_grid(draw: &Draw) {
-    const WEIGHT: f32 = 2.0;
+    const WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0025;
     const LIMIT: f32 = (WINDOW_SIZE as f32 + WEIGHT) / 2.0 - WINDOW_MARGIN;
 
     fn draw_line(draw: &Draw, start: Point2, end: Point2) {
