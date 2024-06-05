@@ -1,5 +1,4 @@
 mod constants;
-// mod coordinates; TODO
 mod model;
 mod player;
 mod rules;
