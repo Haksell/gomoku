@@ -10,7 +10,7 @@ fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, d
     let (xp3, yp3) = (x + 3 * dx, y + 3 * dy);
     let (xp4, yp4) = (x + 4 * dx, y + 4 * dy);
 
-    // test if it is faster directly with booleans
+    // TODO: test if it is faster directly with booleans
 
     let straight_border = || {
         is_same_player(board, player, xp1, yp1)
