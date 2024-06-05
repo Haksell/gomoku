@@ -36,11 +36,11 @@ fn draw_grid(draw: &Draw) {
 }
 
 fn board_to_physical((x, y): (usize, usize)) -> (f32, f32) {
-    fn btp1d(z: usize) -> f32 {
+    fn b2p1d(z: usize) -> f32 {
         (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
     }
 
-    (btp1d(x), btp1d(y))
+    (b2p1d(x), b2p1d(y))
 }
 
 fn draw_dots(draw: &Draw) {
