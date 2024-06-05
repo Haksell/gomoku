@@ -59,13 +59,13 @@
 
 - no sync needed for textures (rm `once_cell`)
 - try other background textures
-- shadow stones
 - show tooltip to show the player piece with some transparency
 - show coordinates of mouse on hover
 - show number of captures
 - show winner (or draw)
 - show forbidden moves (double-three)
 - show allowed moves (double-three)
+- stone shadow
 
 ## resources
 
