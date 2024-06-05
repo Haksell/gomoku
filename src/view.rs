@@ -1,6 +1,7 @@
 use crate::constants::{
     BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE,
 };
+use crate::coordinates::board_to_physical;
 use crate::model::Model;
 use crate::player::Player;
 use crate::textures::TEXTURE_BACKGROUND;
@@ -40,14 +41,6 @@ fn draw_grid(draw: &Draw) {
         draw_line(draw, pt2(pos, -LIMIT), pt2(pos, LIMIT));
         draw_line(draw, pt2(-LIMIT, pos), pt2(LIMIT, pos));
     }
-}
-
-fn board_to_physical(x: usize, y: usize) -> (f32, f32) {
-    fn b2p1d(z: usize) -> f32 {
-        (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
-    }
-
-    (b2p1d(x), b2p1d(y))
 }
 
 fn draw_dots(draw: &Draw) {

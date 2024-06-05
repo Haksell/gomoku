@@ -1,20 +1,21 @@
 mod constants;
+mod coordinates;
 mod model;
 mod player;
 mod rules;
 mod textures;
 mod view;
 
-use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
+use constants::WINDOW_SIZE;
+use coordinates::mouse_to_board;
 use model::Model;
 use nannou::prelude::*;
 use player::Player;
-use rules::creates_double_three;
 use textures::init_textures;
 use view::view;
 
 fn main() {
-    nannou::app(app).view(view).run();
+    nannou::app(app).update(update).view(view).run();
 }
 
 fn app(app: &App) -> Model {
@@ -31,22 +32,10 @@ fn app(app: &App) -> Model {
 }
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
-    if button != MouseButton::Left || model.winner != Player::None {
-        return;
-    }
-    let mouse_pos = app.mouse.position();
-    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    if x < 0 || y < 0 {
-        return;
-    }
-    let (x, y) = (x as usize, y as usize);
-    if x < BOARD_SIZE
-        && y < BOARD_SIZE
-        && model.board[y][x] == Player::None
-        && !creates_double_three(&model.board, model.current_player, x, y)
-    {
-        model.do_move(x, y);
+    if button == MouseButton::Left && model.winner == Player::None {
+        if let Some((x, y)) = mouse_to_board(app, model) {
+            model.do_move(x, y);
+        }
     }
 }
 
@@ -54,4 +43,9 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
     if key == Key::Back && !model.moves.is_empty() {
         *model = Model::from_moves(&model.moves[0..model.moves.len() - 1]);
     }
+}
+
+fn update(app: &App, _model: &mut Model, _update: Update) {
+    let mouse_pos = app.mouse.position();
+    println!("{:?}", mouse_pos);
 }
