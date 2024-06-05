@@ -15,6 +15,7 @@ pub struct Model {
     pub moves: Vec<(usize, usize)>,
     pub is_forced_move: bool,
     pub possible_moves: HashSet<(usize, usize)>,
+    pub hover: Option<(usize, usize)>,
 }
 
 impl Model {
@@ -28,6 +29,7 @@ impl Model {
             moves: Vec::new(),
             is_forced_move: false,
             possible_moves: HashSet::new(),
+            hover: None,
         }
     }
 
@@ -39,7 +41,7 @@ impl Model {
         if is_winner {
             self.winner = self.current_player;
             // self.current_player = Player::None; ???
-            println!("{:?} won.", self.winner);
+            // println!("{:?} won.", self.winner);
         } else {
             if !forced_moves.is_empty() {
                 self.is_forced_move = true;

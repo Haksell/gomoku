@@ -1,7 +1,5 @@
-use nannou::color::Srgb;
-
 pub const WINDOW_SIZE: u32 = 700;
-pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.042;
+pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.05;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
 
 pub const BOARD_SIZE: usize = 19;
@@ -40,10 +38,3 @@ fn test_directions() {
         .zip(DIRECTIONS4)
         .all(|(&(x1, y1), (x2, y2))| x1 == -x2 && y1 == -y2));
 }
-
-pub const COLOR_BACKGROUND: Srgb<u8> = Srgb {
-    red: 237,
-    green: 208,
-    blue: 128,
-    standard: core::marker::PhantomData,
-};

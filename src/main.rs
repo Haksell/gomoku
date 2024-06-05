@@ -1,18 +1,21 @@
 mod constants;
+mod coordinates;
 mod model;
 mod player;
 mod rules;
+mod textures;
 mod view;
 
-use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
+use constants::WINDOW_SIZE;
+use coordinates::mouse_to_board;
 use model::Model;
-use nannou::prelude::*;
+use nannou::{prelude::*, winit::window::CursorIcon};
 use player::Player;
-use rules::creates_double_three;
+use textures::init_textures;
 use view::view;
 
 fn main() {
-    nannou::app(app).view(view).run();
+    nannou::app(app).update(update).view(view).run();
 }
 
 fn app(app: &App) -> Model {
@@ -24,28 +27,15 @@ fn app(app: &App) -> Model {
         .key_pressed(key_pressed)
         .build()
         .unwrap();
-
+    init_textures(app);
     Model::start()
 }
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
-    if button != MouseButton::Left || model.winner != Player::None {
-        return;
-    }
-    let mouse_pos = app.mouse.position();
-    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    if x < 0 || y < 0 {
-        return;
-    }
-    let (x, y) = (x as usize, y as usize);
-    if x < BOARD_SIZE
-        && y < BOARD_SIZE
-        && model.board[y][x] == Player::None
-        && !creates_double_three(&model.board, model.current_player, x, y)
-        && (!model.is_forced_move || model.possible_moves.contains(&(x, y)))
-    {
-        model.do_move(x, y);
+    if button == MouseButton::Left && model.winner == Player::None {
+        if let Some((x, y)) = mouse_to_board(app, model) {
+            model.do_move(x, y);
+        }
     }
 }
 
@@ -56,4 +46,13 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
     if key == Key::Home {
         *model = Model::start();
     }
+}
+
+fn update(app: &App, model: &mut Model, _: Update) {
+    model.hover = mouse_to_board(app, model);
+    app.main_window().set_cursor_icon(if model.hover.is_some() {
+        CursorIcon::Hand
+    } else {
+        CursorIcon::Default
+    });
 }
