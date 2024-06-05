@@ -48,20 +48,22 @@
 - finish implementing rules
 - handle draws
 - unit test of rules
-- show tooltip to show the player piece with some transparency
-- show coordinates of mouse
-- show number of captures
-- show winner (or draw)
-- show forbidden moves
 - random bot
 - bot that likes center
 - arena with elo ranking
-- draw notation
-- make the default ui as least as pretty as the one from alabalet
-- different themes
-- make the code compile faster
 - some margin between cells to avoid missclicks
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
+- make the code compile faster
+
+## todo design (branch)
+
+- show tooltip to show the player piece with some transparency
+- show coordinates of mouse on hover
+- show number of captures
+- show winner (or draw)
+- show forbidden moves (double-three)
+- show allowed moves (double-three)
+- stone shadow
 
 ## resources
 

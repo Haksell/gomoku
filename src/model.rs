@@ -32,7 +32,7 @@ impl Model {
         if check_winner(self, x, y) {
             self.winner = self.current_player;
             // self.current_player = Player::None; ???
-            println!("{:?} won.", self.winner);
+            // println!("{:?} won.", self.winner);
         } else {
             self.current_player = self.current_player.opponent();
         }
