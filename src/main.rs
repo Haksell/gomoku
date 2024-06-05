@@ -9,8 +9,6 @@ use player::Player;
 use rules::{check_double_three, check_winner, handle_captures};
 use view::view;
 
-// TODO: model.rs
-
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
 struct Model {
