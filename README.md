@@ -7,11 +7,11 @@
 - [x] Gomoku will be played on a 19x19 Goban, without limit to the number of stones.
 - [x] You can capture a pair of your opponent's stones from the board by flanking them with your own stones.
 - [x] If you manage to capture 5 pairs of your opponent's stones, you win the game.
+- [x] It is forbidden to play a move that introduces 2 free-three alignments, which would guarantee a win by alignment.
+- [ ] It is not forbidden to introduce a double-three by capturing a pair.
 - [ ] A player who manages to line up five stones wins only if the opponent cannot break this line by capturing a pair.
 - [ ] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture. (???)
 - [ ] If there is no possibility of this happening, there is no need to continue the game. (???)
-- [x] It is forbidden to play a move that introduces 2 free-three alignments, which would guarantee a win by alignment.
-- [ ] It is not forbidden to introduce a double-three by capturing a pair.
 
 ## general guidelines
 
