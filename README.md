@@ -61,6 +61,7 @@
 - different themes
 - make the code compile faster
 - some margin between cells to avoid missclicks
+- `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 
 ## resources
 
