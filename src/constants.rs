@@ -34,7 +34,7 @@ pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
 
 #[test]
 fn test_directions() {
-    assert!(DIRECTIONS4[..] == DIRECTIONS8[..4]);
+    assert!(DIRECTIONS4 == DIRECTIONS8[..4]);
 }
 
 pub const COLOR_BACKGROUND: Srgb<u8> = Srgb {
