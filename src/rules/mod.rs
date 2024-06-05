@@ -16,3 +16,10 @@ fn is_same_player(board: &Board, player: Player, x: isize, y: isize) -> bool {
         && y < BOARD_SIZE as isize
         && board[y as usize][x as usize] == player
 }
+
+fn is_capture(board: &Board, player: Player, x: usize, y: usize, dx: isize, dy: isize) -> bool {
+    let (x, y) = (x as isize, y as isize);
+    is_same_player(board, player, x + 3 * dx, y + 3 * dy)
+        && is_same_player(board, player.opponent(), x + 2 * dx, y + 2 * dy)
+        && is_same_player(board, player.opponent(), x + dx, y + dy)
+}
