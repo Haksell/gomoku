@@ -57,7 +57,6 @@
 
 ## todo design (branch)
 
-- no sync needed for textures (rm `once_cell`)
 - try other background textures
 - show tooltip to show the player piece with some transparency
 - show coordinates of mouse on hover
