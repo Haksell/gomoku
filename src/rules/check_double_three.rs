@@ -1,6 +1,5 @@
-use crate::{constants::DIRECTIONS8, Board, Player};
-
 use super::is_same_player;
+use crate::{constants::DIRECTIONS8, model::Board, Player};
 
 fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, dy: isize) -> bool {
     let (x, y) = (x as isize, y as isize);

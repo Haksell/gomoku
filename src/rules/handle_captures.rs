@@ -1,5 +1,5 @@
 use super::is_same_player;
-use crate::{constants::DIRECTIONS8, Board, Model, Player};
+use crate::{constants::DIRECTIONS8, model::Board, Model, Player};
 
 fn is_capture(board: &mut Board, player: Player, x: usize, y: usize, dx: isize, dy: isize) -> bool {
     let (x, y) = (x as isize, y as isize);

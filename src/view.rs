@@ -2,10 +2,9 @@ use crate::constants::{
     BOARD_SIZE, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
     WINDOW_SIZE,
 };
+use crate::model::Model;
 use crate::player::Player;
 use nannou::prelude::*;
-
-use crate::Model;
 
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();

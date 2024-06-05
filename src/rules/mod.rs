@@ -2,7 +2,7 @@ mod check_double_three;
 mod check_winner;
 mod handle_captures;
 
-use crate::{constants::BOARD_SIZE, player::Player, Board};
+use crate::{constants::BOARD_SIZE, model::Board, player::Player};
 pub use check_double_three::check_double_three;
 pub use check_winner::check_winner;
 pub use handle_captures::handle_captures;

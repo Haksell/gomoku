@@ -2,7 +2,8 @@ use super::is_same_player;
 
 use crate::{
     constants::{DIRECTIONS4, DIRECTIONS8, REQUIRED_CAPTURES},
-    Board, Model, Player,
+    model::Board,
+    Model, Player,
 };
 
 fn is_unbreakable(board: &Board, player: Player, new_x: isize, new_y: isize) -> bool {

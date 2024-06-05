@@ -1,10 +1,12 @@
 mod constants;
 // mod coordinates; TODO
+mod model;
 mod player;
 mod rules;
 mod view;
 
 use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
+use model::Model;
 use nannou::prelude::*;
 use player::Player;
 use rules::{check_double_three, check_winner, handle_captures};
@@ -12,47 +14,6 @@ use view::view;
 
 fn main() {
     nannou::app(app).view(view).run();
-}
-
-type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
-
-struct Model {
-    board: Board,
-    current_player: Player,
-    winner: Player,
-    black_captures: usize,
-    white_captures: usize,
-    moves: Vec<(usize, usize)>,
-}
-
-impl Model {
-    fn start() -> Self {
-        Self {
-            board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
-            current_player: Player::Black,
-            winner: Player::None,
-            black_captures: 0,
-            white_captures: 0,
-            moves: Vec::new(),
-        }
-    }
-
-    /// Assumes the sequence of moves is valid
-    /// TODO: avoid code repetition with mouse_pressed
-    fn from_moves(moves: &[(usize, usize)]) -> Self {
-        let mut model = Self::start();
-        for &(x, y) in moves {
-            model.board[y][x] = model.current_player;
-            handle_captures(&mut model, x, y);
-            if check_winner(&model, x, y) {
-                model.winner = model.current_player;
-                break;
-            }
-            model.current_player = model.current_player.opponent();
-            model.moves.push((x, y));
-        }
-        model
-    }
 }
 
 fn app(app: &App) -> Model {
