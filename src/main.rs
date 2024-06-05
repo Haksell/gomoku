@@ -9,6 +9,8 @@ use player::Player;
 use rules::{check_double_three, check_winner, handle_captures};
 use view::view;
 
+// TODO: model.rs
+
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
 struct Model {
@@ -17,7 +19,37 @@ struct Model {
     winner: Player,
     black_captures: usize,
     white_captures: usize,
-    last_move: Option<(usize, usize)>,
+    moves: Vec<(usize, usize)>,
+}
+
+impl Model {
+    fn start() -> Self {
+        Model {
+            board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
+            current_player: Player::Black,
+            winner: Player::None,
+            black_captures: 0,
+            white_captures: 0,
+            moves: Vec::new(),
+        }
+    }
+
+    /// Assumes the sequence of moves is valid
+    /// TODO: avoid code repetition with mouse_pressed
+    fn from_moves(moves: &[(usize, usize)]) -> Self {
+        let mut model = Self::start();
+        for &(x, y) in moves {
+            model.board[y][x] = model.current_player;
+            handle_captures(&mut model, x, y);
+            if check_winner(&model, x, y) {
+                model.winner = model.current_player;
+                break;
+            }
+            model.current_player = model.current_player.opponent();
+            model.moves.push((x, y));
+        }
+        model
+    }
 }
 
 fn main() {
@@ -34,14 +66,7 @@ fn model(app: &App) -> Model {
         .build()
         .unwrap();
 
-    Model {
-        board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
-        current_player: Player::Black,
-        winner: Player::None,
-        black_captures: 0,
-        white_captures: 0,
-        last_move: None,
-    }
+    Model::start()
 }
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
@@ -67,7 +92,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     }
 
     model.board[y][x] = model.current_player;
-    model.last_move = Some((x, y));
+    model.moves.push((x, y));
     handle_captures(model, x, y);
 
     if check_winner(model, x, y) {
@@ -79,12 +104,8 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     }
 }
 
-//TODO handle if there was a capture
-fn key_pressed(_app: &App, model: &mut Model, key: Key) {
-    if key == Key::Back {
-        if let Some((x, y)) = model.last_move {
-            model.board[y][x] = Player::None;
-            model.current_player = model.current_player.opponent();
-        }
+fn key_pressed(_: &App, model: &mut Model, key: Key) {
+    if key == Key::Back && !model.moves.is_empty() {
+        *model = Model::from_moves(&model.moves[0..model.moves.len() - 1]);
     }
 }
