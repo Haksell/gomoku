@@ -8,7 +8,7 @@ use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
 use model::Model;
 use nannou::prelude::*;
 use player::Player;
-use rules::check_double_three;
+use rules::creates_double_three;
 use view::view;
 
 fn main() {
@@ -42,7 +42,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     if x < BOARD_SIZE
         && y < BOARD_SIZE
         && model.board[y][x] == Player::None
-        && !check_double_three(&model.board, model.current_player, x, y)
+        && !creates_double_three(&model.board, model.current_player, x, y)
     {
         model.do_move(x, y);
     }

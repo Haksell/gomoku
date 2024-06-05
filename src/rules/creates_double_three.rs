@@ -58,7 +58,7 @@ fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, d
         || separated_border()
 }
 
-pub fn check_double_three(board: &Board, player: Player, x: usize, y: usize) -> bool {
+pub fn creates_double_three(board: &Board, player: Player, x: usize, y: usize) -> bool {
     DIRECTIONS4
         .iter()
         .filter(|&&(dx, dy)| {
