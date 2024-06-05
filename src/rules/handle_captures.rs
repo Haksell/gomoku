@@ -21,7 +21,7 @@ pub fn handle_captures(model: &mut Model, x: usize, y: usize) {
     let player = model.current_player;
     let total_captures = DIRECTIONS8
         .iter()
-        .filter(|(dx, dy)| is_capture(&mut model.board, player, x, y, *dx, *dy))
+        .filter(|&&(dx, dy)| is_capture(&mut model.board, player, x, y, dx, dy))
         .count();
     player.increment_captures(model, total_captures);
 }
