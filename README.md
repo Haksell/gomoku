@@ -25,7 +25,7 @@
 
 ## mandatory part
 
-- [ ] The executable must be named Gomoku. `ln -s target/release/gomoku Gomoku`
+- [ ] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player’s moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [ ] You have to use a Minimax algorithm, or a variant.
