@@ -1,4 +1,5 @@
 mod constants;
+// mod coordinates; TODO
 mod player;
 mod rules;
 mod view;
@@ -8,6 +9,10 @@ use nannou::prelude::*;
 use player::Player;
 use rules::{check_double_three, check_winner, handle_captures};
 use view::view;
+
+fn main() {
+    nannou::app(app).view(view).run();
+}
 
 type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
@@ -50,11 +55,7 @@ impl Model {
     }
 }
 
-fn main() {
-    nannou::app(model).view(view).run();
-}
-
-fn model(app: &App) -> Model {
+fn app(app: &App) -> Model {
     app.new_window()
         .title("ligomoku.org")
         .size(WINDOW_SIZE, WINDOW_SIZE)
