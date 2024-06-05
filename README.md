@@ -51,13 +51,12 @@
 - random bot
 - bot that likes center
 - arena with elo ranking
-- some margin between cells to avoid missclicks
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - make the code compile faster
 
 ## todo design (branch)
 
-- show tooltip to show the player piece with some transparency
+- hover transparency
 - show coordinates of mouse on hover
 - show number of captures
 - show winner (or draw)

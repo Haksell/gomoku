@@ -11,6 +11,7 @@ pub struct Model {
     pub black_captures: usize,
     pub white_captures: usize,
     pub moves: Vec<(usize, usize)>,
+    pub hover: Option<(usize, usize)>,
 }
 
 impl Model {
@@ -22,6 +23,7 @@ impl Model {
             black_captures: 0,
             white_captures: 0,
             moves: Vec::new(),
+            hover: None,
         }
     }
 

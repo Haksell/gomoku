@@ -5,10 +5,20 @@ use crate::rules::creates_double_three;
 use nannou::App;
 
 pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
+    fn split_float(z: f32) -> (isize, f32) {
+        let pos = z / CELL_SIZE;
+        let fractional_part = (pos % 1.0).abs();
+        (
+            pos.round() as isize + HALF_BOARD_SIZE as isize,
+            fractional_part.min(1.0 - fractional_part),
+        )
+    }
+
     let mouse_pos = app.mouse.position();
-    let x = (mouse_pos.x / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    let y = (mouse_pos.y / CELL_SIZE).round() as isize + HALF_BOARD_SIZE as isize;
-    if x < 0 || y < 0 {
+    let (x, xd) = split_float(mouse_pos.x);
+    let (y, yd) = split_float(mouse_pos.y);
+    let intersection_distance = (xd * xd + yd * yd).sqrt();
+    if x < 0 || y < 0 || intersection_distance > 0.5 {
         return None;
     }
     let (x, y) = (x as usize, y as usize);

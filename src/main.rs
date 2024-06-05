@@ -9,7 +9,7 @@ mod view;
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use model::Model;
-use nannou::prelude::*;
+use nannou::{prelude::*, winit::window::CursorIcon};
 use player::Player;
 use textures::init_textures;
 use view::view;
@@ -45,7 +45,11 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
     }
 }
 
-fn update(app: &App, _model: &mut Model, _update: Update) {
-    let mouse_pos = app.mouse.position();
-    println!("{:?}", mouse_pos);
+fn update(app: &App, model: &mut Model, _: Update) {
+    model.hover = mouse_to_board(app, model);
+    app.main_window().set_cursor_icon(if model.hover.is_some() {
+        CursorIcon::Hand
+    } else {
+        CursorIcon::Default
+    });
 }

@@ -75,4 +75,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
             }
         }
     }
+    if let Some((x, y)) = model.hover {
+        draw_stone(draw, x, y, &model.current_player.texture());
+    }
 }
