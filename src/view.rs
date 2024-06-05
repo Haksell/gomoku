@@ -5,22 +5,22 @@ use crate::model::Model;
 use crate::player::Player;
 use nannou::prelude::*;
 
-pub const COLOR_BACKGROUND: Srgb<u8> = Srgb {
-    red: 237,
-    green: 208,
-    blue: 128,
-    standard: core::marker::PhantomData,
-};
-
-const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0025;
+const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0022;
 
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    draw.background().color(COLOR_BACKGROUND);
+    draw_background(&draw, app);
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
     draw.to_frame(app, &frame).unwrap();
+}
+
+fn draw_background(draw: &Draw, app: &App) {
+    let background_image = app.assets_path().unwrap().join("wood_vertical.png");
+    let background_texture = wgpu::Texture::from_path(app, background_image).unwrap();
+    draw.texture(&background_texture)
+        .w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32);
 }
 
 fn draw_grid(draw: &Draw) {
@@ -41,7 +41,7 @@ fn draw_grid(draw: &Draw) {
     }
 }
 
-fn board_to_physical((x, y): (usize, usize)) -> (f32, f32) {
+fn board_to_physical(x: usize, y: usize) -> (f32, f32) {
     fn b2p1d(z: usize) -> f32 {
         (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
     }
@@ -50,13 +50,13 @@ fn board_to_physical((x, y): (usize, usize)) -> (f32, f32) {
 }
 
 fn draw_dots(draw: &Draw) {
-    const DOT_SIZE: f32 = CELL_SIZE * 0.25;
+    const DOT_SIZE: f32 = CELL_SIZE * 0.24;
     for y in -1..=1 {
         for x in -1..=1 {
-            let (px, py) = board_to_physical((
+            let (px, py) = board_to_physical(
                 (HALF_BOARD_SIZE as isize + x * DOT_SPACING as isize) as usize,
                 (HALF_BOARD_SIZE as isize + y * DOT_SPACING as isize) as usize,
-            ));
+            );
             draw.ellipse()
                 .x_y(px, py)
                 .w_h(DOT_SIZE, DOT_SIZE)
@@ -69,7 +69,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
     const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
     fn draw_stone(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
-        let (px, py) = board_to_physical((x, y));
+        let (px, py) = board_to_physical(x, y);
         draw.ellipse()
             .x_y(px, py)
             .w_h(STONE_SIZE, STONE_SIZE)
