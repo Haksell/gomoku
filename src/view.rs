@@ -6,6 +6,8 @@ use crate::model::Model;
 use crate::player::Player;
 use nannou::prelude::*;
 
+const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0025;
+
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(COLOR_BACKGROUND);
@@ -16,14 +18,13 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 }
 
 fn draw_grid(draw: &Draw) {
-    const WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0025;
-    const LIMIT: f32 = (WINDOW_SIZE as f32 + WEIGHT) / 2.0 - WINDOW_MARGIN;
+    const LIMIT: f32 = (WINDOW_SIZE as f32 + STROKE_WEIGHT) / 2.0 - WINDOW_MARGIN;
 
     fn draw_line(draw: &Draw, start: Point2, end: Point2) {
         draw.line()
             .start(start)
             .end(end)
-            .weight(WEIGHT)
+            .weight(STROKE_WEIGHT)
             .color(BLACK);
     }
 
@@ -68,7 +69,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
             .w_h(STONE_SIZE, STONE_SIZE)
             .color(color)
             .stroke(BLACK)
-            .stroke_weight(2.0);
+            .stroke_weight(STROKE_WEIGHT);
     }
 
     for y in 0..BOARD_SIZE {

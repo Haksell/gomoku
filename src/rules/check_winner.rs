@@ -1,10 +1,13 @@
 use super::is_same_player;
 
 use crate::{
-    constants::{DIRECTIONS4, DIRECTIONS8, REQUIRED_CAPTURES, STONES_IN_A_ROW},
+    constants::{DIRECTIONS4, DIRECTIONS8},
     model::Board,
     Model, Player,
 };
+
+const STONES_IN_A_ROW: usize = 5;
+const REQUIRED_CAPTURES: usize = 5;
 
 fn is_unbreakable(board: &Board, player: Player, new_x: isize, new_y: isize) -> bool {
     !DIRECTIONS8.iter().any(|(dx, dy)| {
