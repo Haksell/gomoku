@@ -1,6 +1,33 @@
 # gomoku
 
-## rules
+## todo
+
+### misc
+
+- force capturing pair if five in a row
+- finish implementing rules
+- handle draws
+- unit test of rules
+- random bot
+- bot that likes center
+- arena with elo ranking
+- `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
+- make the code compile faster
+
+### design
+
+- hover transparency
+- show coordinates of mouse on hover
+- show number of captures
+- show winner (or draw)
+- show forbidden moves (double-three)
+- show allowed moves (double-three)
+- stone shadow
+- multiple themes
+
+## subject
+
+### rules
 
 - [x] Two players take turns placing stones of their color on an intersection of the board
 - [x] The game ends when one player manages to align 5 stones or more.
@@ -13,7 +40,7 @@
 - [ ] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture. (???)
 - [ ] If there is no possibility of this happening, there is no need to continue the game. (???)
 
-## general guidelines
+### general guidelines
 
 - [ ] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [ ] You have to provide a Makefile which must produce your program. It must not relink.
@@ -23,7 +50,7 @@
 - [ ] You will not get all the points if your implementation has low search depth.
 - [ ] You will not get all the points if your implementation has a naive implementation.
 
-## mandatory part
+### mandatory part
 
 - [ ] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player’s moves.
@@ -34,35 +61,13 @@
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it’s running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
 
-## bonus ideas
+### bonus ideas
 
 - [ ] alternate rules
 - [ ] cancel move
 - [ ] bot arena
 - [ ] mobile version
 - [ ] web version
-
-## todo
-
-- force capturing pair if five in a row
-- finish implementing rules
-- handle draws
-- unit test of rules
-- random bot
-- bot that likes center
-- arena with elo ranking
-- `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
-- make the code compile faster
-
-## todo design (branch)
-
-- hover transparency
-- show coordinates of mouse on hover
-- show number of captures
-- show winner (or draw)
-- show forbidden moves (double-three)
-- show allowed moves (double-three)
-- stone shadow
 
 ## resources
 
