@@ -25,19 +25,25 @@ impl Model {
         }
     }
 
+    /// Assumes the move is valid
+    pub fn do_move(&mut self, x: usize, y: usize) {
+        self.board[y][x] = self.current_player;
+        handle_captures(self, x, y);
+        if check_winner(self, x, y) {
+            self.winner = self.current_player;
+            // self.current_player = Player::None; ???
+            println!("{:?} won.", self.winner);
+        } else {
+            self.current_player = self.current_player.opponent();
+        }
+        self.moves.push((x, y));
+    }
+
     /// Assumes the sequence of moves is valid
-    /// TODO: avoid code repetition with mouse_pressed
     pub fn from_moves(moves: &[(usize, usize)]) -> Self {
         let mut model = Self::start();
         for &(x, y) in moves {
-            model.board[y][x] = model.current_player;
-            handle_captures(&mut model, x, y);
-            if check_winner(&model, x, y) {
-                model.winner = model.current_player;
-                break;
-            }
-            model.current_player = model.current_player.opponent();
-            model.moves.push((x, y));
+            model.do_move(x, y);
         }
         model
     }

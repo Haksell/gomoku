@@ -8,7 +8,7 @@ use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
 use model::Model;
 use nannou::prelude::*;
 use player::Player;
-use rules::{check_double_three, check_winner, handle_captures};
+use rules::check_double_three;
 use view::view;
 
 fn main() {
@@ -29,10 +29,7 @@ fn app(app: &App) -> Model {
 }
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
-    if button != MouseButton::Left {
-        return;
-    }
-    if model.winner != Player::None {
+    if button != MouseButton::Left || model.winner != Player::None {
         return;
     }
     let mouse_pos = app.mouse.position();
@@ -42,24 +39,12 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
         return;
     }
     let (x, y) = (x as usize, y as usize);
-    if x >= BOARD_SIZE
-        || y >= BOARD_SIZE
-        || model.board[y][x] != Player::None
-        || check_double_three(&model.board, model.current_player, x, y)
+    if x < BOARD_SIZE
+        && y < BOARD_SIZE
+        && model.board[y][x] == Player::None
+        && !check_double_three(&model.board, model.current_player, x, y)
     {
-        return;
-    }
-
-    model.board[y][x] = model.current_player;
-    model.moves.push((x, y));
-    handle_captures(model, x, y);
-
-    if check_winner(model, x, y) {
-        model.winner = model.current_player;
-        // model.current_player = Player::None; ???
-        println!("{:?} won.", model.winner);
-    } else {
-        model.current_player = model.current_player.opponent();
+        model.do_move(x, y);
     }
 }
 
