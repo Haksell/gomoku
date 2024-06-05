@@ -67,13 +67,12 @@ fn draw_dots(draw: &Draw) {
 }
 
 fn draw_stones(draw: &Draw, model: &Model) {
-    const STONE_SIZE: f32 = CELL_SIZE * 0.77;
-
     fn draw_stone(draw: &Draw, x: usize, y: usize, texture: &Texture) {
+        const STONE_SIZE: f32 = CELL_SIZE * 0.77;
         let (px, py) = board_to_physical(x, y);
         draw.texture(texture)
             .x_y(px, py)
-            .w_h(STONE_SIZE as f32, STONE_SIZE as f32);
+            .w_h(STONE_SIZE, STONE_SIZE);
     }
 
     for y in 0..BOARD_SIZE {
