@@ -1,10 +1,16 @@
 use crate::constants::{
-    BOARD_SIZE, CELL_SIZE, COLOR_BACKGROUND, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN,
-    WINDOW_SIZE,
+    BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE,
 };
 use crate::model::Model;
 use crate::player::Player;
 use nannou::prelude::*;
+
+pub const COLOR_BACKGROUND: Srgb<u8> = Srgb {
+    red: 237,
+    green: 208,
+    blue: 128,
+    standard: core::marker::PhantomData,
+};
 
 const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0025;
 
