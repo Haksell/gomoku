@@ -1,5 +1,5 @@
 use super::is_same_player;
-use crate::{constants::DIRECTIONS8, model::Board, Player};
+use crate::{constants::DIRECTIONS4, model::Board, Player};
 
 fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, dy: isize) -> bool {
     let (x, y) = (x as isize, y as isize);
@@ -59,9 +59,12 @@ fn is_open_three(board: &Board, player: Player, x: usize, y: usize, dx: isize, d
 }
 
 pub fn check_double_three(board: &Board, player: Player, x: usize, y: usize) -> bool {
-    DIRECTIONS8
+    DIRECTIONS4
         .iter()
-        .filter(|(dx, dy)| is_open_three(board, player, x, y, *dx, *dy))
+        .filter(|&&(dx, dy)| {
+            is_open_three(board, player, x, y, dx, dy)
+                || is_open_three(board, player, x, y, -dx, -dy)
+        })
         .count()
         >= 2
 }
