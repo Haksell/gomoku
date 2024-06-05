@@ -43,6 +43,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
         && y < BOARD_SIZE
         && model.board[y][x] == Player::None
         && !creates_double_three(&model.board, model.current_player, x, y)
+        && (!model.is_forced_move || model.possible_moves.contains(&(x, y)))
     {
         model.do_move(x, y);
     }
@@ -51,5 +52,8 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 fn key_pressed(_: &App, model: &mut Model, key: Key) {
     if key == Key::Back && !model.moves.is_empty() {
         *model = Model::from_moves(&model.moves[0..model.moves.len() - 1]);
+    }
+    if key == Key::Home {
+        *model = Model::start();
     }
 }
