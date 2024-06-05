@@ -7,15 +7,14 @@ use crate::{
 };
 
 fn is_unbreakable(board: &Board, player: Player, new_x: isize, new_y: isize) -> bool {
-    let check = !DIRECTIONS8.iter().any(|(dx, dy)| {
+    !DIRECTIONS8.iter().any(|(dx, dy)| {
         (is_same_player(board, Player::None, new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
             && is_same_player(board, player.opponent(), new_x + 2 * dx, new_y + 2 * dy))
             || (is_same_player(board, player.opponent(), new_x - dx, new_y - dy)
                 && is_same_player(board, player, new_x + dx, new_y + dy)
                 && is_same_player(board, Player::None, new_x + 2 * dx, new_y + 2 * dy))
-    });
-    check
+    })
 }
 
 fn check_five_in_a_row(
