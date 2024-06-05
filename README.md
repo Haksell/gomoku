@@ -57,7 +57,6 @@
 
 ## todo design (branch)
 
-- try other background textures
 - show tooltip to show the player piece with some transparency
 - show coordinates of mouse on hover
 - show number of captures
