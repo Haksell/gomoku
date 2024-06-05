@@ -17,7 +17,7 @@ struct Model {
     winner: Player,
     black_captures: usize,
     white_captures: usize,
-    last_move: (isize, isize),
+    last_move: Option<(usize, usize)>,
 }
 
 fn main() {
@@ -27,7 +27,7 @@ fn main() {
 fn model(app: &App) -> Model {
     app.new_window()
         .title("ligomoku.org")
-        .size(WINDOW_SIZE as u32, WINDOW_SIZE as u32)
+        .size(WINDOW_SIZE, WINDOW_SIZE)
         .resizable(false)
         .mouse_pressed(mouse_pressed)
         .key_pressed(key_pressed)
@@ -40,7 +40,7 @@ fn model(app: &App) -> Model {
         winner: Player::None,
         black_captures: 0,
         white_captures: 0,
-        last_move: (-1, -1),
+        last_move: None,
     }
 }
 
@@ -67,7 +67,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     }
 
     model.board[y][x] = model.current_player;
-    model.last_move = (x as isize, y as isize);
+    model.last_move = Some((x, y));
     handle_captures(model, x, y);
 
     if check_winner(model, x, y) {
@@ -80,10 +80,11 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 }
 
 //TODO handle if there was a capture
-fn key_pressed(_app: &App, model: &mut Model, _key: Key) {
-    if _key == Key::Back && model.last_move != (-1, -1) {
-        let (x, y) = model.last_move;
-        model.board[y as usize][x as usize] = Player::None;
-        model.current_player = model.current_player.opponent();
+fn key_pressed(_app: &App, model: &mut Model, key: Key) {
+    if key == Key::Back {
+        if let Some((x, y)) = model.last_move {
+            model.board[y][x] = Player::None;
+            model.current_player = model.current_player.opponent();
+        }
     }
 }
