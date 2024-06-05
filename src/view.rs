@@ -3,23 +3,24 @@ use crate::constants::{
 };
 use crate::model::Model;
 use crate::player::Player;
+use crate::textures::TEXTURE_BACKGROUND;
 use nannou::prelude::*;
+use wgpu::Texture;
 
 const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0022;
 
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    draw_background(&draw, app);
+    draw_background(&draw);
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
 
-fn draw_background(draw: &Draw, app: &App) {
-    let background_image = app.assets_path().unwrap().join("wood_vertical.png");
-    let background_texture = wgpu::Texture::from_path(app, background_image).unwrap();
-    draw.texture(&background_texture)
+fn draw_background(draw: &Draw) {
+    let background_texture = TEXTURE_BACKGROUND.get().unwrap().lock().unwrap();
+    draw.texture(&*background_texture)
         .w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32);
 }
 
@@ -68,20 +69,17 @@ fn draw_dots(draw: &Draw) {
 fn draw_stones(draw: &Draw, model: &Model) {
     const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
-    fn draw_stone(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
+    fn draw_stone(draw: &Draw, x: usize, y: usize, texture: &Texture) {
         let (px, py) = board_to_physical(x, y);
-        draw.ellipse()
+        draw.texture(texture)
             .x_y(px, py)
-            .w_h(STONE_SIZE, STONE_SIZE)
-            .color(color)
-            .stroke(BLACK)
-            .stroke_weight(STROKE_WEIGHT);
+            .w_h(STONE_SIZE as f32, STONE_SIZE as f32);
     }
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if model.board[y][x] != Player::None {
-                draw_stone(draw, x, y, model.board[y][x].color());
+                draw_stone(draw, x, y, &model.board[y][x].texture());
             }
         }
     }

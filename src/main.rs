@@ -2,6 +2,7 @@ mod constants;
 mod model;
 mod player;
 mod rules;
+mod textures;
 mod view;
 
 use constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE, WINDOW_SIZE};
@@ -9,6 +10,7 @@ use model::Model;
 use nannou::prelude::*;
 use player::Player;
 use rules::creates_double_three;
+use textures::init_textures;
 use view::view;
 
 fn main() {
@@ -24,7 +26,7 @@ fn app(app: &App) -> Model {
         .key_pressed(key_pressed)
         .build()
         .unwrap();
-
+    init_textures(app);
     Model::start()
 }
 

@@ -1,5 +1,9 @@
-use crate::Model;
-use nannou::color;
+use crate::{
+    textures::{TEXTURE_BLACK, TEXTURE_WHITE},
+    Model,
+};
+use nannou::wgpu::Texture;
+use std::sync::MutexGuard;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Player {
@@ -9,19 +13,19 @@ pub enum Player {
 }
 
 impl Player {
-    pub fn color(&self) -> color::Srgb<u8> {
-        match self {
-            Player::None => panic!("{self:?} doesn't have a color"),
-            Player::Black => color::BLACK,
-            Player::White => color::WHITE,
-        }
-    }
-
     pub fn opponent(&self) -> Self {
         match self {
             Player::None => panic!("{self:?} doesn't have an opponent"),
             Player::Black => Player::White,
             Player::White => Player::Black,
+        }
+    }
+
+    pub fn texture(&self) -> MutexGuard<'_, Texture> {
+        match self {
+            Player::None => panic!("{self:?} doesn't have a texture"),
+            Player::Black => TEXTURE_BLACK.get().unwrap().lock().unwrap(),
+            Player::White => TEXTURE_WHITE.get().unwrap().lock().unwrap(),
         }
     }
 
