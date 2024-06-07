@@ -31,6 +31,25 @@
 - hover transparency
 - multiple themes
 
+### algorithms
+
+- [ ] Random
+- [ ] Minimax
+- [ ] Alpha-Beta Pruning
+- [ ] ProbCut
+- [ ] Principal Variation Search
+- [ ] NegaScout
+- [ ] MTD(f)
+- [ ] SSS*
+
+### bonus ideas
+
+- [ ] alternate rules
+- [ ] cancel move
+- [ ] bot arena
+- [ ] mobile version
+- [ ] web version
+
 ## subject
 
 ### rules
@@ -67,14 +86,6 @@
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it’s running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
 
-### bonus ideas
-
-- [ ] alternate rules
-- [ ] cancel move
-- [ ] bot arena
-- [ ] mobile version
-- [ ] web version
-
 ## evaluation
 
 - [ ] preliminary checks (git repository not empty, Makefile, no crash)
@@ -96,16 +107,3 @@
 - [ ] does the heuristic take both players into account?
 - [ ] does the heuristic take past player actions into account to identify patterns and weigh board states accordingly?
 - [ ] bonuses: 1 point per identifiable, separate bonus
-
-## resources
-
-- https://github.com/nannou-org/nannou
-- https://github.com/emilk/egui
-- https://www.chessprogramming.org/Iterative_Deepening
-- https://www.chessprogramming.org/Transposition_Table
-- https://stackoverflow.com/questions/41756443/how-to-implement-iterative-deepening-with-alpha-beta-pruning
-- https://en.wikipedia.org/wiki/Zobrist_hashing
-- https://www.chessprogramming.org/ProbCut
-- https://wiki.cs.pdx.edu/cs542-spring2013/papers/buro/probcut.pdf
-- https://en.wikipedia.org/wiki/Principal_variation_search
-- https://en.wikipedia.org/wiki/MTD(f)
