@@ -4,9 +4,9 @@ use crate::{constants::BOARD_SIZE, model::Model};
 const MAX_DISTANCE: usize = 1;
 const MAX_DEPTH: usize = 4;
 
-pub struct BotMinimax {}
+pub struct BotAlphaBeta {}
 
-impl Bot for BotMinimax {
+impl Bot for BotAlphaBeta {
     fn get_move(model: &Model) -> (usize, usize) {
         if model.moves.is_empty() {
             return (BOARD_SIZE / 2, BOARD_SIZE / 2);
@@ -18,7 +18,7 @@ impl Bot for BotMinimax {
         for (x, y) in close_moves {
             let mut model = model.clone();
             model.do_move(x, y);
-            let score = minimax(&model, 1);
+            let score = alphabeta(&model, 1, i64::MIN, i64::MAX);
             if score > best_score {
                 best_score = score;
                 best_move = (x, y);
@@ -29,7 +29,7 @@ impl Bot for BotMinimax {
     }
 }
 
-fn minimax(model: &Model, depth: usize) -> i64 {
+fn alphabeta(model: &Model, depth: usize, mut min_score: i64, mut max_score: i64) -> i64 {
     if model.winner == model.human {
         return i64::MIN;
     }
@@ -52,12 +52,20 @@ fn minimax(model: &Model, depth: usize) -> i64 {
     for (x, y) in close_moves {
         let mut model = (*model).clone();
         model.do_move(x, y);
-        let score = minimax(&model, depth + 1);
-        best_score = if is_maximizing_player {
-            best_score.max(score)
+        let score = alphabeta(&model, depth + 1, min_score, max_score);
+        if is_maximizing_player {
+            best_score = best_score.max(score);
+            if score > max_score {
+                break;
+            }
+            min_score = min_score.max(score);
         } else {
-            best_score.min(score)
-        };
+            best_score = best_score.min(score);
+            if score < min_score {
+                break;
+            }
+            max_score = max_score.min(score);
+        }
         // model.undo_move(x, y);
     }
     best_score

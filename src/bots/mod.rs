@@ -1,7 +1,8 @@
+mod alpha_beta;
 mod minimax;
 mod random;
 
-pub use self::{minimax::BotMinimax, random::BotRandom};
+pub use self::{alpha_beta::BotAlphaBeta, minimax::BotMinimax, random::BotRandom};
 use crate::{constants::BOARD_SIZE, model::Model, player::Player, rules::creates_double_three};
 use rand::{seq::SliceRandom as _, thread_rng};
 
