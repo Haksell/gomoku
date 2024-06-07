@@ -764,6 +764,7 @@ dependencies = [
 name = "gomoku"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
  "nannou",
  "nannou_egui",
  "once_cell",

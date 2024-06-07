@@ -1,10 +1,10 @@
 use super::get_close_moves;
-use crate::{constants::BOARD_SIZE, model::Model};
+use crate::{constants::BOARD_SIZE, heuristics::Heuristic, model::Model};
 
 const MAX_DISTANCE: usize = 1;
 const MAX_DEPTH: usize = 4;
 
-pub fn minimax(model: &Model) -> (usize, usize) {
+pub fn minimax(model: &Model, heuristic: Heuristic) -> (usize, usize) {
     if model.moves.is_empty() {
         return (BOARD_SIZE / 2, BOARD_SIZE / 2);
     }
@@ -15,7 +15,7 @@ pub fn minimax(model: &Model) -> (usize, usize) {
     for (x, y) in close_moves {
         let mut model = model.clone();
         model.do_move(x, y);
-        let score = _minimax(&model, 1);
+        let score = _minimax(&model, heuristic, 1);
         if score > best_score {
             best_score = score;
             best_move = (x, y);
@@ -25,7 +25,7 @@ pub fn minimax(model: &Model) -> (usize, usize) {
     best_move
 }
 
-fn _minimax(model: &Model, depth: usize) -> i64 {
+fn _minimax(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
     if model.winner == model.human {
         return i64::MIN;
     }
@@ -33,7 +33,7 @@ fn _minimax(model: &Model, depth: usize) -> i64 {
         return i64::MAX;
     }
     if depth == MAX_DEPTH {
-        return 0; // TODO: heuristic function
+        return heuristic(model);
     }
     let close_moves = get_close_moves(model, 1, false);
     if close_moves.is_empty() {
@@ -48,7 +48,7 @@ fn _minimax(model: &Model, depth: usize) -> i64 {
     for (x, y) in close_moves {
         let mut model = (*model).clone();
         model.do_move(x, y);
-        let score = _minimax(&model, depth + 1);
+        let score = _minimax(&model, heuristic, depth + 1);
         best_score = if is_maximizing_player {
             best_score.max(score)
         } else {
