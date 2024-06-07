@@ -3,7 +3,8 @@ pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
 
 pub const BOARD_SIZE: usize = 19;
-pub const HALF_BOARD_SIZE: usize = BOARD_SIZE >> 1;
+pub const HALF_BOARD_SIZE: usize = BOARD_SIZE / 2;
+pub const BOARD_CENTER: (usize, usize) = (HALF_BOARD_SIZE, HALF_BOARD_SIZE);
 pub const DOT_SPACING: usize = 6;
 
 #[test]

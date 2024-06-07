@@ -1,12 +1,12 @@
 use super::get_close_moves;
-use crate::{constants::BOARD_SIZE, heuristics::Heuristic, model::Model};
+use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
 
 const MAX_DISTANCE: usize = 1;
 const MAX_DEPTH: usize = 4;
 
 pub fn minimax(model: &Model, heuristic: Heuristic) -> (usize, usize) {
     if model.moves.is_empty() {
-        return (BOARD_SIZE / 2, BOARD_SIZE / 2);
+        return BOARD_CENTER;
     }
     let close_moves = get_close_moves(model, MAX_DISTANCE, true);
     assert!(!close_moves.is_empty()); // TODO: check
