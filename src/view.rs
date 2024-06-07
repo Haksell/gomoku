@@ -1,15 +1,17 @@
-use crate::constants::{
-    BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE,
+use crate::{
+    constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
+    coordinates::board_to_physical,
+    model::Model,
+    player::Player,
+    rules::creates_double_three,
+    textures::TEXTURE_BACKGROUND,
 };
-use crate::coordinates::board_to_physical;
-use crate::model::Model;
-use crate::player::Player;
-use crate::rules::creates_double_three;
-use crate::textures::TEXTURE_BACKGROUND;
-use nannou::color::{Srgb, BLACK};
-use nannou::geom::{pt2, Point2};
-use nannou::wgpu::Texture;
-use nannou::{App, Draw, Frame};
+use nannou::{
+    color::{Srgb, BLACK},
+    geom::{pt2, Point2},
+    wgpu::Texture,
+    App, Draw, Frame,
+};
 
 const DOT_SIZE: f32 = CELL_SIZE * 0.25;
 const LINE_WIDTH: f32 = CELL_SIZE * 0.052;
