@@ -4,10 +4,11 @@
 
 ### misc
 
-
 - fast `undo_move`
 - decent heuristic
 - implement draws
+- 1v1 bot to estimate level
+- bot arena
 - force capturing pair if five in a row
 - finish implementing rules
 - handle draws
@@ -72,6 +73,28 @@
 - [ ] mobile version
 - [ ] web version
 
+## evaluation
+
+- [ ] preliminary checks (git repository not empty, Makefile, no crash)
+- [x] rules
+- [ ] human-vs-human
+- [ ] human-vs-bot
+- [ ] takes less than half a second on average
+- [ ] there is a timer indicating how much time the AI takes
+- [ ] performance (AI victory in under 20 moves -> 5)
+- [x] implementation (alpha-beta/negascout/mtdf -> 5)
+- [ ] search depth (10 or more levels -> 5)
+- [x] search space (multiple rectangular windows emcompassing placed stones but minimizing wasted space -> 5)
+- [ ] does the heuristic take current alignments into account?
+- [ ] does the heuristic check whether an alignment has enough space to develop into a 5-in-a-row?
+- [ ] does the heuristic weigh an alignment according to its freedom (free, half-free, flanked)?
+- [ ] does the heuristic take potential captures into account?
+- [ ] does the heuristic take current captured stones into account?
+- [ ] does the heuristic check for advanteageous combinations?
+- [ ] does the heuristic take both players into account?
+- [ ] does the heuristic take past player actions into account to identify patterns and weigh board states accordingly?
+- [ ] bonuses: 1 point per identifiable, separate bonus
+
 ## resources
 
 - https://github.com/nannou-org/nannou
@@ -82,3 +105,5 @@
 - https://en.wikipedia.org/wiki/Zobrist_hashing
 - https://www.chessprogramming.org/ProbCut
 - https://wiki.cs.pdx.edu/cs542-spring2013/papers/buro/probcut.pdf
+- https://en.wikipedia.org/wiki/Principal_variation_search
+- https://en.wikipedia.org/wiki/MTD(f)
