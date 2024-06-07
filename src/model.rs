@@ -34,9 +34,7 @@ impl Model {
 
     /// Assumes the move is valid
     pub fn do_move(&mut self, x: usize, y: usize) {
-        println!("{}, {} {:?}", x, y, self.current_player);
         self.board[y][x] = self.current_player;
-        println!("{:?}", self.board);
         handle_captures(self, x, y);
         let (is_winner, forced_moves) = check_winner(self, x, y);
         if is_winner {

@@ -1,4 +1,4 @@
-mod bot;
+mod bots;
 mod constants;
 mod coordinates;
 mod model;
@@ -7,7 +7,7 @@ mod rules;
 mod textures;
 mod view;
 
-use bot::get_bot_move;
+use bots::{Bot as _, BotMinimax};
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use model::Model;
@@ -42,7 +42,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
             model.do_move(x, y);
             model.hover = None;
             if model.winner == Player::None {
-                let (x, y) = get_bot_move(model);
+                let (x, y) = BotMinimax::get_move(model);
                 model.do_move(x, y);
             }
         }
