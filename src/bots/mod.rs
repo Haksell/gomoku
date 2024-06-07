@@ -8,7 +8,8 @@ pub use self::{
 use crate::{constants::BOARD_SIZE, model::Model, player::Player, rules::creates_double_three};
 use rand::{seq::SliceRandom as _, thread_rng};
 
-// TODO: type (&Model) -> (usize, usize)
+// TODO: type (&Model, &Heuristic) -> (usize, usize)
+// TODO: Vec<Bot>
 
 fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     if !model.forced_moves.is_empty() {

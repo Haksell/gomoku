@@ -1,6 +1,7 @@
 mod bots;
 mod constants;
 mod coordinates;
+mod heuristics;
 mod model;
 mod player;
 mod rules;
@@ -10,6 +11,7 @@ mod view;
 use bots::alpha_beta_pruning;
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
+use heuristics::zero;
 use model::Model;
 use nannou::{prelude::*, winit::window::CursorIcon};
 use player::Player;
@@ -42,7 +44,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
             model.do_move(x, y);
             model.hover = None;
             if model.winner == Player::None {
-                let (x, y) = alpha_beta_pruning(model);
+                let (x, y) = alpha_beta_pruning(model, zero);
                 model.do_move(x, y);
             }
         }
