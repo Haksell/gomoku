@@ -39,6 +39,7 @@
 - [ ] ProbCut
 - [ ] Principal Variation Search
 - [ ] NegaScout
+- [ ] Quiescence Search
 - [ ] MTD(f)
 - [ ] SSS*
 
