@@ -19,6 +19,7 @@
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - make the code compile faster
 - implement forced draws?
+- compute during human time?
 
 ### design
 
