@@ -26,7 +26,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
         || y >= BOARD_SIZE
         || model.board[y][x] != Player::None
         || creates_double_three(&model.board, model.current_player, x, y)
-        || (model.is_forced_move && !model.possible_moves.contains(&(x, y)))
+        || (!model.possible_moves.is_empty() && !model.possible_moves.contains(&(x, y)))
     {
         return None;
     }
