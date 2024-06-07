@@ -19,6 +19,7 @@ use textures::init_textures;
 use view::view;
 
 fn main() {
+    println!("{:?}", std::env::args());
     nannou::app(app).update(update).view(view).run();
 }
 
@@ -53,6 +54,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 
 fn key_pressed(_: &App, model: &mut Model, key: Key) {
     if key == Key::Back && !model.moves.is_empty() {
+        // TODO: use model.undo_move
         *model = Model::from_moves(&model.moves[0..model.moves.len() - 1]);
     }
     if key == Key::Home {
