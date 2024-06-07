@@ -7,7 +7,7 @@ mod rules;
 mod textures;
 mod view;
 
-use bots::{Bot as _, BotMinimax};
+use bots::{Bot as _, BotMinimax, BotRandom};
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use model::Model;

@@ -5,6 +5,7 @@ use std::collections::HashSet;
 
 pub type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
+#[derive(Clone)]
 pub struct Model {
     pub board: Board,
     pub current_player: Player,
@@ -41,13 +42,27 @@ impl Model {
             self.winner = self.current_player;
             // self.forced_moves.clear(); ???
             // self.current_player = Player::None; ???
-            println!("{:?} won.", self.winner);
+            // println!("{:?} won.", self.winner); // TODO: not in minimax
         } else {
             self.forced_moves = forced_moves;
             self.current_player = self.current_player.opponent();
         }
         self.moves.push((x, y));
     }
+
+    /// Assumes the move is valid
+    /// TODO: use for backspace
+    /// TODO: undo captures
+    // pub fn undo_move(&self, x: usize, y: usize) {
+    //     self.board[y][x] = Player::None;
+    //     if self.winner != Player::None {
+    //         self.winner = Player::None;
+    //     } else {
+    //         self.current_player = self.current_player.opponent();
+    //     }
+    //     self.forced_moves.clear();
+    //     self.moves.pop();
+    // }
 
     /// Assumes the sequence of moves is valid
     pub fn from_moves(moves: &[(usize, usize)]) -> Self {

@@ -4,6 +4,10 @@
 
 ### misc
 
+
+- fast `undo_move`
+- decent heuristic
+- alpha-beta pruning
 - implement draws
 - force capturing pair if five in a row
 - finish implementing rules

@@ -1,15 +1,15 @@
-mod first;
 mod minimax;
+mod random;
 
+pub use self::{minimax::BotMinimax, random::BotRandom};
 use crate::{constants::BOARD_SIZE, model::Model, player::Player, rules::creates_double_three};
-pub use first::BotFirst;
-pub use minimax::BotMinimax;
+use rand::{seq::SliceRandom as _, thread_rng};
 
 pub trait Bot {
     fn get_move(model: &Model) -> (usize, usize);
 }
 
-fn get_legal_moves(model: &Model) -> Vec<(usize, usize)> {
+fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     if !model.forced_moves.is_empty() {
         return model.forced_moves.clone().into_iter().collect();
     }
@@ -23,11 +23,15 @@ fn get_legal_moves(model: &Model) -> Vec<(usize, usize)> {
             }
         }
     }
+    if shuffle {
+        let mut rng = thread_rng();
+        legal_moves.shuffle(&mut rng);
+    }
     legal_moves
 }
 
 /// TODO: precompute
-fn get_close_moves(model: &Model, max_dist: usize) -> Vec<(usize, usize)> {
+fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<(usize, usize)> {
     let mut is_close = [[false; BOARD_SIZE]; BOARD_SIZE];
     for &(x, y) in &model.moves {
         for dy in -(max_dist as isize)..=max_dist as isize {
@@ -46,11 +50,8 @@ fn get_close_moves(model: &Model, max_dist: usize) -> Vec<(usize, usize)> {
             }
         }
     }
-    let mut close_moves = Vec::new();
-    for (x, y) in get_legal_moves(model) {
-        if is_close[y][x] {
-            close_moves.push((x, y));
-        }
-    }
-    close_moves
+    get_legal_moves(model, shuffle)
+        .into_iter()
+        .filter(|&(x, y)| is_close[y][x])
+        .collect()
 }
