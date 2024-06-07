@@ -1,8 +1,7 @@
-use std::collections::HashSet;
-
 use crate::constants::BOARD_SIZE;
 use crate::player::Player;
 use crate::rules::{check_winner, handle_captures};
+use std::collections::HashSet;
 
 pub type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 
@@ -41,13 +40,11 @@ impl Model {
         if is_winner {
             self.winner = self.current_player;
             // self.current_player = Player::None; ???
-            // println!("{:?} won.", self.winner);
+            println!("{:?} won.", self.winner);
         } else {
             if !forced_moves.is_empty() {
                 self.is_forced_move = true;
-                self.possible_moves.clear();
-                self.possible_moves.extend(forced_moves);
-                // println!("forced moves: {:?}", self.possible_moves);
+                self.possible_moves = forced_moves;
             } else {
                 self.is_forced_move = false;
                 self.possible_moves.clear();

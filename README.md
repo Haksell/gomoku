@@ -16,13 +16,11 @@
 
 ### design
 
-- hover transparency
 - show coordinates of mouse on hover
 - show number of captures
 - show winner (or draw)
-- show forbidden moves (double-three)
-- show allowed moves (double-three)
 - stone shadow
+- hover transparency
 - multiple themes
 
 ## subject

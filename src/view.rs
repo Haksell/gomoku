@@ -4,11 +4,15 @@ use crate::constants::{
 use crate::coordinates::board_to_physical;
 use crate::model::Model;
 use crate::player::Player;
+use crate::rules::creates_double_three;
 use crate::textures::TEXTURE_BACKGROUND;
-use nannou::prelude::*;
-use wgpu::Texture;
+use nannou::color::{Srgb, BLACK};
+use nannou::geom::{pt2, Point2};
+use nannou::wgpu::Texture;
+use nannou::{App, Draw, Frame};
 
 const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0022;
+const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
@@ -16,6 +20,13 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
+    if model.winner == Player::None {
+        if model.possible_moves.is_empty() {
+            draw_invalid_moves(&draw, model);
+        } else {
+            draw_valid_moves(&draw, model);
+        }
+    }
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -61,7 +72,6 @@ fn draw_dots(draw: &Draw) {
 
 fn draw_stones(draw: &Draw, model: &Model) {
     fn draw_stone(draw: &Draw, x: usize, y: usize, texture: &Texture) {
-        const STONE_SIZE: f32 = CELL_SIZE * 0.77;
         let (px, py) = board_to_physical(x, y);
         draw.texture(texture)
             .x_y(px, py)
@@ -77,5 +87,49 @@ fn draw_stones(draw: &Draw, model: &Model) {
     }
     if let Some((x, y)) = model.hover {
         draw_stone(draw, x, y, &model.current_player.texture());
+    }
+}
+
+fn draw_circle(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
+    let (px, py) = board_to_physical(x, y);
+    draw.ellipse()
+        .x_y(px, py)
+        .w_h(STONE_SIZE, STONE_SIZE)
+        .color(color);
+}
+
+fn draw_valid_moves(draw: &Draw, model: &Model) {
+    // Tailwind green-500
+    const COLOR_VALID_MOVE: Srgb<u8> = Srgb {
+        red: 0x22,
+        green: 0xc5,
+        blue: 0x5e,
+        standard: core::marker::PhantomData,
+    };
+
+    for &(x, y) in model.possible_moves.iter() {
+        if Some((x, y)) != model.hover {
+            draw_circle(draw, x, y, COLOR_VALID_MOVE);
+        }
+    }
+}
+
+fn draw_invalid_moves(draw: &Draw, model: &Model) {
+    // Tailwind red-500
+    const COLOR_INVALID_MOVE: Srgb<u8> = Srgb {
+        red: 0xef,
+        green: 0x44,
+        blue: 0x44,
+        standard: core::marker::PhantomData,
+    };
+
+    for y in 0..BOARD_SIZE {
+        for x in 0..BOARD_SIZE {
+            if model.board[y][x] == Player::None
+                && creates_double_three(&model.board, model.current_player, x, y)
+            {
+                draw_circle(draw, x, y, COLOR_INVALID_MOVE);
+            }
+        }
     }
 }
