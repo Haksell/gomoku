@@ -48,20 +48,14 @@ fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
 
 /// TODO: precompute
 fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<(usize, usize)> {
+    let neighborhood = |z: usize| {
+        (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)
+    };
+
     let mut is_close = [[false; BOARD_SIZE]; BOARD_SIZE];
     for &(x, y) in &model.moves {
-        for dy in -(max_dist as isize)..=max_dist as isize {
-            let ny = y as isize + dy;
-            if ny < 0 || ny as usize >= BOARD_SIZE {
-                continue;
-            }
-            let ny = ny as usize;
-            for dx in -(max_dist as isize)..=max_dist as isize {
-                let nx = x as isize + dx;
-                if nx < 0 || nx as usize >= BOARD_SIZE {
-                    continue;
-                }
-                let nx = nx as usize;
+        for ny in neighborhood(y) {
+            for nx in neighborhood(x) {
                 is_close[ny][nx] = true;
             }
         }

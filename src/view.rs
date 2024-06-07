@@ -11,7 +11,8 @@ use nannou::geom::{pt2, Point2};
 use nannou::wgpu::Texture;
 use nannou::{App, Draw, Frame};
 
-const STROKE_WEIGHT: f32 = WINDOW_SIZE as f32 * 0.0022;
+const DOT_SIZE: f32 = CELL_SIZE * 0.25;
+const LINE_WIDTH: f32 = CELL_SIZE * 0.052;
 const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
 pub fn view(app: &App, model: &Model, frame: Frame) {
@@ -37,13 +38,13 @@ fn draw_background(draw: &Draw) {
 }
 
 fn draw_grid(draw: &Draw) {
-    const LIMIT: f32 = (WINDOW_SIZE as f32 + STROKE_WEIGHT) / 2.0 - WINDOW_MARGIN;
+    const LIMIT: f32 = (WINDOW_SIZE as f32 + LINE_WIDTH) / 2.0 - WINDOW_MARGIN;
 
     fn draw_line(draw: &Draw, start: Point2, end: Point2) {
         draw.line()
             .start(start)
             .end(end)
-            .weight(STROKE_WEIGHT)
+            .weight(LINE_WIDTH)
             .color(BLACK);
     }
 
@@ -55,7 +56,6 @@ fn draw_grid(draw: &Draw) {
 }
 
 fn draw_dots(draw: &Draw) {
-    const DOT_SIZE: f32 = CELL_SIZE * 0.24;
     for y in -1..=1 {
         for x in -1..=1 {
             let (px, py) = board_to_physical(

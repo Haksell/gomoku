@@ -7,10 +7,10 @@ use nannou::App;
 pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
     fn split_float(z: f32) -> (isize, f32) {
         let pos = z / CELL_SIZE;
-        let fractional_part = (pos % 1.0).abs();
+        let pos_round = pos.round();
         (
-            pos.round() as isize + HALF_BOARD_SIZE as isize,
-            fractional_part.min(1.0 - fractional_part),
+            pos_round as isize + HALF_BOARD_SIZE as isize,
+            (pos - pos_round).abs(),
         )
     }
 
@@ -18,7 +18,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
     let (x, xd) = split_float(mouse_pos.x);
     let (y, yd) = split_float(mouse_pos.y);
     let intersection_distance = (xd * xd + yd * yd).sqrt();
-    if x < 0 || y < 0 || intersection_distance > 0.5 {
+    if x < 0 || y < 0 || intersection_distance > 0.4 {
         return None;
     }
     let (x, y) = (x as usize, y as usize);

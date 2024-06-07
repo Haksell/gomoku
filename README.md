@@ -20,6 +20,7 @@
 - make the code compile faster
 - implement forced draws?
 - compute during human time?
+- iterative alpha-beta pruning to always return a move in less than 1s
 
 ### design
 

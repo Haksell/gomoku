@@ -66,6 +66,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
     if model.winner != Player::None || model.current_player != model.human {
         return;
     }
+    // TODO: fix bug where hover remains on edge of board when mouse leaves fast
     model.hover = mouse_to_board(app, model);
     app.main_window().set_cursor_icon(if model.hover.is_some() {
         CursorIcon::Hand
