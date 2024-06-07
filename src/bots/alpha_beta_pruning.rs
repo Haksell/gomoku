@@ -1,32 +1,28 @@
-use super::{get_close_moves, Bot};
+use super::get_close_moves;
 use crate::{constants::BOARD_SIZE, model::Model};
 
-const MAX_DISTANCE: usize = 1;
+const MAX_DISTANCE: usize = 2;
 const MAX_DEPTH: usize = 4;
 
-pub struct BotAlphaBeta {}
-
-impl Bot for BotAlphaBeta {
-    fn get_move(model: &Model) -> (usize, usize) {
-        if model.moves.is_empty() {
-            return (BOARD_SIZE / 2, BOARD_SIZE / 2);
-        }
-        let close_moves = get_close_moves(model, MAX_DISTANCE, true);
-        assert!(!close_moves.is_empty()); // TODO: check
-        let mut best_score = i64::MIN;
-        let mut best_move = close_moves[0];
-        for (x, y) in close_moves {
-            let mut model = model.clone();
-            model.do_move(x, y);
-            let score = alphabeta(&model, 1, i64::MIN, i64::MAX);
-            if score > best_score {
-                best_score = score;
-                best_move = (x, y);
-            }
-            // model.undo_move(x, y);
-        }
-        best_move
+pub fn alpha_beta_pruning(model: &Model) -> (usize, usize) {
+    if model.moves.is_empty() {
+        return (BOARD_SIZE / 2, BOARD_SIZE / 2);
     }
+    let close_moves = get_close_moves(model, MAX_DISTANCE, true);
+    assert!(!close_moves.is_empty()); // TODO: check
+    let mut best_score = i64::MIN;
+    let mut best_move = close_moves[0];
+    for (x, y) in close_moves {
+        let mut model = model.clone();
+        model.do_move(x, y);
+        let score = alphabeta(&model, 1, i64::MIN, i64::MAX);
+        if score > best_score {
+            best_score = score;
+            best_move = (x, y);
+        }
+        // model.undo_move(x, y);
+    }
+    best_move
 }
 
 fn alphabeta(model: &Model, depth: usize, mut min_score: i64, mut max_score: i64) -> i64 {

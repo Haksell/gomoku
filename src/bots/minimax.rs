@@ -1,35 +1,31 @@
-use super::{get_close_moves, Bot};
+use super::get_close_moves;
 use crate::{constants::BOARD_SIZE, model::Model};
 
 const MAX_DISTANCE: usize = 1;
 const MAX_DEPTH: usize = 4;
 
-pub struct BotMinimax {}
-
-impl Bot for BotMinimax {
-    fn get_move(model: &Model) -> (usize, usize) {
-        if model.moves.is_empty() {
-            return (BOARD_SIZE / 2, BOARD_SIZE / 2);
-        }
-        let close_moves = get_close_moves(model, MAX_DISTANCE, true);
-        assert!(!close_moves.is_empty()); // TODO: check
-        let mut best_score = i64::MIN;
-        let mut best_move = close_moves[0];
-        for (x, y) in close_moves {
-            let mut model = model.clone();
-            model.do_move(x, y);
-            let score = minimax(&model, 1);
-            if score > best_score {
-                best_score = score;
-                best_move = (x, y);
-            }
-            // model.undo_move(x, y);
-        }
-        best_move
+pub fn minimax(model: &Model) -> (usize, usize) {
+    if model.moves.is_empty() {
+        return (BOARD_SIZE / 2, BOARD_SIZE / 2);
     }
+    let close_moves = get_close_moves(model, MAX_DISTANCE, true);
+    assert!(!close_moves.is_empty()); // TODO: check
+    let mut best_score = i64::MIN;
+    let mut best_move = close_moves[0];
+    for (x, y) in close_moves {
+        let mut model = model.clone();
+        model.do_move(x, y);
+        let score = _minimax(&model, 1);
+        if score > best_score {
+            best_score = score;
+            best_move = (x, y);
+        }
+        // model.undo_move(x, y);
+    }
+    best_move
 }
 
-fn minimax(model: &Model, depth: usize) -> i64 {
+fn _minimax(model: &Model, depth: usize) -> i64 {
     if model.winner == model.human {
         return i64::MIN;
     }
@@ -52,7 +48,7 @@ fn minimax(model: &Model, depth: usize) -> i64 {
     for (x, y) in close_moves {
         let mut model = (*model).clone();
         model.do_move(x, y);
-        let score = minimax(&model, depth + 1);
+        let score = _minimax(&model, depth + 1);
         best_score = if is_maximizing_player {
             best_score.max(score)
         } else {

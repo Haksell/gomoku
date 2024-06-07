@@ -1,14 +1,14 @@
-mod alpha_beta;
+mod alpha_beta_pruning;
 mod minimax;
-mod random;
+mod random_mover;
 
-pub use self::{alpha_beta::BotAlphaBeta, minimax::BotMinimax, random::BotRandom};
+pub use self::{
+    alpha_beta_pruning::alpha_beta_pruning, minimax::minimax, random_mover::random_mover,
+};
 use crate::{constants::BOARD_SIZE, model::Model, player::Player, rules::creates_double_three};
 use rand::{seq::SliceRandom as _, thread_rng};
 
-pub trait Bot {
-    fn get_move(model: &Model) -> (usize, usize);
-}
+// TODO: type (&Model) -> (usize, usize)
 
 fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     if !model.forced_moves.is_empty() {
