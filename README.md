@@ -4,6 +4,7 @@
 
 ### misc
 
+- implement draws
 - force capturing pair if five in a row
 - finish implementing rules
 - handle draws
@@ -13,6 +14,7 @@
 - arena with elo ranking
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - make the code compile faster
+- implement forced draws?
 
 ### design
 

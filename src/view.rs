@@ -21,7 +21,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_dots(&draw);
     draw_stones(&draw, model);
     if model.winner == Player::None {
-        if model.possible_moves.is_empty() {
+        if model.forced_moves.is_empty() {
             draw_invalid_moves(&draw, model);
         } else {
             draw_valid_moves(&draw, model);
@@ -107,7 +107,7 @@ fn draw_valid_moves(draw: &Draw, model: &Model) {
         standard: core::marker::PhantomData,
     };
 
-    for &(x, y) in model.possible_moves.iter() {
+    for &(x, y) in model.forced_moves.iter() {
         if Some((x, y)) != model.hover {
             draw_circle(draw, x, y, COLOR_VALID_MOVE);
         }

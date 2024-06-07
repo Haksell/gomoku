@@ -8,11 +8,12 @@ pub type Board = [[Player; BOARD_SIZE]; BOARD_SIZE];
 pub struct Model {
     pub board: Board,
     pub current_player: Player,
+    pub human: Player,
     pub winner: Player,
     pub black_captures: usize,
     pub white_captures: usize,
     pub moves: Vec<(usize, usize)>,
-    pub possible_moves: HashSet<(usize, usize)>,
+    pub forced_moves: HashSet<(usize, usize)>,
     pub hover: Option<(usize, usize)>,
 }
 
@@ -21,27 +22,30 @@ impl Model {
         Self {
             board: [[Player::None; BOARD_SIZE]; BOARD_SIZE],
             current_player: Player::Black,
+            human: Player::Black,
             winner: Player::None,
             black_captures: 0,
             white_captures: 0,
             moves: Vec::new(),
-            possible_moves: HashSet::new(),
+            forced_moves: HashSet::new(),
             hover: None,
         }
     }
 
     /// Assumes the move is valid
     pub fn do_move(&mut self, x: usize, y: usize) {
+        println!("{}, {} {:?}", x, y, self.current_player);
         self.board[y][x] = self.current_player;
+        println!("{:?}", self.board);
         handle_captures(self, x, y);
         let (is_winner, forced_moves) = check_winner(self, x, y);
         if is_winner {
             self.winner = self.current_player;
-            // self.possible_moves.clear(); ???
+            // self.forced_moves.clear(); ???
             // self.current_player = Player::None; ???
             println!("{:?} won.", self.winner);
         } else {
-            self.possible_moves = forced_moves;
+            self.forced_moves = forced_moves;
             self.current_player = self.current_player.opponent();
         }
         self.moves.push((x, y));

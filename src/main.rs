@@ -1,3 +1,4 @@
+mod bot;
 mod constants;
 mod coordinates;
 mod model;
@@ -6,6 +7,7 @@ mod rules;
 mod textures;
 mod view;
 
+use bot::get_bot_move;
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use model::Model;
@@ -32,9 +34,17 @@ fn app(app: &App) -> Model {
 }
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
-    if button == MouseButton::Left && model.winner == Player::None {
+    if button == MouseButton::Left
+        && model.winner == Player::None
+        && model.human == model.current_player
+    {
         if let Some((x, y)) = mouse_to_board(app, model) {
             model.do_move(x, y);
+            model.hover = None;
+            if model.winner == Player::None {
+                let (x, y) = get_bot_move(model);
+                model.do_move(x, y);
+            }
         }
     }
 }
@@ -49,7 +59,7 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {
-    if model.winner != Player::None {
+    if model.winner != Player::None || model.current_player != model.human {
         return;
     }
     model.hover = mouse_to_board(app, model);
