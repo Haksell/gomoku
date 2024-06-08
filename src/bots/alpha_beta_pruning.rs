@@ -1,28 +1,21 @@
 use super::get_close_moves;
 use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
 
-const MAX_DISTANCE: usize = 1;
 const MAX_DEPTH: usize = 4;
 
 pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> (usize, usize) {
     if model.moves.is_empty() {
         return BOARD_CENTER;
     }
-    let close_moves = get_close_moves(model, MAX_DISTANCE, true);
-    assert!(!close_moves.is_empty()); // TODO: check
-    let mut best_score = i64::MIN;
-    let mut best_move = close_moves[0];
-    for (x, y) in close_moves {
-        let mut model = model.clone();
-        model.do_move(x, y);
-        let score = _alpha_beta_pruning(&model, heuristic, 1, i64::MIN, i64::MAX);
-        if score > best_score {
-            best_score = score;
-            best_move = (x, y);
-        }
-        // model.undo_move(x, y);
-    }
-    best_move
+    get_close_moves(model, 2, true)
+        .into_iter()
+        .max_by_key(|&(x, y)| {
+            // TODO: undo_move instead of clone
+            let mut model = model.clone();
+            model.do_move(x, y);
+            _alpha_beta_pruning(&model, heuristic, 1, i64::MIN, i64::MAX)
+        })
+        .unwrap() // TODO: check get_close_moves never returns empty vector
 }
 
 fn _alpha_beta_pruning(
