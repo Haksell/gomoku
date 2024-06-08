@@ -33,9 +33,9 @@
 
 ### algorithms
 
-- [ ] Random
-- [ ] Minimax
-- [ ] Alpha-Beta Pruning
+- [x] Random
+- [x] Minimax
+- [x] Alpha-Beta Pruning
 - [ ] ProbCut
 - [ ] Principal Variation Search
 - [ ] NegaScout
