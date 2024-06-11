@@ -1,8 +1,13 @@
 use super::get_close_moves;
 use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
 
-// TODO: struct with distance and numebr of moves
-const DFS: &[(usize, usize)] = &[(2, usize::MAX), (1, usize::MAX), (1, 8), (1, 5)];
+// TODO: struct with distance and number of moves
+const DFS: &[(usize, usize)] = &[
+    (1, usize::MAX),
+    (1, usize::MAX),
+    (1, usize::MAX),
+    (1, usize::MAX),
+];
 const MAX_DEPTH: usize = DFS.len();
 
 pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> (usize, usize) {
