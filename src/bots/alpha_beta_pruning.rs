@@ -36,7 +36,8 @@ fn _alpha_beta_pruning(
     if depth == MAX_DEPTH {
         return heuristic(model);
     }
-    let close_moves = get_close_moves(model, DFS[1].0, false);
+    // TODO: sort by heuristic instead of shuffle
+    let close_moves = get_close_moves(model, DFS[1].0, true);
     if close_moves.is_empty() {
         return 0;
     }
