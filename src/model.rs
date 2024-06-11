@@ -42,7 +42,6 @@ impl Model {
             self.winner = self.current_player;
             // self.forced_moves.clear(); ???
             // self.current_player = Player::None; ???
-            // println!("{:?} won.", self.winner); // TODO: not in minimax
         } else {
             self.forced_moves = forced_moves;
             self.current_player = self.current_player.opponent();

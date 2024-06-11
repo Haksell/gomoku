@@ -42,11 +42,14 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
         && model.human == model.current_player
     {
         if let Some((x, y)) = mouse_to_board(app, model) {
-            model.do_move(x, y);
             model.hover = None;
+            model.do_move(x, y);
             if model.winner == Player::None {
                 let (x, y) = alpha_beta_pruning(model, capturophile);
                 model.do_move(x, y);
+            }
+            if model.winner != Player::None {
+                println!("{:?} won.", model.winner);
             }
         }
     }
