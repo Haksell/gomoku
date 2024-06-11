@@ -42,6 +42,7 @@
 - [ ] Quiescence Search
 - [ ] MTD(f)
 - [ ] SSS*
+- [ ] MCTS
 
 ### bonus ideas
 
