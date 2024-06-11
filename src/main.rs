@@ -1,14 +1,15 @@
-mod bots;
+mod algorithms;
 mod constants;
 mod coordinates;
 mod heuristics;
 mod model;
+mod player;
 mod rules;
 mod textures;
 mod turn;
 mod view;
 
-use bots::alpha_beta_pruning;
+use algorithms::alpha_beta_pruning;
 use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use heuristics::capturophile;
@@ -43,7 +44,7 @@ fn app(app: &App) -> Model {
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     if button == MouseButton::Left
         && model.winner == Turn::None
-        && model.human == model.current_player
+        && model.human == model.current_turn
     {
         if let Some((x, y)) = mouse_to_board(app, model) {
             model.hover = None;
@@ -70,7 +71,7 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {
-    if model.winner != Turn::None || model.current_player != model.human {
+    if model.winner != Turn::None || model.current_turn != model.human {
         return;
     }
     // TODO: fix bug where hover remains on edge of board when mouse leaves fast

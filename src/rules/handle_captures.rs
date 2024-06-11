@@ -2,7 +2,7 @@ use super::is_capture;
 use crate::{constants::DIRECTIONS8, turn::Turn, Model};
 
 pub fn handle_captures(model: &mut Model, x: usize, y: usize) {
-    let player = model.current_player;
+    let player = model.current_turn;
     let total_captures = DIRECTIONS8
         .iter()
         .filter(|&&(dx, dy)| {

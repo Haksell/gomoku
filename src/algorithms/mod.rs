@@ -6,18 +6,18 @@ pub use self::{
     alpha_beta_pruning::alpha_beta_pruning, minimax::minimax, random_mover::random_mover,
 };
 use crate::{
-    constants::BOARD_SIZE, heuristics::Heuristic, model::Model, turn::Turn,
-    rules::creates_double_three,
+    constants::BOARD_SIZE, heuristics::Heuristic, model::Model, rules::creates_double_three,
+    turn::Turn,
 };
 use lazy_static::lazy_static;
 use rand::{seq::SliceRandom as _, thread_rng};
 use std::collections::HashMap;
 
-pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
+pub type Algorithm = fn(&Model, Heuristic) -> (usize, usize);
 
 lazy_static! {
-    pub static ref BOT_MAP: HashMap<&'static str, Bot> = {
-        let mut map: HashMap<&'static str, Bot> = HashMap::new();
+    pub static ref ALGORITHM_MAP: HashMap<&'static str, Algorithm> = {
+        let mut map: HashMap<&'static str, Algorithm> = HashMap::new();
         map.insert("alpha_beta_pruning", alpha_beta_pruning);
         map.insert("minimax", minimax);
         map.insert("random_mover", random_mover);
@@ -33,7 +33,7 @@ fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if model.board[y][x] == Turn::None
-                && !creates_double_three(&model.board, model.current_player, x, y)
+                && !creates_double_three(&model.board, model.current_turn, x, y)
             {
                 legal_moves.push((x, y));
             }

@@ -1,7 +1,7 @@
 use crate::constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE};
 use crate::model::Model;
-use crate::turn::Turn;
 use crate::rules::creates_double_three;
+use crate::turn::Turn;
 use nannou::App;
 
 pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
@@ -25,7 +25,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
         || model.board[y][x] != Turn::None
-        || creates_double_three(&model.board, model.current_player, x, y)
+        || creates_double_three(&model.board, model.current_turn, x, y)
         || (!model.forced_moves.is_empty() && !model.forced_moves.contains(&(x, y)))
     {
         return None;

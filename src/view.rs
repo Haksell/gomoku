@@ -2,9 +2,9 @@ use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
     coordinates::board_to_physical,
     model::Model,
-    turn::Turn,
     rules::creates_double_three,
     textures::TEXTURE_BACKGROUND,
+    turn::Turn,
 };
 use nannou::{
     color::{Srgb, BLACK},
@@ -88,7 +88,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
         }
     }
     if let Some((x, y)) = model.hover {
-        draw_stone(draw, x, y, &model.current_player.texture());
+        draw_stone(draw, x, y, &model.current_turn.texture());
     }
 }
 
@@ -128,7 +128,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if model.board[y][x] == Turn::None
-                && creates_double_three(&model.board, model.current_player, x, y)
+                && creates_double_three(&model.board, model.current_turn, x, y)
             {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);
             }

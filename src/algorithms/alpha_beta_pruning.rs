@@ -1,5 +1,5 @@
 use super::get_close_moves;
-use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
+use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model, turn::Turn};
 
 // TODO: struct with distance and number of moves
 const DFS: &[(usize, usize)] = &[
@@ -32,11 +32,13 @@ fn _alpha_beta_pruning(
     mut min_score: i64,
     mut max_score: i64,
 ) -> i64 {
-    if model.winner == model.human {
-        return i64::MIN;
-    }
-    if model.winner == model.human.opponent() {
-        return i64::MAX;
+    let is_maximizing_player = depth & 1 == 0;
+    if model.winner != Turn::None {
+        return if is_maximizing_player {
+            i64::MIN
+        } else {
+            i64::MAX
+        };
     }
     if depth == MAX_DEPTH {
         return heuristic(model);
@@ -46,7 +48,6 @@ fn _alpha_beta_pruning(
     if close_moves.is_empty() {
         return 0;
     }
-    let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player {
         i64::MIN
     } else {

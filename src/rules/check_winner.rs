@@ -81,20 +81,20 @@ fn get_break_possibilities(
 
 pub fn check_winner(model: &Model, x: usize, y: usize) -> (bool, HashSet<(usize, usize)>) {
     let mut breakable_positions: HashSet<(usize, usize)> = HashSet::new();
-    if model.current_player.captures(model) >= REQUIRED_CAPTURES {
+    if model.current_turn.captures(model) >= REQUIRED_CAPTURES {
         return (true, breakable_positions);
     }
     let mut potential_winners: Vec<Vec<(usize, usize)>> = Vec::new();
     for (dx, dy) in DIRECTIONS4.into_iter() {
         let longest_row_in_dir =
-            get_longest_row_in_dir(&model.board, model.current_player, x, y, dx, dy);
+            get_longest_row_in_dir(&model.board, model.current_turn, x, y, dx, dy);
         if longest_row_in_dir.len() >= STONES_IN_A_ROW {
             potential_winners.push(longest_row_in_dir)
         }
     }
     for potential_winner in potential_winners.iter_mut() {
         let break_possibilities =
-            get_break_possibilities(potential_winner, &model.board, model.current_player);
+            get_break_possibilities(potential_winner, &model.board, model.current_turn);
         if break_possibilities.is_empty() {
             return (true, breakable_positions);
         }
