@@ -2,7 +2,7 @@ use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
     coordinates::board_to_physical,
     model::Model,
-    player::Player,
+    turn::Turn,
     rules::creates_double_three,
     textures::TEXTURE_BACKGROUND,
 };
@@ -23,7 +23,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
-    if model.winner == Player::None {
+    if model.winner == Turn::None {
         if model.forced_moves.is_empty() {
             draw_invalid_moves(&draw, model);
         } else {
@@ -82,7 +82,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.board[y][x] != Player::None {
+            if model.board[y][x] != Turn::None {
                 draw_stone(draw, x, y, &model.board[y][x].texture());
             }
         }
@@ -127,7 +127,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.board[y][x] == Player::None
+            if model.board[y][x] == Turn::None
                 && creates_double_three(&model.board, model.current_player, x, y)
             {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);

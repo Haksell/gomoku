@@ -5,7 +5,7 @@ use super::is_same_player;
 use crate::{
     constants::{DIRECTIONS4, DIRECTIONS8},
     model::Board,
-    Model, Player,
+    Model, Turn,
 };
 
 const STONES_IN_A_ROW: usize = 5;
@@ -13,13 +13,13 @@ const REQUIRED_CAPTURES: usize = 5;
 
 fn find_breakable(
     board: &Board,
-    player: Player,
+    player: Turn,
     new_x: isize,
     new_y: isize,
 ) -> HashSet<(usize, usize)> {
     let mut breaking_positions: HashSet<(usize, usize)> = HashSet::new();
     for (dx, dy) in DIRECTIONS8.iter() {
-        if is_same_player(board, Player::None, new_x - dx, new_y - dy)
+        if is_same_player(board, Turn::None, new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
             && is_same_player(board, player.opponent(), new_x + 2 * dx, new_y + 2 * dy)
         {
@@ -27,7 +27,7 @@ fn find_breakable(
         }
         if is_same_player(board, player.opponent(), new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
-            && is_same_player(board, Player::None, new_x + 2 * dx, new_y + 2 * dy)
+            && is_same_player(board, Turn::None, new_x + 2 * dx, new_y + 2 * dy)
         {
             breaking_positions.insert(((new_x + 2 * dx) as usize, (new_y + 2 * dy) as usize));
         }
@@ -37,7 +37,7 @@ fn find_breakable(
 
 fn get_longest_row_in_dir(
     board: &Board,
-    player: Player,
+    player: Turn,
     x: usize,
     y: usize,
     dx: isize,
@@ -68,7 +68,7 @@ fn get_longest_row_in_dir(
 fn get_break_possibilities(
     potential_winner: &mut Vec<(usize, usize)>,
     board: &Board,
-    player: Player,
+    player: Turn,
 ) -> HashSet<(usize, usize)> {
     let mut break_possibilities: HashSet<(usize, usize)> = HashSet::new();
     potential_winner.sort();

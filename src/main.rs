@@ -3,9 +3,9 @@ mod constants;
 mod coordinates;
 mod heuristics;
 mod model;
-mod player;
 mod rules;
 mod textures;
+mod turn;
 mod view;
 
 use bots::alpha_beta_pruning;
@@ -13,9 +13,13 @@ use constants::WINDOW_SIZE;
 use coordinates::mouse_to_board;
 use heuristics::capturophile;
 use model::Model;
-use nannou::{prelude::*, winit::window::CursorIcon};
-use player::Player;
+use nannou::{
+    event::{Key, MouseButton, Update},
+    winit::window::CursorIcon,
+    App,
+};
 use textures::init_textures;
+use turn::Turn;
 use view::view;
 
 fn main() {
@@ -38,17 +42,17 @@ fn app(app: &App) -> Model {
 
 fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     if button == MouseButton::Left
-        && model.winner == Player::None
+        && model.winner == Turn::None
         && model.human == model.current_player
     {
         if let Some((x, y)) = mouse_to_board(app, model) {
             model.hover = None;
             model.do_move(x, y);
-            if model.winner == Player::None {
+            if model.winner == Turn::None {
                 let (x, y) = alpha_beta_pruning(model, capturophile);
                 model.do_move(x, y);
             }
-            if model.winner != Player::None {
+            if model.winner != Turn::None {
                 println!("{:?} won.", model.winner);
             }
         }
@@ -66,7 +70,7 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {
-    if model.winner != Player::None || model.current_player != model.human {
+    if model.winner != Turn::None || model.current_player != model.human {
         return;
     }
     // TODO: fix bug where hover remains on edge of board when mouse leaves fast
