@@ -26,7 +26,8 @@
 
 - show coordinates of mouse on hover
 - show number of captures
-- show winner (or draw)
+- [x] show winner
+- [ ] or draw
 - [x] stone shadow
 - [x] hover transparency
 - multiple themes

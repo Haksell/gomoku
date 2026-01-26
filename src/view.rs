@@ -9,7 +9,6 @@ use crate::{
 use nannou::{
     color::{LinSrgba, Srgb, BLACK},
     geom::{pt2, Point2},
-    wgpu::Texture,
     App, Draw, Frame,
 };
 
@@ -29,6 +28,9 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
         } else {
             draw_valid_moves(&draw, model);
         }
+    }
+    if model.winner != Turn::None {
+        draw_game_over_overlay(&draw, model);
     }
     draw.to_frame(app, &frame).unwrap();
 }
@@ -159,4 +161,30 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
             }
         }
     }
+}
+
+fn draw_game_over_overlay(draw: &Draw, model: &Model) {
+    use nannou::color::{rgba, WHITE};
+
+    let msg = match model.winner {
+        Turn::Black => "Black wins",
+        Turn::White => "White wins",
+        Turn::None => return,
+    };
+
+    draw.rect()
+        .w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32)
+        .color(rgba(0.0, 0.0, 0.0, 0.55));
+
+    let title_y = WINDOW_SIZE as f32 * 0.03;
+    draw.text(msg)
+        .color(WHITE)
+        .font_size((WINDOW_SIZE as f32 * 0.05) as u32)
+        .x_y(0.0, title_y);
+
+    let subtitle_y = title_y - WINDOW_SIZE as f32 * 0.06;
+    draw.text("Press Home to restart")
+        .color(WHITE)
+        .font_size((WINDOW_SIZE as f32 * 0.025) as u32)
+        .x_y(0.0, subtitle_y);
 }
