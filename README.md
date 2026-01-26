@@ -27,9 +27,10 @@
 - show coordinates of mouse on hover
 - show number of captures
 - show winner (or draw)
-- stone shadow
-- hover transparency
+- [x] stone shadow
+- [x] hover transparency
 - multiple themes
+- draw stone before AI move
 
 ### algorithms
 

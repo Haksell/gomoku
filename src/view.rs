@@ -2,12 +2,12 @@ use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
     coordinates::board_to_physical,
     model::Model,
-    turn::Turn,
     rules::creates_double_three,
     textures::TEXTURE_BACKGROUND,
+    turn::Turn,
 };
 use nannou::{
-    color::{Srgb, BLACK},
+    color::{LinSrgba, Srgb, BLACK},
     geom::{pt2, Point2},
     wgpu::Texture,
     App, Draw, Frame,
@@ -73,22 +73,47 @@ fn draw_dots(draw: &Draw) {
 }
 
 fn draw_stones(draw: &Draw, model: &Model) {
-    fn draw_stone(draw: &Draw, x: usize, y: usize, texture: &Texture) {
+    fn draw_shadow(draw: &Draw, px: f32, py: f32) {
+        draw.ellipse()
+            .x_y(px + 1.5, py - 1.5)
+            .w_h(STONE_SIZE * 1.03, STONE_SIZE * 1.03)
+            .color(nannou::color::rgba(0.0, 0.0, 0.0, 0.65));
+    }
+
+    fn draw_stone(draw: &Draw, x: usize, y: usize, turn: Turn) {
         let (px, py) = board_to_physical(x, y);
-        draw.texture(texture)
+        draw_shadow(draw, px, py);
+
+        let texture_guard = turn.texture();
+        draw.texture(&*texture_guard)
             .x_y(px, py)
             .w_h(STONE_SIZE, STONE_SIZE);
     }
 
+    fn draw_hover_stone(draw: &Draw, x: usize, y: usize, color: LinSrgba) {
+        let (px, py) = board_to_physical(x, y);
+        draw.ellipse()
+            .x_y(px, py)
+            .w_h(STONE_SIZE, STONE_SIZE)
+            .color(color);
+    }
+
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.board[y][x] != Turn::None {
-                draw_stone(draw, x, y, &model.board[y][x].texture());
+            let turn = model.board[y][x];
+            if turn != Turn::None {
+                draw_stone(draw, x, y, turn);
             }
         }
     }
+
     if let Some((x, y)) = model.hover {
-        draw_stone(draw, x, y, &model.current_player.texture());
+        let color = match model.current_player {
+            Turn::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
+            Turn::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
+            Turn::None => return,
+        };
+        draw_hover_stone(draw, x, y, color);
     }
 }
 
