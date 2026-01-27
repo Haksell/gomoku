@@ -17,6 +17,7 @@ pub struct Model {
     pub forced_moves: HashSet<(usize, usize)>,
     pub hover: Option<(usize, usize)>,
     pub ai_pending_frames: u8,
+    pub ai_thinking_time: Option<u128>,
 }
 
 impl Model {
@@ -32,6 +33,7 @@ impl Model {
             forced_moves: HashSet::new(),
             hover: None,
             ai_pending_frames: 0,
+            ai_thinking_time: None,
         }
     }
 

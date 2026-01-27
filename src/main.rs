@@ -18,6 +18,7 @@ use nannou::{
     winit::window::CursorIcon,
     App,
 };
+use std::time::Instant;
 use textures::init_textures;
 use turn::Turn;
 use view::view;
@@ -74,7 +75,13 @@ fn update(app: &App, model: &mut Model, _: Update) {
         model.ai_pending_frames -= 1;
 
         if model.ai_pending_frames == 0 && model.current_player != model.human {
+            let start = Instant::now();
             let (x, y) = alpha_beta_pruning(model, capturophile);
+            model.ai_thinking_time = Some(start.elapsed().as_millis());
+            println!(
+                "AI move computed in {:?} ms",
+                model.ai_thinking_time.unwrap()
+            ); // TODO: show in UI and delete this println (MANDATORY!)
             model.do_move(x, y);
         }
         false
