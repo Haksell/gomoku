@@ -31,7 +31,7 @@
 - [x] stone shadow
 - [x] hover transparency
 - [ ] multiple themes
-- [ ] draw stone before AI move
+- [x] draw stone before AI move
 
 ### algorithms
 

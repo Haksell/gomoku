@@ -49,11 +49,7 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
             model.hover = None;
             model.do_move(x, y);
             if model.winner == Turn::None {
-                let (x, y) = alpha_beta_pruning(model, capturophile);
-                model.do_move(x, y);
-            }
-            if model.winner != Turn::None {
-                println!("{:?} won.", model.winner);
+                model.ai_pending_frames = 2;
             }
         }
     }
@@ -70,11 +66,26 @@ fn key_pressed(_: &App, model: &mut Model, key: Key) {
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {
-    if model.winner != Turn::None || model.current_player != model.human {
-        return;
+    model.hover = None;
+
+    let should_allow_hover = if model.winner != Turn::None {
+        false
+    } else if model.ai_pending_frames > 0 {
+        model.ai_pending_frames -= 1;
+
+        if model.ai_pending_frames == 0 && model.current_player != model.human {
+            let (x, y) = alpha_beta_pruning(model, capturophile);
+            model.do_move(x, y);
+        }
+        false
+    } else {
+        model.current_player == model.human
+    };
+
+    if should_allow_hover {
+        model.hover = mouse_to_board(app, model);
     }
-    // TODO: fix bug where hover remains on edge of board when mouse leaves fast
-    model.hover = mouse_to_board(app, model);
+
     app.main_window().set_cursor_icon(if model.hover.is_some() {
         CursorIcon::Hand
     } else {
