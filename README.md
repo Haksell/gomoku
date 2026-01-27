@@ -72,8 +72,8 @@
 ### general guidelines
 
 - [ ] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
-- [ ] You have to provide a Makefile which must produce your program. It must not relink.
-- [ ] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
+- [x] You have to provide a Makefile which must produce your program. It must not relink.
+- [x] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
 - [ ] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
 - [ ] You will not get all the points if your implementation wins too slowly (in too many moves).
 - [ ] You will not get all the points if your implementation has low search depth.
@@ -81,7 +81,7 @@
 
 ### mandatory part
 
-- [ ] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
+- [x] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player’s moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [ ] You have to use a Minimax algorithm, or a variant.
