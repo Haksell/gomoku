@@ -28,10 +28,10 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
         } else {
             draw_valid_moves(&draw, model);
         }
-    }
-    if model.winner != Turn::None {
+    } else {
         draw_game_over_overlay(&draw, model);
     }
+    draw_hover_coords(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -187,4 +187,19 @@ fn draw_game_over_overlay(draw: &Draw, model: &Model) {
         .color(WHITE)
         .font_size((WINDOW_SIZE as f32 * 0.025) as u32)
         .x_y(0.0, subtitle_y);
+}
+
+fn draw_hover_coords(draw: &Draw, model: &Model) {
+    use nannou::color::rgba;
+
+    let Some((x, y)) = model.hover else {
+        return;
+    };
+
+    let (px, py) = board_to_physical(x, y);
+    let text = format!("({}, {})", x, y);
+    draw.text(&text)
+        .x_y(px, py - CELL_SIZE * 0.65)
+        .font_size(16)
+        .color(rgba(1.0, 1.0, 1.0, 0.75));
 }

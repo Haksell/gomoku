@@ -24,14 +24,14 @@
 
 ### design
 
-- show coordinates of mouse on hover
-- show number of captures
+- [x] show coordinates of mouse on hover
+- [ ] show number of captures
 - [x] show winner
 - [ ] or draw
 - [x] stone shadow
 - [x] hover transparency
-- multiple themes
-- draw stone before AI move
+- [ ] multiple themes
+- [ ] draw stone before AI move
 
 ### algorithms
 
