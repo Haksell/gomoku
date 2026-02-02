@@ -6,24 +6,21 @@ pub use self::{
     alpha_beta_pruning::alpha_beta_pruning, minimax::minimax, random_mover::random_mover,
 };
 use crate::{
-    constants::BOARD_SIZE, heuristics::Heuristic, model::Model, turn::Turn,
-    rules::creates_double_three,
+    constants::BOARD_SIZE, heuristics::Heuristic, model::Model, rules::creates_double_three,
+    turn::Turn,
 };
-use lazy_static::lazy_static;
 use rand::{seq::SliceRandom as _, thread_rng};
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 
 pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
 
-lazy_static! {
-    pub static ref BOT_MAP: HashMap<&'static str, Bot> = {
-        let mut map: HashMap<&'static str, Bot> = HashMap::new();
-        map.insert("alpha_beta_pruning", alpha_beta_pruning);
-        map.insert("minimax", minimax);
-        map.insert("random_mover", random_mover);
-        map
-    };
-}
+pub const BOT_MAP: LazyLock<HashMap<&'static str, Bot>> = LazyLock::new(|| {
+    HashMap::from([
+        ("alpha_beta_pruning", alpha_beta_pruning as Bot),
+        ("minimax", minimax as Bot),
+        ("random_mover", random_mover as Bot),
+    ])
+});
 
 fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     if !model.forced_moves.is_empty() {

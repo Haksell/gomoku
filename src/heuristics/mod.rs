@@ -1,19 +1,16 @@
 mod capturophile;
 mod zero;
 
-use std::collections::HashMap;
-
 pub use self::{capturophile::capturophile, zero::zero};
+
 use crate::model::Model;
-use lazy_static::lazy_static;
+use std::{collections::HashMap, sync::LazyLock};
 
 pub type Heuristic = fn(&Model) -> i64;
 
-lazy_static! {
-    pub static ref HEURISTIC_MAP: HashMap<&'static str, Heuristic> = {
-        let mut map: HashMap<&'static str, Heuristic> = HashMap::new();
-        map.insert("zero", zero);
-        map.insert("capturophile", capturophile);
-        map
-    };
-}
+pub const HEURISTIC_MAP: LazyLock<HashMap<&'static str, Heuristic>> = LazyLock::new(|| {
+    HashMap::from([
+        ("zero", zero as Heuristic),
+        ("capturophile", capturophile as Heuristic),
+    ])
+});

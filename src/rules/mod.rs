@@ -2,10 +2,11 @@ mod check_winner;
 mod creates_double_three;
 mod handle_captures;
 
+pub use self::{
+    check_winner::check_winner, creates_double_three::creates_double_three,
+    handle_captures::handle_captures,
+};
 use crate::{constants::BOARD_SIZE, model::Board, turn::Turn};
-pub use check_winner::check_winner;
-pub use creates_double_three::creates_double_three;
-pub use handle_captures::handle_captures;
 
 // TODO: all same prototype (no Model)
 
