@@ -767,7 +767,6 @@ dependencies = [
  "nannou",
  "nannou_egui",
  "once_cell",
- "rand 0.8.5",
 ]
 
 [[package]]
