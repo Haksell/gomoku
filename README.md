@@ -22,6 +22,13 @@
 - compute during human time?
 - iterative alpha-beta pruning to always return a move in less than 1s
 - clippy lints hardcore mode
+- argument parsing:
+```shell
+$ ./gomoku human human
+$ ./gomoku human minimax:zero
+$ ./gomoku alpha_beta_pruning:capturophile human
+$ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
+```
 
 ### design
 
