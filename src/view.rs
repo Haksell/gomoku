@@ -7,15 +7,16 @@ use crate::{
     turn::Turn,
 };
 use nannou::{
-    color::{LinSrgba, Srgb, BLACK},
-    geom::{pt2, Point2},
     App, Draw, Frame,
+    color::{BLACK, LinSrgba, Srgb},
+    geom::{Point2, pt2},
 };
 
 const DOT_SIZE: f32 = CELL_SIZE * 0.25;
 const LINE_WIDTH: f32 = CELL_SIZE * 0.052;
 const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
+#[expect(clippy::needless_pass_by_value)]
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw_background(&draw);
@@ -42,7 +43,7 @@ fn draw_background(draw: &Draw) {
 }
 
 fn draw_grid(draw: &Draw) {
-    const LIMIT: f32 = (WINDOW_SIZE as f32 + LINE_WIDTH) / 2.0 - WINDOW_MARGIN;
+    const LIMIT: f32 = f32::midpoint(WINDOW_SIZE as f32, LINE_WIDTH) - WINDOW_MARGIN;
 
     fn draw_line(draw: &Draw, start: Point2, end: Point2) {
         draw.line()
@@ -136,7 +137,7 @@ fn draw_valid_moves(draw: &Draw, model: &Model) {
         standard: core::marker::PhantomData,
     };
 
-    for &(x, y) in model.forced_moves.iter() {
+    for &(x, y) in &model.forced_moves {
         if Some((x, y)) != model.hover {
             draw_circle(draw, x, y, COLOR_VALID_MOVE);
         }
@@ -164,7 +165,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 }
 
 fn draw_game_over_overlay(draw: &Draw, model: &Model) {
-    use nannou::color::{rgba, WHITE};
+    use nannou::color::{WHITE, rgba};
 
     let msg = match model.winner {
         Turn::Black => "Black wins",
@@ -197,7 +198,7 @@ fn draw_hover_coords(draw: &Draw, model: &Model) {
     };
 
     let (px, py) = board_to_physical(x, y);
-    let text = format!("({}, {})", x, y);
+    let text = format!("({x}, {y})");
     draw.text(&text)
         .x_y(px, py - CELL_SIZE * 0.65)
         .font_size(16)

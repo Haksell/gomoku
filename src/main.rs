@@ -14,9 +14,9 @@ use coordinates::mouse_to_board;
 use heuristics::capturophile;
 use model::Model;
 use nannou::{
+    App,
     event::{Key, MouseButton, Update},
     winit::window::CursorIcon,
-    App,
 };
 use std::time::Instant;
 use textures::init_textures;
@@ -45,13 +45,12 @@ fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     if button == MouseButton::Left
         && model.winner == Turn::None
         && model.human == model.current_player
+        && let Some((x, y)) = mouse_to_board(app, model)
     {
-        if let Some((x, y)) = mouse_to_board(app, model) {
-            model.hover = None;
-            model.do_move(x, y);
-            if model.winner == Turn::None {
-                model.ai_pending_frames = 2;
-            }
+        model.hover = None;
+        model.do_move(x, y);
+        if model.winner == Turn::None {
+            model.ai_pending_frames = 2;
         }
     }
 }

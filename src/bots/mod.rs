@@ -14,7 +14,7 @@ use std::{collections::HashMap, sync::LazyLock};
 
 pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
 
-pub const BOT_MAP: LazyLock<HashMap<&'static str, Bot>> = LazyLock::new(|| {
+pub static BOT_MAP: LazyLock<HashMap<&'static str, Bot>> = LazyLock::new(|| {
     HashMap::from([
         ("alpha_beta_pruning", alpha_beta_pruning as Bot),
         ("minimax", minimax as Bot),
@@ -43,7 +43,7 @@ fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     legal_moves
 }
 
-/// TODO: precompute
+// TODO: precompute
 fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<(usize, usize)> {
     let neighborhood = |z: usize| {
         (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)

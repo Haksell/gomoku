@@ -20,12 +20,12 @@ pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> (usize, usize)
             // TODO: undo_move instead of clone
             let mut model = model.clone();
             model.do_move(x, y);
-            _alpha_beta_pruning(&model, heuristic, 1, i64::MIN, i64::MAX)
+            alpha_beta_pruning_helper(&model, heuristic, 1, i64::MIN, i64::MAX)
         })
         .unwrap() // TODO: check get_close_moves never returns empty vector
 }
 
-fn _alpha_beta_pruning(
+fn alpha_beta_pruning_helper(
     model: &Model,
     heuristic: Heuristic,
     depth: usize,
@@ -56,7 +56,7 @@ fn _alpha_beta_pruning(
     for &(x, y) in &close_moves[0..(DFS[depth].1).min(close_moves.len())] {
         let mut model = (*model).clone();
         model.do_move(x, y);
-        let score = _alpha_beta_pruning(&model, heuristic, depth + 1, min_score, max_score);
+        let score = alpha_beta_pruning_helper(&model, heuristic, depth + 1, min_score, max_score);
         if is_maximizing_player {
             best_score = best_score.max(score);
             if score > max_score {

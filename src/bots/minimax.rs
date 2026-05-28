@@ -13,12 +13,12 @@ pub fn minimax(model: &Model, heuristic: Heuristic) -> (usize, usize) {
             // TODO: undo_move instead of clone
             let mut model = model.clone();
             model.do_move(x, y);
-            _minimax(&model, heuristic, 1)
+            minimax_helper(&model, heuristic, 1)
         })
         .unwrap() // TODO: check get_close_moves never returns empty vector
 }
 
-fn _minimax(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
+fn minimax_helper(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
     if model.winner == model.human {
         return i64::MIN;
     }
@@ -41,7 +41,7 @@ fn _minimax(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
     for (x, y) in close_moves {
         let mut model = (*model).clone();
         model.do_move(x, y);
-        let score = _minimax(&model, heuristic, depth + 1);
+        let score = minimax_helper(&model, heuristic, depth + 1);
         best_score = if is_maximizing_player {
             best_score.max(score)
         } else {

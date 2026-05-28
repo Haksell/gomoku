@@ -1,12 +1,10 @@
-use std::collections::HashSet;
-
 use super::is_same_player;
-
 use crate::{
+    Model, Turn,
     constants::{DIRECTIONS4, DIRECTIONS8},
     model::Board,
-    Model, Turn,
 };
+use std::collections::HashSet;
 
 const STONES_IN_A_ROW: usize = 5;
 const REQUIRED_CAPTURES: usize = 5;
@@ -18,7 +16,7 @@ fn find_breakable(
     new_y: isize,
 ) -> HashSet<(usize, usize)> {
     let mut breaking_positions: HashSet<(usize, usize)> = HashSet::new();
-    for (dx, dy) in DIRECTIONS8.iter() {
+    for (dx, dy) in &DIRECTIONS8 {
         if is_same_player(board, Turn::None, new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
             && is_same_player(board, player.opponent(), new_x + 2 * dx, new_y + 2 * dy)
@@ -53,7 +51,7 @@ fn get_longest_row_in_dir(
             let new_x = x as isize + step * dx;
             let new_y = y as isize + step * dy;
             if is_same_player(board, player, new_x, new_y) {
-                row.push((new_x as usize, new_y as usize))
+                row.push((new_x as usize, new_y as usize));
             } else {
                 return;
             }
@@ -66,12 +64,12 @@ fn get_longest_row_in_dir(
 }
 
 fn get_break_possibilities(
-    potential_winner: &mut Vec<(usize, usize)>,
+    potential_winner: &mut [(usize, usize)],
     board: &Board,
     player: Turn,
 ) -> HashSet<(usize, usize)> {
     let mut break_possibilities: HashSet<(usize, usize)> = HashSet::new();
-    potential_winner.sort();
+    potential_winner.sort_unstable();
     let overflow = potential_winner.len() - STONES_IN_A_ROW;
     for &(x, y) in &potential_winner[overflow..STONES_IN_A_ROW] {
         break_possibilities.extend(find_breakable(board, player, x as isize, y as isize));
@@ -85,14 +83,14 @@ pub fn check_winner(model: &Model, x: usize, y: usize) -> (bool, HashSet<(usize,
         return (true, breakable_positions);
     }
     let mut potential_winners: Vec<Vec<(usize, usize)>> = Vec::new();
-    for (dx, dy) in DIRECTIONS4.into_iter() {
+    for &(dx, dy) in &DIRECTIONS4 {
         let longest_row_in_dir =
             get_longest_row_in_dir(&model.board, model.current_player, x, y, dx, dy);
         if longest_row_in_dir.len() >= STONES_IN_A_ROW {
-            potential_winners.push(longest_row_in_dir)
+            potential_winners.push(longest_row_in_dir);
         }
     }
-    for potential_winner in potential_winners.iter_mut() {
+    for potential_winner in &mut potential_winners {
         let break_possibilities =
             get_break_possibilities(potential_winner, &model.board, model.current_player);
         if break_possibilities.is_empty() {

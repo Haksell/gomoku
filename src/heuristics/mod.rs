@@ -8,7 +8,7 @@ use std::{collections::HashMap, sync::LazyLock};
 
 pub type Heuristic = fn(&Model) -> i64;
 
-pub const HEURISTIC_MAP: LazyLock<HashMap<&'static str, Heuristic>> = LazyLock::new(|| {
+pub static HEURISTIC_MAP: LazyLock<HashMap<&'static str, Heuristic>> = LazyLock::new(|| {
     HashMap::from([
         ("zero", zero as Heuristic),
         ("capturophile", capturophile as Heuristic),

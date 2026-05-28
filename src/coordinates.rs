@@ -1,7 +1,9 @@
-use crate::constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE};
-use crate::model::Model;
-use crate::turn::Turn;
-use crate::rules::creates_double_three;
+use crate::{
+    constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE},
+    model::Model,
+    rules::creates_double_three,
+    turn::Turn,
+};
 use nannou::App;
 
 pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
@@ -17,7 +19,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
     let mouse_pos = app.mouse.position();
     let (x, xd) = split_float(mouse_pos.x);
     let (y, yd) = split_float(mouse_pos.y);
-    let intersection_distance = (xd * xd + yd * yd).sqrt();
+    let intersection_distance = f32::hypot(xd, yd);
     if x < 0 || y < 0 || intersection_distance > 0.4 {
         return None;
     }

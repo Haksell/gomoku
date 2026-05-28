@@ -1,6 +1,8 @@
-use crate::constants::BOARD_SIZE;
-use crate::rules::{check_winner, handle_captures};
-use crate::turn::Turn;
+use crate::{
+    constants::BOARD_SIZE,
+    rules::{check_winner, handle_captures},
+    turn::Turn,
+};
 use std::collections::HashSet;
 
 pub type Board = [[Turn; BOARD_SIZE]; BOARD_SIZE];
@@ -37,7 +39,7 @@ impl Model {
         }
     }
 
-    /// Assumes the move is valid
+    /// Assumes the move is valid.
     pub fn do_move(&mut self, x: usize, y: usize) {
         self.board[y][x] = self.current_player;
         handle_captures(self, x, y);
@@ -53,9 +55,9 @@ impl Model {
         self.moves.push((x, y));
     }
 
-    /// Assumes the move is valid
-    /// TODO: use for backspace
-    /// TODO: undo captures
+    // Assumes the move is valid
+    // TODO: use for backspace
+    // TODO: undo captures
     // pub fn undo_move(&self, x: usize, y: usize) {
     //     self.board[y][x] = Turn::None;
     //     if self.winner != Turn::None {
@@ -67,7 +69,7 @@ impl Model {
     //     self.moves.pop();
     // }
 
-    /// Assumes the sequence of moves is valid
+    /// Assumes the sequence of moves is valid.
     pub fn from_moves(moves: &[(usize, usize)]) -> Self {
         let mut model = Self::start();
         for &(x, y) in moves {
