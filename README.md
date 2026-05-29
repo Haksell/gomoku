@@ -36,6 +36,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [ ] show number of captures
 - [x] show winner
 - [ ] or draw
+- [ ] highlight 5-in-a-row that won
 - [x] stone shadow
 - [x] hover transparency
 - [ ] multiple themes
@@ -56,9 +57,10 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 
 ### bonus ideas
 
-- [ ] alternate rules
-- [ ] cancel move
+- [ ] bot vs bot
 - [ ] bot arena
+- [ ] alternate rules (swap, swap2...)
+- [ ] cancel move
 - [ ] mobile version
 - [ ] web version
 
@@ -74,8 +76,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [x] It is forbidden to play a move that introduces 2 free-three alignments, which would guarantee a win by alignment.
 - [x] It is not forbidden to introduce a double-three by capturing a pair.
 - [x] A player who manages to line up five stones wins only if the opponent cannot break this line by capturing a pair.
-- [x] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture. (???)
-- [x] If there is no possibility of this happening, there is no need to continue the game. (???)
+- [x] If the player has already lost four pairs and the opponent can capture one more, the opponent wins by capture.
 
 ### general guidelines
 
@@ -90,26 +91,39 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 ### mandatory part
 
 - [x] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
-- [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player’s moves.
+- [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player's moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [ ] You have to use a Minimax algorithm, or a variant.
 - [ ] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
 - [ ] You must also provide a usable graphical interface to allow one to actually play Gomoku.
-- [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it’s running.
+- [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it's running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
 
 ## evaluation
 
-- [ ] preliminary checks (git repository not empty, Makefile, no crash)
-- [x] rules
-- [ ] human-vs-human
-- [ ] human-vs-bot
+### preliminary checks
+
+- [ ] there is something in the git repository
+- [ ] the Makefile is present and has the required rules
+- [ ] no crash
+
+### interface
+
+- [x] rules are implemented properly
+- [ ] human-vs-human is playable
+- [ ] human-vs-bot is playable
+
+### algorithm
+
 - [ ] takes less than half a second on average
 - [ ] there is a timer indicating how much time the AI takes
 - [ ] performance (AI victory in under 20 moves -> 5)
 - [x] implementation (alpha-beta/negascout/mtdf -> 5)
 - [ ] search depth (10 or more levels -> 5)
-- [x] search space (multiple rectangular windows emcompassing placed stones but minimizing wasted space -> 5)
+- [ ] search space (multiple rectangular windows emcompassing placed stones but minimizing wasted space -> 5)
+
+### heuristics
+
 - [ ] does the heuristic take current alignments into account?
 - [ ] does the heuristic check whether an alignment has enough space to develop into a 5-in-a-row?
 - [ ] does the heuristic weigh an alignment according to its freedom (free, half-free, flanked)?
@@ -118,4 +132,3 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [ ] does the heuristic check for advanteageous combinations?
 - [ ] does the heuristic take both players into account?
 - [ ] does the heuristic take past player actions into account to identify patterns and weigh board states accordingly?
-- [ ] bonuses: 1 point per identifiable, separate bonus
