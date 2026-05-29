@@ -59,7 +59,9 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 
 - [ ] bot vs bot
 - [ ] bot arena
-- [ ] alternate rules (swap, swap2...)
+- [ ] alternate start rules (swap, swap2...)
+- [ ] variable board size (clap arg?)
+- [ ] gomoku vs renju rules
 - [ ] cancel move
 - [ ] mobile version
 - [ ] web version
