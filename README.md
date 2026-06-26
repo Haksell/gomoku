@@ -4,6 +4,7 @@
 
 ### misc
 
+- check correct min and max in alpha-beta pruning
 - fast `undo_move`
 - decent heuristic
 - implement draws
@@ -22,6 +23,7 @@
 - compute during human time?
 - iterative alpha-beta pruning to always return a move in less than 1s
 - clippy lints hardcore mode
+- MCTS solver for endgame (different concept than MCTS)
 - argument parsing:
 ```shell
 $ ./gomoku human human
