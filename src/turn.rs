@@ -3,7 +3,6 @@ use crate::{
     textures::{TEXTURE_BLACK, TEXTURE_WHITE},
 };
 use nannou::wgpu::Texture;
-use std::sync::MutexGuard;
 
 // very sussy baka
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -22,11 +21,11 @@ impl Turn {
         }
     }
 
-    pub fn texture(&self) -> MutexGuard<'_, Texture> {
+    pub fn texture(&self) -> &Texture {
         match self {
             Self::None => panic!("{self:?} doesn't have a texture"),
-            Self::Black => TEXTURE_BLACK.get().unwrap().lock().unwrap(),
-            Self::White => TEXTURE_WHITE.get().unwrap().lock().unwrap(),
+            Self::Black => TEXTURE_BLACK.get().unwrap(),
+            Self::White => TEXTURE_WHITE.get().unwrap(),
         }
     }
 

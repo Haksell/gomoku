@@ -1,12 +1,9 @@
 use nannou::{App, wgpu::Texture};
-use std::{
-    path::Path,
-    sync::{Mutex, OnceLock},
-};
+use std::{path::Path, sync::OnceLock};
 
-pub static TEXTURE_BACKGROUND: OnceLock<Mutex<Texture>> = OnceLock::new();
-pub static TEXTURE_BLACK: OnceLock<Mutex<Texture>> = OnceLock::new();
-pub static TEXTURE_WHITE: OnceLock<Mutex<Texture>> = OnceLock::new();
+pub static TEXTURE_BACKGROUND: OnceLock<Texture> = OnceLock::new();
+pub static TEXTURE_BLACK: OnceLock<Texture> = OnceLock::new();
+pub static TEXTURE_WHITE: OnceLock<Texture> = OnceLock::new();
 
 const TEXTURES_DIRECTORY: &str = "assets";
 
@@ -16,10 +13,10 @@ fn handle_error<T, E: std::fmt::Debug>(result: Result<T, E>) -> T {
     })
 }
 
-fn init_texture(app: &App, texture_background: &OnceLock<Mutex<Texture>>, path: &str) {
+fn init_texture(app: &App, texture_background: &OnceLock<Texture>, path: &str) {
     let texture_path = Path::new(TEXTURES_DIRECTORY).join(path);
     let texture = handle_error(Texture::from_path(app, texture_path));
-    handle_error(texture_background.set(Mutex::new(texture)));
+    handle_error(texture_background.set(texture));
 }
 
 pub fn init_textures(app: &App) {

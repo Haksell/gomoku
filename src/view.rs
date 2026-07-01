@@ -37,8 +37,8 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 }
 
 fn draw_background(draw: &Draw) {
-    let background_texture = TEXTURE_BACKGROUND.get().unwrap().lock().unwrap();
-    draw.texture(&*background_texture).w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32);
+    let background_texture = TEXTURE_BACKGROUND.get().unwrap();
+    draw.texture(background_texture).w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32);
 }
 
 fn draw_grid(draw: &Draw) {
@@ -80,7 +80,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
         draw_shadow(draw, px, py);
 
         let texture_guard = turn.texture();
-        draw.texture(&*texture_guard).x_y(px, py).w_h(STONE_SIZE, STONE_SIZE);
+        draw.texture(texture_guard).x_y(px, py).w_h(STONE_SIZE, STONE_SIZE);
     }
 
     fn draw_hover_stone(draw: &Draw, x: usize, y: usize, color: LinSrgba) {
