@@ -4,7 +4,7 @@
 
 ### misc
 
-- fix move shows as hover before bot plays
+- fix move shows as hover before bot plays (async bot)
 - fast `undo_move`
 - decent heuristic
 - implement draws
