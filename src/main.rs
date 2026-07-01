@@ -8,10 +8,16 @@ mod textures;
 mod turn;
 mod view;
 
-use bots::alpha_beta_pruning;
-use constants::WINDOW_SIZE;
-use coordinates::mouse_to_board;
-use heuristics::capturophile;
+use crate::{
+    bots::{BotArg, alpha_beta_pruning},
+    constants::WINDOW_SIZE,
+    coordinates::mouse_to_board,
+    heuristics::{HeuristicArg, capturophile},
+    textures::init_textures,
+    turn::Turn,
+    view::view,
+};
+use clap::Parser;
 use model::Model;
 use nannou::{
     App,
@@ -19,9 +25,14 @@ use nannou::{
     winit::window::CursorIcon,
 };
 use std::time::Instant;
-use textures::init_textures;
-use turn::Turn;
-use view::view;
+
+#[derive(Debug, Parser)]
+struct Args {
+    #[arg(short, long, value_enum, default_value_t = BotArg::AlphaBetaPruning)]
+    bot: BotArg,
+    #[arg(short, long, value_enum, default_value_t = HeuristicArg::Capturophile)]
+    heuristic: HeuristicArg,
+}
 
 fn main() {
     println!("{:?}", std::env::args());

@@ -9,8 +9,16 @@ use crate::{
     constants::BOARD_SIZE, heuristics::Heuristic, model::Model, rules::creates_double_three,
     turn::Turn,
 };
+use clap::ValueEnum;
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 use std::{collections::HashMap, sync::LazyLock};
+
+#[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]
+pub enum BotArg {
+    AlphaBetaPruning,
+    Minimax,
+    RandomMover,
+}
 
 pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
 
