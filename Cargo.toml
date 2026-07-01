@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-clap = { version = "4.6.1", features = ["derive"] }
-itertools = "0.15.0"
+clap = { version = "4.6", features = ["derive"] }
+itertools = "0.15"
 nannou = { version = "0.19", default-features = false }
 nannou_egui = { version = "0.19", default-features = false }
 

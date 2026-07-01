@@ -91,14 +91,15 @@ fn mouse_pressed(app: &App, state: &mut State, button: MouseButton) {
 }
 
 fn key_pressed(_: &App, state: &mut State, key: Key) {
-    if key == Key::Back && !state.moves.is_empty() {
-        // TODO: use state.undo_move
-        *state = State::from_moves(
-            state.black_player,
-            state.white_player,
-            &state.moves[0..state.moves.len() - 1],
-        );
-    }
+    // FIXME
+    // if key == Key::Back && !state.moves.is_empty() {
+    //     // TODO: use state.undo_move
+    //     *state = State::from_moves(
+    //         state.black_player,
+    //         state.white_player,
+    //         &state.moves[0..state.moves.len() - 1],
+    //     );
+    // }
     if key == Key::Home {
         *state = State::new(state.black_player, state.white_player);
     }
