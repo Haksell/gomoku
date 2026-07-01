@@ -1,12 +1,16 @@
 #!/bin/bash
 
-if (($# != 1)); then
+# TODO: remove before push
+
+if (($# > 1)); then
     echo "Usage: $0 msg"
     exit 1
 fi
 
+MSG=${1:-.}
+
 git add .
-git commit -m "$1
+git commit -m "$MSG
 
 Co-authored-by: solvictor <victor.egret.pro@gmail.com>"
 git push
