@@ -2,23 +2,23 @@ use super::get_close_moves;
 use crate::{
     constants::BOARD_CENTER,
     heuristics::Heuristic,
-    model::{Model, Position},
     player::PlayerColor,
+    state::{Position, State},
 };
 use std::cmp::{max, min};
 
 // TODO: struct with distance and number of moves
-const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX), (1, usize::MAX)];
+const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX)];
 const MAX_DEPTH: usize = DFS.len();
 
-pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> Position {
-    if model.moves.is_empty() {
+pub fn alpha_beta_pruning(state: &State, heuristic: Heuristic) -> Position {
+    if state.moves.is_empty() {
         return BOARD_CENTER;
     }
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(
-        model,
-        model.current_color,
+        state,
+        state.current_color,
         heuristic,
         0,
         i64::MIN,
@@ -29,7 +29,7 @@ pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> Position {
 }
 
 fn alpha_beta_pruning_helper(
-    model: &Model,
+    state: &State,
     current_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
@@ -37,15 +37,15 @@ fn alpha_beta_pruning_helper(
     mut max_score: i64,
     best_move: &mut Position,
 ) -> i64 {
-    if let Some(winner) = model.winner {
+    if let Some(winner) = state.winner {
         return if winner == current_player { i64::MAX } else { i64::MIN };
     }
     if depth == MAX_DEPTH {
-        return heuristic(model);
+        return heuristic(state);
     }
 
     // TODO: sort by depth 1 heuristic
-    let close_moves = get_close_moves(model, DFS[depth].0, true);
+    let close_moves = get_close_moves(state, DFS[depth].0, true);
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = depth & 1 == 0;
@@ -55,10 +55,10 @@ fn alpha_beta_pruning_helper(
     let a = &close_moves[0..(DFS[depth].1).min(close_moves.len())];
     for &(x, y) in a {
         // TODO: do_move then undo_move
-        let mut model = model.clone();
-        model.do_move(x, y);
+        let mut state = state.clone();
+        state.do_move(x, y);
         let score = alpha_beta_pruning_helper(
-            &model,
+            &state,
             current_player,
             heuristic,
             depth + 1,

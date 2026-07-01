@@ -1,7 +1,7 @@
 use super::{DIRECTIONS4, DIRECTIONS8, is_same_player};
 use crate::{
-    Model, PlayerColor,
-    model::{Board, Position},
+    PlayerColor, State,
+    state::{Board, Position},
 };
 use std::collections::HashSet;
 
@@ -77,22 +77,22 @@ fn get_break_possibilities(
     break_possibilities
 }
 
-pub fn check_winner(model: &Model, x: usize, y: usize) -> (bool, HashSet<Position>) {
+pub fn check_winner(state: &State, x: usize, y: usize) -> (bool, HashSet<Position>) {
     let mut breakable_positions: HashSet<Position> = HashSet::new();
-    if model.current_color.captures(model) >= REQUIRED_CAPTURES {
+    if state.current_color.captures(state) >= REQUIRED_CAPTURES {
         return (true, breakable_positions);
     }
     let mut potential_winners: Vec<Vec<Position>> = Vec::new();
     for &(dx, dy) in &DIRECTIONS4 {
         let longest_row_in_dir =
-            get_longest_row_in_dir(&model.board, model.current_color, x, y, dx, dy);
+            get_longest_row_in_dir(&state.board, state.current_color, x, y, dx, dy);
         if longest_row_in_dir.len() >= STONES_IN_A_ROW {
             potential_winners.push(longest_row_in_dir);
         }
     }
     for potential_winner in &mut potential_winners {
         let break_possibilities =
-            get_break_possibilities(potential_winner, &model.board, model.current_color);
+            get_break_possibilities(potential_winner, &state.board, state.current_color);
         if break_possibilities.is_empty() {
             return (true, breakable_positions);
         }

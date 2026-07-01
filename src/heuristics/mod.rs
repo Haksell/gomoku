@@ -1,10 +1,9 @@
-mod capturophile;
-mod zero;
+pub mod capturophile;
+pub mod zero;
 
-use crate::model::Model;
+use crate::state::State;
 
-pub type Heuristic = fn(&Model) -> i64;
-pub const DEFAULT_HEURISTIC: Heuristic = capturophile::capturophile;
+pub type Heuristic = fn(&State) -> i64;
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {

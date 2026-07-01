@@ -6,7 +6,7 @@ pub use self::{
     check_winner::check_winner, creates_double_three::creates_double_three,
     handle_captures::handle_captures,
 };
-use crate::{constants::BOARD_SIZE, model::Board, player::PlayerColor};
+use crate::{constants::BOARD_SIZE, player::PlayerColor, state::Board};
 
 pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
 pub const DIRECTIONS8: [(isize, isize); 8] =

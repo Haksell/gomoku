@@ -1,5 +1,5 @@
-use crate::model::Model;
+use crate::state::State;
 
-pub const fn zero(_: &Model) -> i64 {
+pub const fn zero(_: &State) -> i64 {
     0
 }

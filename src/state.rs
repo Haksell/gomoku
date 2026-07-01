@@ -10,7 +10,7 @@ pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
 pub type Position = (usize, usize); // TODO: !usize 
 
 #[derive(Clone)]
-pub struct Model {
+pub struct State {
     pub board: Board,
     pub current_color: PlayerColor,
     // TODO: is_game_over instead of Option because of redundancy with current_color
@@ -25,7 +25,7 @@ pub struct Model {
     pub white_player: Player,
 }
 
-impl Model {
+impl State {
     pub fn new(black_player: Player, white_player: Player) -> Self {
         Self {
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
@@ -73,17 +73,29 @@ impl Model {
 
     /// Assumes the sequence of moves is valid.
     pub fn from_moves(black_player: Player, white_player: Player, moves: &[Position]) -> Self {
-        let mut model = Self::new(black_player, white_player);
+        let mut state = Self::new(black_player, white_player);
         for &(x, y) in moves {
-            model.do_move(x, y);
+            state.do_move(x, y);
         }
-        model
+        state
     }
 
     pub const fn current_player(&self) -> &Player {
         match self.current_color {
             PlayerColor::Black => &self.black_player,
             PlayerColor::White => &self.white_player,
+        }
+    }
+
+    pub fn play_game(&mut self) {
+        assert!(self.black_player.is_bot());
+        assert!(self.white_player.is_bot());
+
+        // TODO: handle draws properly
+        while self.winner.is_none() {
+            let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
+            let (x, y) = bot(self, *heuristic);
+            self.do_move(x, y);
         }
     }
 }

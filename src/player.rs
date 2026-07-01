@@ -1,7 +1,7 @@
 use crate::{
-    Model,
-    bots::{Bot, DEFAULT_BOT, parse_bot},
-    heuristics::{DEFAULT_HEURISTIC, Heuristic, parse_heuristic},
+    State,
+    bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
+    heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
     textures::{TEXTURE_BLACK, TEXTURE_WHITE},
 };
 use itertools::Itertools as _;
@@ -18,6 +18,10 @@ impl Player {
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
     }
+
+    pub const fn is_bot(&self) -> bool {
+        matches!(self, Self::Bot { .. })
+    }
 }
 
 #[expect(clippy::fallible_impl_from)]
@@ -25,7 +29,8 @@ impl From<&str> for Player {
     fn from(v: &str) -> Self {
         match v {
             "human" => return Self::Human,
-            "bot" => return Self::Bot { bot: DEFAULT_BOT, heuristic: DEFAULT_HEURISTIC },
+            "best" => return Self::Bot { bot: alpha_beta_pruning, heuristic: capturophile },
+            "random" => return Self::Bot { bot: random_mover, heuristic: zero },
             _ => {}
         }
 
@@ -63,17 +68,17 @@ impl PlayerColor {
         }
     }
 
-    pub const fn captures(self, model: &Model) -> usize {
+    pub const fn captures(self, state: &State) -> usize {
         match self {
-            Self::Black => model.black_captures,
-            Self::White => model.white_captures,
+            Self::Black => state.black_captures,
+            Self::White => state.white_captures,
         }
     }
 
-    pub const fn increment_captures(self, model: &mut Model, captures: usize) {
+    pub const fn increment_captures(self, state: &mut State, captures: usize) {
         match self {
-            Self::Black => model.black_captures += captures,
-            Self::White => model.white_captures += captures,
+            Self::Black => state.black_captures += captures,
+            Self::White => state.white_captures += captures,
         }
     }
 }
