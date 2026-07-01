@@ -77,10 +77,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
             let start = Instant::now();
             let (x, y) = alpha_beta_pruning(model, capturophile);
             model.ai_thinking_time = Some(start.elapsed().as_millis());
-            println!(
-                "AI move computed in {:?} ms",
-                model.ai_thinking_time.unwrap()
-            ); // TODO: show in UI and delete this println (MANDATORY!)
+            println!("AI move computed in {:?} ms", model.ai_thinking_time.unwrap()); // TODO: show in UI and delete this println (MANDATORY!)
             model.do_move(x, y);
         }
         false

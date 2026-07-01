@@ -57,8 +57,5 @@ fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<(usize,
             }
         }
     }
-    get_legal_moves(model, shuffle)
-        .into_iter()
-        .filter(|&(x, y)| is_close[y][x])
-        .collect()
+    get_legal_moves(model, shuffle).into_iter().filter(|&(x, y)| is_close[y][x]).collect()
 }

@@ -1,5 +1,5 @@
 use super::is_capture;
-use crate::{constants::DIRECTIONS8, turn::Turn, Model};
+use crate::{Model, constants::DIRECTIONS8, turn::Turn};
 
 pub fn handle_captures(model: &mut Model, x: usize, y: usize) {
     let player = model.current_player;

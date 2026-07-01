@@ -8,16 +8,8 @@ pub const BOARD_CENTER: (usize, usize) = (HALF_BOARD_SIZE, HALF_BOARD_SIZE);
 pub const DOT_SPACING: usize = 6;
 
 pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
-pub const DIRECTIONS8: [(isize, isize); 8] = [
-    (0, 1),
-    (1, 1),
-    (1, 0),
-    (1, -1),
-    (0, -1),
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-];
+pub const DIRECTIONS8: [(isize, isize); 8] =
+    [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)];
 
 #[cfg(test)]
 mod tests {

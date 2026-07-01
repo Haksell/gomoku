@@ -10,10 +10,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
     fn split_float(z: f32) -> (isize, f32) {
         let pos = z / CELL_SIZE;
         let pos_round = pos.round();
-        (
-            pos_round as isize + HALF_BOARD_SIZE as isize,
-            (pos - pos_round).abs(),
-        )
+        (pos_round as isize + HALF_BOARD_SIZE as isize, (pos - pos_round).abs())
     }
 
     let mouse_pos = app.mouse.position();

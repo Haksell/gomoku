@@ -33,20 +33,13 @@ fn minimax_helper(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
         return 0;
     }
     let is_maximizing_player = depth & 1 == 0;
-    let mut best_score = if is_maximizing_player {
-        i64::MIN
-    } else {
-        i64::MAX
-    };
+    let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
     for (x, y) in close_moves {
         let mut model = (*model).clone();
         model.do_move(x, y);
         let score = minimax_helper(&model, heuristic, depth + 1);
-        best_score = if is_maximizing_player {
-            best_score.max(score)
-        } else {
-            best_score.min(score)
-        };
+        best_score =
+            if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
         // model.undo_move(x, y);
     }
     best_score

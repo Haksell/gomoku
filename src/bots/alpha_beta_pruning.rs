@@ -2,12 +2,8 @@ use super::get_close_moves;
 use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
 
 // TODO: struct with distance and number of moves
-const DFS: &[(usize, usize)] = &[
-    (1, usize::MAX),
-    (1, usize::MAX),
-    (1, usize::MAX),
-    (1, usize::MAX),
-];
+const DFS: &[(usize, usize)] =
+    &[(1, usize::MAX), (1, usize::MAX), (1, usize::MAX), (1, usize::MAX)];
 const MAX_DEPTH: usize = DFS.len();
 
 pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> (usize, usize) {
@@ -47,11 +43,7 @@ fn alpha_beta_pruning_helper(
         return 0;
     }
     let is_maximizing_player = depth & 1 == 0;
-    let mut best_score = if is_maximizing_player {
-        i64::MIN
-    } else {
-        i64::MAX
-    };
+    let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
     // TODO: sort by depth 1 heuristic
     for &(x, y) in &close_moves[0..(DFS[depth].1).min(close_moves.len())] {
         let mut model = (*model).clone();

@@ -63,9 +63,7 @@ fn is_open_three(board: &Board, player: Turn, x: usize, y: usize, dx: isize, dy:
 }
 
 pub fn creates_double_three(board: &Board, player: Turn, x: usize, y: usize) -> bool {
-    DIRECTIONS8
-        .iter()
-        .all(|&(dx, dy)| !is_capture(board, player, x, y, dx, dy))
+    DIRECTIONS8.iter().all(|&(dx, dy)| !is_capture(board, player, x, y, dx, dy))
         && DIRECTIONS4
             .iter()
             .filter(|&&(dx, dy)| {
