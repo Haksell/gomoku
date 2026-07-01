@@ -3,6 +3,7 @@ use crate::{
     constants::BOARD_CENTER,
     heuristics::Heuristic,
     model::{Model, Position},
+    player::PlayerColor,
 };
 
 const MAX_DEPTH: usize = 4;
@@ -17,17 +18,19 @@ pub fn minimax(model: &Model, heuristic: Heuristic) -> Position {
             // TODO: undo_move instead of clone
             let mut model = model.clone();
             model.do_move(x, y);
-            minimax_helper(&model, heuristic, 1)
+            minimax_helper(&model, model.current_color, heuristic, 1)
         })
         .unwrap() // TODO: check get_close_moves never returns empty vector
 }
 
-fn minimax_helper(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
-    if model.winner == model.human {
-        return i64::MIN;
-    }
-    if model.winner == model.human.opponent() {
-        return i64::MAX;
+fn minimax_helper(
+    model: &Model,
+    current_player: PlayerColor,
+    heuristic: Heuristic,
+    depth: usize,
+) -> i64 {
+    if let Some(winner) = model.winner {
+        return if winner == current_player { i64::MAX } else { i64::MIN };
     }
     if depth == MAX_DEPTH {
         return heuristic(model);
@@ -39,9 +42,9 @@ fn minimax_helper(model: &Model, heuristic: Heuristic, depth: usize) -> i64 {
     let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
     for (x, y) in close_moves {
-        let mut model = (*model).clone();
+        let mut model = model.clone();
         model.do_move(x, y);
-        let score = minimax_helper(&model, heuristic, depth + 1);
+        let score = minimax_helper(&model, current_player, heuristic, depth + 1);
         best_score =
             if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
         // model.undo_move(x, y);

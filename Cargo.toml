@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.6.1", features = ["derive"] }
+itertools = "0.15.0"
 nannou = { version = "0.19", default-features = false }
 nannou_egui = { version = "0.19", default-features = false }
 
@@ -40,6 +41,7 @@ indexing_slicing = "allow"
 integer_division = "allow"
 integer_division_remainder_used = "allow"
 iter_over_hash_type = "allow"
+min_ident_chars = "allow"
 missing_assert_message = "allow"
 missing_docs_in_private_items = "allow"
 mod_module_files = "allow"
@@ -53,6 +55,7 @@ pub_use = "allow"
 shadow_reuse = "allow"
 shadow_same = "allow"
 single_call_fn = "allow"
+single_char_lifetime_names = "allow"
 std_instead_of_core = "allow"
 suboptimal_flops = "allow"
 unreachable = "allow"

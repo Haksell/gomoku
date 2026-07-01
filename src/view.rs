@@ -4,11 +4,11 @@ use crate::{
     model::Model,
     rules::creates_double_three,
     textures::TEXTURE_BACKGROUND,
-    turn::Turn,
+    player::PlayerColor,
 };
 use nannou::{
     App, Draw, Frame,
-    color::{BLACK, LinSrgba, Srgb},
+    color::{BLACK, LinSrgba, Srgb, WHITE, rgba},
     geom::{Point2, pt2},
 };
 
@@ -23,14 +23,15 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
-    if model.winner == Turn::None {
-        if model.forced_moves.is_empty() {
-            draw_invalid_moves(&draw, model);
-        } else {
-            draw_valid_moves(&draw, model);
+    match model.winner {
+        Some(winner) => draw_game_over_overlay(&draw, winner),
+        None => {
+            if model.forced_moves.is_empty() {
+                draw_invalid_moves(&draw, model);
+            } else {
+                draw_valid_moves(&draw, model);
+            }
         }
-    } else {
-        draw_game_over_overlay(&draw, model);
     }
     draw_hover_coords(&draw, model);
     draw.to_frame(app, &frame).unwrap();
@@ -75,7 +76,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
             .color(nannou::color::rgba(0.0, 0.0, 0.0, 0.65));
     }
 
-    fn draw_stone(draw: &Draw, x: usize, y: usize, turn: Turn) {
+    fn draw_stone(draw: &Draw, x: usize, y: usize, turn: PlayerColor) {
         let (px, py) = board_to_physical(x, y);
         draw_shadow(draw, px, py);
 
@@ -90,18 +91,16 @@ fn draw_stones(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            let turn = model.board[y][x];
-            if turn != Turn::None {
-                draw_stone(draw, x, y, turn);
+            if let Some(color) = model.board[y][x] {
+                draw_stone(draw, x, y, color);
             }
         }
     }
 
     if let Some((x, y)) = model.hover {
-        let color = match model.current_player {
-            Turn::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
-            Turn::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
-            Turn::None => return,
+        let color = match model.current_color {
+            PlayerColor::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
+            PlayerColor::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
         };
         draw_hover_stone(draw, x, y, color);
     }
@@ -131,8 +130,8 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.board[y][x] == Turn::None
-                && creates_double_three(&model.board, model.current_player, x, y)
+            if model.board[y][x].is_none()
+                && creates_double_three(&model.board, model.current_color, x, y)
             {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);
             }
@@ -140,13 +139,10 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     }
 }
 
-fn draw_game_over_overlay(draw: &Draw, model: &Model) {
-    use nannou::color::{WHITE, rgba};
-
-    let msg = match model.winner {
-        Turn::Black => "Black wins",
-        Turn::White => "White wins",
-        Turn::None => return,
+fn draw_game_over_overlay(draw: &Draw, winner: PlayerColor) {
+    let msg = match winner {
+        PlayerColor::Black => "Black wins",
+        PlayerColor::White => "White wins",
     };
 
     draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0.0, 0.0, 0.0, 0.55));
@@ -162,8 +158,6 @@ fn draw_game_over_overlay(draw: &Draw, model: &Model) {
 }
 
 fn draw_hover_coords(draw: &Draw, model: &Model) {
-    use nannou::color::rgba;
-
     let Some((x, y)) = model.hover else {
         return;
     };

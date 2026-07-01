@@ -4,33 +4,22 @@
 
 ### misc
 
-- show captures in interface
+- fix move shows as hover before bot plays
 - fast `undo_move`
 - decent heuristic
 - implement draws
-- 1v1 bot to estimate level
-- bot arena
 - force capturing pair if five in a row
 - finish implementing rules
-- handle draws
 - unit test of rules
-- random bot
 - bot that likes center
 - arena with elo ranking
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - make the code compile faster
-- implement forced draws?
 - compute during human time?
 - iterative alpha-beta pruning to always return a move in less than 1s
 - clippy lints hardcore mode
 - MCTS solver for endgame (different concept than MCTS)
-- argument parsing:
-```shell
-$ ./gomoku human human
-$ ./gomoku human minimax:zero
-$ ./gomoku alpha_beta_pruning:capturophile human
-$ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
-```
+- bot arena
 
 ### design
 
@@ -43,6 +32,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [x] hover transparency
 - [ ] multiple themes
 - [x] draw stone before AI move
+- [ ] confetti
 
 ### algorithms
 
@@ -67,6 +57,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [ ] cancel move
 - [ ] mobile version
 - [ ] web version
+- [ ] board size
 
 ## subject
 
@@ -84,7 +75,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 
 ### general guidelines
 
-- [ ] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
+- [x] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [x] You have to provide a Makefile which must produce your program. It must not relink.
 - [x] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
 - [ ] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
@@ -97,9 +88,9 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [x] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player's moves.
 - [ ] Human vs Human, with a move suggestion feature.
-- [ ] You have to use a Minimax algorithm, or a variant.
+- [x] You have to use a Minimax algorithm, or a variant.
 - [ ] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
-- [ ] You must also provide a usable graphical interface to allow one to actually play Gomoku.
+- [x] You must also provide a usable graphical interface to allow one to actually play Gomoku.
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it's running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
 
@@ -113,7 +104,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 
 ### interface
 
-- [x] rules are implemented properly
+- [ ] rules are implemented properly
 - [ ] human-vs-human is playable
 - [ ] human-vs-bot is playable
 
@@ -122,7 +113,7 @@ $ ./gomoku alpha_beta_pruning:capturophile minimax:capturophile
 - [ ] takes less than half a second on average
 - [ ] there is a timer indicating how much time the AI takes
 - [ ] performance (AI victory in under 20 moves -> 5)
-- [x] implementation (alpha-beta/negascout/mtdf -> 5)
+- [ ] implementation (alpha-beta/negascout/mtdf -> 5)
 - [ ] search depth (10 or more levels -> 5)
 - [ ] search space (multiple rectangular windows emcompassing placed stones but minimizing wasted space -> 5)
 

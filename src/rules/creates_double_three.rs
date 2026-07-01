@@ -1,11 +1,14 @@
-use super::{is_capture, is_same_player};
-use crate::{
-    Turn,
-    constants::{DIRECTIONS4, DIRECTIONS8},
-    model::Board,
-};
+use super::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_player};
+use crate::{PlayerColor, model::Board};
 
-fn is_open_three(board: &Board, player: Turn, x: usize, y: usize, dx: isize, dy: isize) -> bool {
+fn is_open_three(
+    board: &Board,
+    player: PlayerColor,
+    x: usize,
+    y: usize,
+    dx: isize,
+    dy: isize,
+) -> bool {
     let (x, y) = (x as isize, y as isize);
     let (xm1, ym1) = (x - dx, y - dy);
     let (xm2, ym2) = (x - 2 * dx, y - 2 * dy);
@@ -17,41 +20,41 @@ fn is_open_three(board: &Board, player: Turn, x: usize, y: usize, dx: isize, dy:
     // TODO: test if it is faster directly with booleans
 
     let straight_border = || {
-        is_same_player(board, player, xp1, yp1)
-            && is_same_player(board, player, xp2, yp2)
-            && is_same_player(board, Turn::None, xp3, yp3)
-            && is_same_player(board, Turn::None, xm1, ym1)
+        is_same_player(board, Some(player), xp1, yp1)
+            && is_same_player(board, Some(player), xp2, yp2)
+            && is_same_player(board, None, xp3, yp3)
+            && is_same_player(board, None, xm1, ym1)
     };
 
     let straight_center = || {
-        is_same_player(board, player, xp1, yp1)
-            && is_same_player(board, player, xm1, ym1)
-            && is_same_player(board, Turn::None, xp2, yp2)
-            && is_same_player(board, Turn::None, xm2, ym2)
+        is_same_player(board, Some(player), xp1, yp1)
+            && is_same_player(board, Some(player), xm1, ym1)
+            && is_same_player(board, None, xp2, yp2)
+            && is_same_player(board, None, xm2, ym2)
     };
 
     let separated_alone = || {
-        is_same_player(board, player, xp2, yp2)
-            && is_same_player(board, player, xp3, yp3)
-            && is_same_player(board, Turn::None, xm1, ym1)
-            && is_same_player(board, Turn::None, xp1, yp1)
-            && is_same_player(board, Turn::None, xp4, yp4)
+        is_same_player(board, Some(player), xp2, yp2)
+            && is_same_player(board, Some(player), xp3, yp3)
+            && is_same_player(board, None, xm1, ym1)
+            && is_same_player(board, None, xp1, yp1)
+            && is_same_player(board, None, xp4, yp4)
     };
 
     let separated_center = || {
-        is_same_player(board, player, xm1, ym1)
-            && is_same_player(board, player, xp2, yp2)
-            && is_same_player(board, Turn::None, xm2, ym2)
-            && is_same_player(board, Turn::None, xp1, yp1)
-            && is_same_player(board, Turn::None, xp3, yp3)
+        is_same_player(board, Some(player), xm1, ym1)
+            && is_same_player(board, Some(player), xp2, yp2)
+            && is_same_player(board, None, xm2, ym2)
+            && is_same_player(board, None, xp1, yp1)
+            && is_same_player(board, None, xp3, yp3)
     };
 
     let separated_border = || {
-        is_same_player(board, player, xp1, yp1)
-            && is_same_player(board, player, xp3, yp3)
-            && is_same_player(board, Turn::None, xm1, ym1)
-            && is_same_player(board, Turn::None, xp2, yp2)
-            && is_same_player(board, Turn::None, xp4, yp4)
+        is_same_player(board, Some(player), xp1, yp1)
+            && is_same_player(board, Some(player), xp3, yp3)
+            && is_same_player(board, None, xm1, ym1)
+            && is_same_player(board, None, xp2, yp2)
+            && is_same_player(board, None, xp4, yp4)
     };
 
     // TODO: order by most common to optimize short-circuiting
@@ -62,7 +65,7 @@ fn is_open_three(board: &Board, player: Turn, x: usize, y: usize, dx: isize, dy:
         || separated_border()
 }
 
-pub fn creates_double_three(board: &Board, player: Turn, x: usize, y: usize) -> bool {
+pub fn creates_double_three(board: &Board, player: PlayerColor, x: usize, y: usize) -> bool {
     DIRECTIONS8.iter().all(|&(dx, dy)| !is_capture(board, player, x, y, dx, dy))
         && DIRECTIONS4
             .iter()
