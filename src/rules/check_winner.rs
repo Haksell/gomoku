@@ -2,20 +2,15 @@ use super::is_same_player;
 use crate::{
     Model, Turn,
     constants::{DIRECTIONS4, DIRECTIONS8},
-    model::Board,
+    model::{Board, Position},
 };
 use std::collections::HashSet;
 
 const STONES_IN_A_ROW: usize = 5;
 const REQUIRED_CAPTURES: usize = 5;
 
-fn find_breakable(
-    board: &Board,
-    player: Turn,
-    new_x: isize,
-    new_y: isize,
-) -> HashSet<(usize, usize)> {
-    let mut breaking_positions: HashSet<(usize, usize)> = HashSet::new();
+fn find_breakable(board: &Board, player: Turn, new_x: isize, new_y: isize) -> HashSet<Position> {
+    let mut breaking_positions: HashSet<Position> = HashSet::new();
     for (dx, dy) in &DIRECTIONS8 {
         if is_same_player(board, Turn::None, new_x - dx, new_y - dy)
             && is_same_player(board, player, new_x + dx, new_y + dy)
@@ -40,8 +35,8 @@ fn get_longest_row_in_dir(
     y: usize,
     dx: isize,
     dy: isize,
-) -> Vec<(usize, usize)> {
-    let mut row: Vec<(usize, usize)> = vec![(x, y)];
+) -> Vec<Position> {
+    let mut row: Vec<Position> = vec![(x, y)];
 
     let mut advance = |reverse: bool| {
         for mut step in 1..STONES_IN_A_ROW as isize {
@@ -64,11 +59,11 @@ fn get_longest_row_in_dir(
 }
 
 fn get_break_possibilities(
-    potential_winner: &mut [(usize, usize)],
+    potential_winner: &mut [Position],
     board: &Board,
     player: Turn,
-) -> HashSet<(usize, usize)> {
-    let mut break_possibilities: HashSet<(usize, usize)> = HashSet::new();
+) -> HashSet<Position> {
+    let mut break_possibilities: HashSet<Position> = HashSet::new();
     potential_winner.sort_unstable();
     let overflow = potential_winner.len() - STONES_IN_A_ROW;
     for &(x, y) in &potential_winner[overflow..STONES_IN_A_ROW] {
@@ -77,12 +72,12 @@ fn get_break_possibilities(
     break_possibilities
 }
 
-pub fn check_winner(model: &Model, x: usize, y: usize) -> (bool, HashSet<(usize, usize)>) {
-    let mut breakable_positions: HashSet<(usize, usize)> = HashSet::new();
+pub fn check_winner(model: &Model, x: usize, y: usize) -> (bool, HashSet<Position>) {
+    let mut breakable_positions: HashSet<Position> = HashSet::new();
     if model.current_player.captures(model) >= REQUIRED_CAPTURES {
         return (true, breakable_positions);
     }
-    let mut potential_winners: Vec<Vec<(usize, usize)>> = Vec::new();
+    let mut potential_winners: Vec<Vec<Position>> = Vec::new();
     for &(dx, dy) in &DIRECTIONS4 {
         let longest_row_in_dir =
             get_longest_row_in_dir(&model.board, model.current_player, x, y, dx, dy);

@@ -8,6 +8,7 @@ use crate::{
 use std::collections::HashSet;
 
 pub type Board = [[Turn; BOARD_SIZE]; BOARD_SIZE];
+pub type Position = (usize, usize); // TODO: !usize 
 
 #[derive(Clone)]
 pub struct Model {
@@ -17,9 +18,9 @@ pub struct Model {
     pub winner: Turn,
     pub black_captures: usize,
     pub white_captures: usize,
-    pub moves: Vec<(usize, usize)>,
-    pub forced_moves: HashSet<(usize, usize)>,
-    pub hover: Option<(usize, usize)>,
+    pub moves: Vec<Position>,
+    pub forced_moves: HashSet<Position>,
+    pub hover: Option<Position>,
     pub ai_pending_frames: u8,
     pub ai_thinking_time: Option<u128>,
     pub bot: Bot,
@@ -76,7 +77,7 @@ impl Model {
     // }
 
     /// Assumes the sequence of moves is valid.
-    pub fn from_moves(bot: Bot, heuristic: Heuristic, moves: &[(usize, usize)]) -> Self {
+    pub fn from_moves(bot: Bot, heuristic: Heuristic, moves: &[Position]) -> Self {
         let mut model = Self::new(bot, heuristic);
         for &(x, y) in moves {
             model.do_move(x, y);

@@ -1,13 +1,15 @@
 use super::get_close_moves;
-use crate::{heuristics::Heuristic, model::Model};
+use crate::{
+    heuristics::Heuristic,
+    model::{Model, Position},
+};
 use std::cmp::{max, min};
 
 // TODO: struct with distance and number of moves
-const DFS: &[(usize, usize)] =
-    &[(1, usize::MAX), (1, usize::MAX), (1, usize::MAX), (1, usize::MAX)];
+const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX), (1, usize::MAX), (1, usize::MAX)];
 const MAX_DEPTH: usize = DFS.len();
 
-pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> (usize, usize) {
+pub fn alpha_beta_pruning(model: &Model, heuristic: Heuristic) -> Position {
     debug_assert!(!model.moves.is_empty());
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(model, heuristic, 0, i64::MIN, i64::MAX, &mut best_move);
@@ -20,7 +22,7 @@ fn alpha_beta_pruning_helper(
     depth: usize,
     mut min_score: i64,
     mut max_score: i64,
-    best_move: &mut (usize, usize),
+    best_move: &mut Position,
 ) -> i64 {
     // TODO: handle bot vs bot and human vs human
     if model.winner == model.human {

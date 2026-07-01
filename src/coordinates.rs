@@ -1,12 +1,12 @@
 use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE},
-    model::Model,
+    model::{Model, Position},
     rules::creates_double_three,
     turn::Turn,
 };
 use nannou::App;
 
-pub fn mouse_to_board(app: &App, model: &Model) -> Option<(usize, usize)> {
+pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     fn split_float(z: f32) -> (isize, f32) {
         let pos = z / CELL_SIZE;
         let pos_round = pos.round();

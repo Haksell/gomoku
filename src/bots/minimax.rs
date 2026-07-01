@@ -1,9 +1,13 @@
 use super::get_close_moves;
-use crate::{constants::BOARD_CENTER, heuristics::Heuristic, model::Model};
+use crate::{
+    constants::BOARD_CENTER,
+    heuristics::Heuristic,
+    model::{Model, Position},
+};
 
 const MAX_DEPTH: usize = 4;
 
-pub fn minimax(model: &Model, heuristic: Heuristic) -> (usize, usize) {
+pub fn minimax(model: &Model, heuristic: Heuristic) -> Position {
     if model.moves.is_empty() {
         return BOARD_CENTER;
     }

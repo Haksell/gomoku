@@ -3,13 +3,16 @@ mod minimax;
 mod random_mover;
 
 use crate::{
-    constants::BOARD_SIZE, heuristics::Heuristic, model::Model, rules::creates_double_three,
+    constants::BOARD_SIZE,
+    heuristics::Heuristic,
+    model::{Model, Position},
+    rules::creates_double_three,
     turn::Turn,
 };
 use clap::ValueEnum;
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 
-pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
+pub type Bot = fn(&Model, Heuristic) -> Position;
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]
 pub enum BotArg {
@@ -28,7 +31,7 @@ impl BotArg {
     }
 }
 
-fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
+fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<Position> {
     if !model.forced_moves.is_empty() {
         return model.forced_moves.clone().into_iter().collect();
     }
@@ -50,7 +53,7 @@ fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
 }
 
 // TODO: precompute
-fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<(usize, usize)> {
+fn get_close_moves(model: &Model, max_dist: usize, shuffle: bool) -> Vec<Position> {
     let neighborhood = |z: usize| {
         (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)
     };

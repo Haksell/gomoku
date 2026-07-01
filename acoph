@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if (($# != 1)); then
+    echo "Usage: $0 msg"
+    exit 1
+fi
+
+git add .
+git commit -m "$1
+
+Co-authored-by: solvictor <victor.egret.pro@gmail.com>"
+git push
