@@ -10,7 +10,7 @@ pub static TEXTURE_WHITE: OnceLock<Mutex<Texture>> = OnceLock::new();
 
 const TEXTURES_DIRECTORY: &str = "assets";
 
-fn handle_error<T, E: core::fmt::Debug>(result: Result<T, E>) -> T {
+fn handle_error<T, E: std::fmt::Debug>(result: Result<T, E>) -> T {
     result.unwrap_or_else(|err| {
         panic!("Failed to load texture: {err:?}");
     })

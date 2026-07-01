@@ -115,7 +115,7 @@ fn draw_circle(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
 fn draw_valid_moves(draw: &Draw, model: &Model) {
     // Tailwind green-500
     const COLOR_VALID_MOVE: Srgb<u8> =
-        Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: core::marker::PhantomData };
+        Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
 
     for &(x, y) in &model.forced_moves {
         if Some((x, y)) != model.hover {
@@ -127,7 +127,7 @@ fn draw_valid_moves(draw: &Draw, model: &Model) {
 fn draw_invalid_moves(draw: &Draw, model: &Model) {
     // Tailwind red-500
     const COLOR_INVALID_MOVE: Srgb<u8> =
-        Srgb { red: 0xef, green: 0x44, blue: 0x44, standard: core::marker::PhantomData };
+        Srgb { red: 0xef, green: 0x44, blue: 0x44, standard: std::marker::PhantomData };
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {

@@ -4,7 +4,7 @@
 
 ### misc
 
-- check correct min and max in alpha-beta pruning
+- show captures in interface
 - fast `undo_move`
 - decent heuristic
 - implement draws
