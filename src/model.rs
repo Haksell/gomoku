@@ -1,5 +1,7 @@
 use crate::{
+    bots::Bot,
     constants::BOARD_SIZE,
+    heuristics::Heuristic,
     rules::{check_winner, handle_captures},
     turn::Turn,
 };
@@ -20,10 +22,12 @@ pub struct Model {
     pub hover: Option<(usize, usize)>,
     pub ai_pending_frames: u8,
     pub ai_thinking_time: Option<u128>,
+    pub bot: Bot,
+    pub heuristic: Heuristic,
 }
 
 impl Model {
-    pub fn start() -> Self {
+    pub fn new(bot: Bot, heuristic: Heuristic) -> Self {
         Self {
             board: [[Turn::None; BOARD_SIZE]; BOARD_SIZE],
             current_player: Turn::Black,
@@ -36,6 +40,8 @@ impl Model {
             hover: None,
             ai_pending_frames: 0,
             ai_thinking_time: None,
+            bot,
+            heuristic,
         }
     }
 
@@ -70,8 +76,8 @@ impl Model {
     // }
 
     /// Assumes the sequence of moves is valid.
-    pub fn from_moves(moves: &[(usize, usize)]) -> Self {
-        let mut model = Self::start();
+    pub fn from_moves(bot: Bot, heuristic: Heuristic, moves: &[(usize, usize)]) -> Self {
+        let mut model = Self::new(bot, heuristic);
         for &(x, y) in moves {
             model.do_move(x, y);
         }

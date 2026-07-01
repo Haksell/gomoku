@@ -1,11 +1,10 @@
 mod capturophile;
 mod zero;
 
-pub use self::{capturophile::capturophile, zero::zero};
-
 use crate::model::Model;
 use clap::ValueEnum;
-use std::{collections::HashMap, sync::LazyLock};
+
+pub type Heuristic = fn(&Model) -> i64;
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]
 pub enum HeuristicArg {
@@ -13,8 +12,11 @@ pub enum HeuristicArg {
     Zero,
 }
 
-pub type Heuristic = fn(&Model) -> i64;
-
-pub static HEURISTIC_MAP: LazyLock<HashMap<&'static str, Heuristic>> = LazyLock::new(|| {
-    HashMap::from([("zero", zero as Heuristic), ("capturophile", capturophile as Heuristic)])
-});
+impl HeuristicArg {
+    pub fn func(&self) -> Heuristic {
+        match self {
+            Self::Capturophile => capturophile::capturophile,
+            Self::Zero => zero::zero,
+        }
+    }
+}

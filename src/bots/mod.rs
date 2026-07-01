@@ -2,16 +2,14 @@ mod alpha_beta_pruning;
 mod minimax;
 mod random_mover;
 
-pub use self::{
-    alpha_beta_pruning::alpha_beta_pruning, minimax::minimax, random_mover::random_mover,
-};
 use crate::{
     constants::BOARD_SIZE, heuristics::Heuristic, model::Model, rules::creates_double_three,
     turn::Turn,
 };
 use clap::ValueEnum;
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
-use std::{collections::HashMap, sync::LazyLock};
+
+pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]
 pub enum BotArg {
@@ -20,15 +18,15 @@ pub enum BotArg {
     RandomMover,
 }
 
-pub type Bot = fn(&Model, Heuristic) -> (usize, usize);
-
-pub static BOT_MAP: LazyLock<HashMap<&'static str, Bot>> = LazyLock::new(|| {
-    HashMap::from([
-        ("alpha_beta_pruning", alpha_beta_pruning as Bot),
-        ("minimax", minimax as Bot),
-        ("random_mover", random_mover as Bot),
-    ])
-});
+impl BotArg {
+    pub fn func(&self) -> Bot {
+        match self {
+            Self::AlphaBetaPruning => alpha_beta_pruning::alpha_beta_pruning,
+            Self::Minimax => minimax::minimax,
+            Self::RandomMover => random_mover::random_mover,
+        }
+    }
+}
 
 fn get_legal_moves(model: &Model, shuffle: bool) -> Vec<(usize, usize)> {
     if !model.forced_moves.is_empty() {
