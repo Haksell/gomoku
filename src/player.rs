@@ -1,7 +1,7 @@
 use crate::{
     bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
+    game::Game,
     heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
-    model::Game,
     textures::{TEXTURE_BLACK, TEXTURE_WHITE},
 };
 use itertools::Itertools as _;

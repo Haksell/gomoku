@@ -1,6 +1,7 @@
 mod bots;
 mod constants;
 mod coordinates;
+mod game;
 mod heuristics;
 mod model;
 mod player;
@@ -11,7 +12,7 @@ mod view;
 use crate::{
     constants::WINDOW_SIZE,
     coordinates::mouse_to_board,
-    model::Game,
+    game::Game,
     player::{Player, PlayerColor},
     textures::init_textures,
     view::view,

@@ -1,5 +1,5 @@
 use super::{DIRECTIONS8, is_capture};
-use crate::model::Game;
+use crate::game::Game;
 
 pub fn handle_captures(model: &mut Game, x: usize, y: usize) {
     let player = model.current_color;

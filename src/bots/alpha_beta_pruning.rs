@@ -1,9 +1,9 @@
 use super::get_close_moves;
 use crate::{
     constants::BOARD_CENTER,
+    game::{Game, Position},
     heuristics::Heuristic,
     player::PlayerColor,
-    model::{Game, Position},
 };
 use std::cmp::{max, min};
 

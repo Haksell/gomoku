@@ -1,7 +1,7 @@
 pub mod capturophile;
 pub mod zero;
 
-use crate::model::Game;
+use crate::game::Game;
 
 pub type Heuristic = fn(&Game) -> i64;
 

@@ -1,4 +1,4 @@
-use crate::model::Position;
+use crate::game::Position;
 
 pub const WINDOW_SIZE: u32 = 750;
 pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;

@@ -1,4 +1,4 @@
-use crate::{player::PlayerColor, model::Game};
+use crate::{player::PlayerColor, game::Game};
 
 pub const fn capturophile(game: &Game) -> i64 {
     match game.current_color {

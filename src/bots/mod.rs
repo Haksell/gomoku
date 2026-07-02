@@ -6,7 +6,7 @@ use crate::{
     constants::BOARD_SIZE,
     heuristics::Heuristic,
     rules::creates_double_three,
-    model::{Game, Position},
+    game::{Game, Position},
 };
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 
