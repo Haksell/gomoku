@@ -14,12 +14,12 @@
 - bot that likes center
 - arena with elo ranking
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
-- make the code compile faster
 - compute during human time?
 - iterative alpha-beta pruning to always return a move in less than 1s
 - clippy lints hardcore mode
 - MCTS solver for endgame (different concept than MCTS)
 - bot arena
+- check rust performance book for better compilation
 
 ### design
 
