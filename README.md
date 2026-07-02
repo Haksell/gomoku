@@ -100,6 +100,11 @@
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it's running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
 
+## push check
+
+- ctrl+f `todo`
+- ctrl+f `unimplemented`
+
 ## evaluation
 
 ### preliminary checks
