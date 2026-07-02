@@ -1,4 +1,3 @@
-use super::get_close_moves;
 use crate::{
     game::{
         Game, GameState,
@@ -9,9 +8,8 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-// TODO: struct with distance and number of moves
-const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX)];
-const MAX_DEPTH: usize = DFS.len();
+// TODO: different max_dist and number of best moves to check depending on depth
+const MAX_DEPTH: usize = 3;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
     if game.plies == 0 {
@@ -53,15 +51,13 @@ fn alpha_beta_pruning_helper(
     }
 
     // TODO: sort by depth 1 heuristic
-    let close_moves = get_close_moves(game, DFS[depth].0, true);
+    let close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
-    // TODO: sort by depth 1 heuristic
-    let a = &close_moves[0..(DFS[depth].1).min(close_moves.len())];
-    for &(x, y) in a {
+    for (x, y) in close_moves {
         // TODO: do_move then undo_move
         let mut model = game.clone();
         model.do_move(x, y);

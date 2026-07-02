@@ -1,4 +1,3 @@
-use super::get_close_moves;
 use crate::{
     game::{
         Game, GameState,
@@ -15,7 +14,7 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
-    get_close_moves(game, 1, true)
+    game.get_legal_moves(Some(2), true)
         .into_iter()
         .max_by_key(|&(x, y)| {
             // TODO: undo_move instead of clone
@@ -44,7 +43,8 @@ fn minimax_helper(
         return heuristic(game);
     }
 
-    let close_moves = get_close_moves(game, 1, false);
+    // TODO: NOT Some(2)
+    let close_moves = game.get_legal_moves(Some(2), false);
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = depth & 1 == 0;

@@ -4,7 +4,7 @@
 
 ### misc
 
-- precompute close_moves
+- check open three next to border
 - fix move shows as hover before bot plays (async bot)
 - fast `undo_move`
 - decent heuristic

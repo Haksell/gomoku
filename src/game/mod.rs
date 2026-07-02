@@ -5,12 +5,14 @@ pub mod handle_captures;
 
 use crate::{Player, player::PlayerColor};
 use board::{BOARD_SIZE, Board, Position};
+use nannou::rand::{seq::SliceRandom as _, thread_rng};
 use std::collections::HashSet;
 
 #[derive(Clone)]
 pub struct Game {
     pub state: GameState,
     pub board: Board,
+    pub close_moves: [[bool; BOARD_SIZE]; BOARD_SIZE],
     pub current_color: PlayerColor,
     pub black_captures: usize,
     pub white_captures: usize,
@@ -27,6 +29,7 @@ impl Game {
         Self {
             state: GameState::Playing,
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
+            close_moves: [[false; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
             white_captures: 0,
@@ -42,6 +45,7 @@ impl Game {
         self.plies += 1;
 
         self.board[y][x] = Some(self.current_color);
+        self.update_close_moves(x, y);
         self.handle_captures(x, y);
 
         let (is_winner, forced_moves) = self.check_winner(x, y);
@@ -96,6 +100,61 @@ impl Game {
             let (x, y) = bot(self, *heuristic);
             self.do_move(x, y);
         }
+    }
+
+    // TODO: dynamic ajustable en tout cas
+    fn update_close_moves(&mut self, x: usize, y: usize) {
+        const MANHATTAN2: [(isize, isize); 13] = [
+            (0, 0),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+            (1, -1),
+            (0, -1),
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+            (0, 2),
+            (2, 0),
+            (0, -2),
+            (-2, 0),
+        ];
+
+        for (dx, dy) in &MANHATTAN2 {
+            let nx = x as isize + dx;
+            let ny = y as isize + dy;
+            if nx < 0 || nx >= BOARD_SIZE as isize || ny < 0 || ny >= BOARD_SIZE as isize {
+                continue;
+            }
+            self.close_moves[ny as usize][nx as usize] = true;
+        }
+    }
+
+    pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
+        // TODO: stop hardcoding 2
+        debug_assert!(matches!(max_dist, None | Some(2)));
+        if !self.forced_moves.is_empty() {
+            return self.forced_moves.clone().into_iter().collect();
+        }
+
+        let mut legal_moves = Vec::new();
+        for y in 0..BOARD_SIZE {
+            for x in 0..BOARD_SIZE {
+                if (max_dist.is_none() || self.close_moves[y][x])
+                    && self.board[y][x].is_none()
+                    && !self.creates_double_three(x, y)
+                {
+                    legal_moves.push((x, y));
+                }
+            }
+        }
+
+        if shuffle {
+            let mut rng = thread_rng();
+            legal_moves.shuffle(&mut rng);
+        }
+
+        legal_moves
     }
 }
 
