@@ -6,11 +6,11 @@ use crate::{
     constants::BOARD_SIZE,
     heuristics::Heuristic,
     rules::creates_double_three,
-    state::{Position, State},
+    state::{Game, Position},
 };
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 
-pub type Bot = fn(&State, Heuristic) -> Position;
+pub type Bot = fn(&Game, Heuristic) -> Position;
 
 pub fn parse_bot(s: &str) -> Result<Bot, String> {
     match s {
@@ -21,15 +21,15 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
     }
 }
 
-fn get_legal_moves(state: &State, shuffle: bool) -> Vec<Position> {
-    if !state.forced_moves.is_empty() {
-        return state.forced_moves.clone().into_iter().collect();
+fn get_legal_moves(game: &Game, shuffle: bool) -> Vec<Position> {
+    if !game.forced_moves.is_empty() {
+        return game.forced_moves.clone().into_iter().collect();
     }
     let mut legal_moves = Vec::new();
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if state.board[y][x].is_none()
-                && !creates_double_three(&state.board, state.current_color, x, y)
+            if game.board[y][x].is_none()
+                && !creates_double_three(&game.board, game.current_color, x, y)
             {
                 legal_moves.push((x, y));
             }
@@ -44,13 +44,13 @@ fn get_legal_moves(state: &State, shuffle: bool) -> Vec<Position> {
 
 // TODO: precompute
 // TODO: manhattan?
-fn get_close_moves(state: &State, max_dist: usize, shuffle: bool) -> Vec<Position> {
+fn get_close_moves(game: &Game, max_dist: usize, shuffle: bool) -> Vec<Position> {
     let neighborhood = |z: usize| {
         (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)
     };
 
     let mut is_close = [[false; BOARD_SIZE]; BOARD_SIZE];
-    for &(x, y) in &state.moves {
+    for &(x, y) in &game.moves {
         for ny in neighborhood(y) {
             for nx in neighborhood(x) {
                 is_close[ny][nx] = true;
@@ -58,5 +58,5 @@ fn get_close_moves(state: &State, max_dist: usize, shuffle: bool) -> Vec<Positio
         }
     }
 
-    get_legal_moves(state, shuffle).into_iter().filter(|&(x, y)| is_close[y][x]).collect()
+    get_legal_moves(game, shuffle).into_iter().filter(|&(x, y)| is_close[y][x]).collect()
 }

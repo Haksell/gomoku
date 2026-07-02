@@ -1,7 +1,7 @@
 use super::{DIRECTIONS8, is_capture};
-use crate::State;
+use crate::state::Game;
 
-pub fn handle_captures(state: &mut State, x: usize, y: usize) {
+pub fn handle_captures(state: &mut Game, x: usize, y: usize) {
     let player = state.current_color;
     let total_captures = DIRECTIONS8
         .iter()

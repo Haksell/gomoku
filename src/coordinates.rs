@@ -22,9 +22,9 @@ pub fn mouse_to_board(app: &App, state: &State) -> Option<Position> {
     let (x, y) = (x as usize, y as usize);
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
-        || state.board[y][x].is_some()
-        || creates_double_three(&state.board, state.current_color, x, y)
-        || (!state.forced_moves.is_empty() && !state.forced_moves.contains(&(x, y)))
+        || state.game.board[y][x].is_some()
+        || creates_double_three(&state.game.board, state.game.current_color, x, y)
+        || (!state.game.forced_moves.is_empty() && !state.game.forced_moves.contains(&(x, y)))
     {
         return None;
     }

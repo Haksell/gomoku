@@ -1,5 +1,5 @@
-use crate::state::State;
+use crate::state::Game;
 
-pub const fn zero(_: &State) -> i64 {
+pub const fn zero(_: &Game) -> i64 {
     0
 }

@@ -3,7 +3,7 @@ use crate::{
     constants::BOARD_CENTER,
     heuristics::Heuristic,
     player::PlayerColor,
-    state::{Position, State},
+    state::{Game, Position},
 };
 use std::cmp::{max, min};
 
@@ -11,14 +11,14 @@ use std::cmp::{max, min};
 const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX)];
 const MAX_DEPTH: usize = DFS.len();
 
-pub fn alpha_beta_pruning(state: &State, heuristic: Heuristic) -> Position {
-    if state.moves.is_empty() {
+pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
+    if game.moves.is_empty() {
         return BOARD_CENTER;
     }
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(
-        state,
-        state.current_color,
+        game,
+        game.current_color,
         heuristic,
         0,
         i64::MIN,
@@ -29,7 +29,7 @@ pub fn alpha_beta_pruning(state: &State, heuristic: Heuristic) -> Position {
 }
 
 fn alpha_beta_pruning_helper(
-    state: &State,
+    game: &Game,
     current_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
@@ -37,15 +37,15 @@ fn alpha_beta_pruning_helper(
     mut max_score: i64,
     best_move: &mut Position,
 ) -> i64 {
-    if let Some(winner) = state.winner {
+    if let Some(winner) = game.winner {
         return if winner == current_player { i64::MAX } else { i64::MIN };
     }
     if depth == MAX_DEPTH {
-        return heuristic(state);
+        return heuristic(game);
     }
 
     // TODO: sort by depth 1 heuristic
-    let close_moves = get_close_moves(state, DFS[depth].0, true);
+    let close_moves = get_close_moves(game, DFS[depth].0, true);
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = depth & 1 == 0;
@@ -55,7 +55,7 @@ fn alpha_beta_pruning_helper(
     let a = &close_moves[0..(DFS[depth].1).min(close_moves.len())];
     for &(x, y) in a {
         // TODO: do_move then undo_move
-        let mut state = state.clone();
+        let mut state = game.clone();
         state.do_move(x, y);
         let score = alpha_beta_pruning_helper(
             &state,

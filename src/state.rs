@@ -10,7 +10,7 @@ pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
 pub type Position = (usize, usize); // TODO: !usize 
 
 #[derive(Clone)]
-pub struct State {
+pub struct Game {
     pub board: Board,
     pub current_color: PlayerColor,
     // TODO: is_game_over instead of Option because of redundancy with current_color
@@ -19,13 +19,24 @@ pub struct State {
     pub white_captures: usize,
     pub moves: Vec<Position>,
     pub forced_moves: HashSet<Position>,
-    pub hover: Option<Position>,
-    pub ai_thinking_time: Option<u128>,
     pub black_player: Player,
     pub white_player: Player,
 }
 
+#[derive(Clone)]
+pub struct State {
+    pub game: Game,
+    pub hover: Option<Position>,
+    pub ai_thinking_time: Option<u128>,
+}
+
 impl State {
+    pub fn new(black_player: Player, white_player: Player) -> Self {
+        Self { game: Game::new(black_player, white_player), hover: None, ai_thinking_time: None }
+    }
+}
+
+impl Game {
     pub fn new(black_player: Player, white_player: Player) -> Self {
         Self {
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
@@ -35,8 +46,6 @@ impl State {
             white_captures: 0,
             moves: Vec::new(),
             forced_moves: HashSet::new(),
-            hover: None,
-            ai_thinking_time: None,
             black_player,
             white_player,
         }
@@ -71,14 +80,14 @@ impl State {
     //     self.moves.pop();
     // }
 
-    /// Assumes the sequence of moves is valid.
-    pub fn from_moves(black_player: Player, white_player: Player, moves: &[Position]) -> Self {
-        let mut state = Self::new(black_player, white_player);
-        for &(x, y) in moves {
-            state.do_move(x, y);
-        }
-        state
-    }
+    // /// Assumes the sequence of moves is valid.
+    // pub fn from_moves(black_player: Player, white_player: Player, moves: &[Position]) -> Self {
+    //     let mut state = Self::new(black_player, white_player);
+    //     for &(x, y) in moves {
+    //         state.do_move(x, y);
+    //     }
+    //     state
+    // }
 
     pub const fn current_player(&self) -> &Player {
         match self.current_color {

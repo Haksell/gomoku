@@ -1,7 +1,7 @@
 use crate::{
-    State,
     bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
     heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
+    state::Game,
     textures::{TEXTURE_BLACK, TEXTURE_WHITE},
 };
 use itertools::Itertools as _;
@@ -68,17 +68,17 @@ impl PlayerColor {
         }
     }
 
-    pub const fn captures(self, state: &State) -> usize {
+    pub const fn captures(self, game: &Game) -> usize {
         match self {
-            Self::Black => state.black_captures,
-            Self::White => state.white_captures,
+            Self::Black => game.black_captures,
+            Self::White => game.white_captures,
         }
     }
 
-    pub const fn increment_captures(self, state: &mut State, captures: usize) {
+    pub const fn increment_captures(self, game: &mut Game, captures: usize) {
         match self {
-            Self::Black => state.black_captures += captures,
-            Self::White => state.white_captures += captures,
+            Self::Black => game.black_captures += captures,
+            Self::White => game.white_captures += captures,
         }
     }
 }

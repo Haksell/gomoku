@@ -1,8 +1,8 @@
-use crate::{player::PlayerColor, state::State};
+use crate::{player::PlayerColor, state::Game};
 
-pub const fn capturophile(state: &State) -> i64 {
-    match state.current_color {
-        PlayerColor::Black => state.black_captures as i64 - state.white_captures as i64,
-        PlayerColor::White => state.white_captures as i64 - state.black_captures as i64,
+pub const fn capturophile(game: &Game) -> i64 {
+    match game.current_color {
+        PlayerColor::Black => game.black_captures as i64 - game.white_captures as i64,
+        PlayerColor::White => game.white_captures as i64 - game.black_captures as i64,
     }
 }

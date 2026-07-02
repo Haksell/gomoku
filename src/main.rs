@@ -12,6 +12,7 @@ use crate::{
     constants::WINDOW_SIZE,
     coordinates::mouse_to_board,
     player::{Player, PlayerColor},
+    state::Game,
     textures::init_textures,
     view::view,
 };
@@ -46,7 +47,7 @@ fn main() {
             let mut black_wins = 0;
             let mut white_wins = 0;
             for game in 1..=n {
-                let mut state = State::new(args.black_player, args.white_player);
+                let mut state = Game::new(args.black_player, args.white_player);
                 state.play_game();
                 match state.winner {
                     Some(PlayerColor::Black) => black_wins += 1,
@@ -81,12 +82,12 @@ fn app(app: &App) -> State {
 
 fn mouse_pressed(app: &App, state: &mut State, button: MouseButton) {
     if button == MouseButton::Left
-        && state.winner.is_none()
-        && state.current_player().is_human()
+        && state.game.winner.is_none()
+        && state.game.current_player().is_human()
         && let Some((x, y)) = mouse_to_board(app, state)
     {
         state.hover = None;
-        state.do_move(x, y);
+        state.game.do_move(x, y);
     }
 }
 
@@ -101,24 +102,25 @@ fn key_pressed(_: &App, state: &mut State, key: Key) {
     //     );
     // }
     if key == Key::Home {
-        *state = State::new(state.black_player, state.white_player);
+        *state = State::new(state.game.black_player, state.game.white_player);
     }
 }
 
 fn update(app: &App, state: &mut State, _: Update) {
     state.hover = None;
 
-    if state.winner.is_none()
-        && let Player::Bot { bot, heuristic } = state.current_player()
+    if state.game.winner.is_none()
+        && let Player::Bot { bot, heuristic } = state.game.current_player()
     {
         let start = Instant::now();
-        let (x, y) = bot(state, *heuristic);
+        // let bot_thread = std::thread::spawn(|| bot(state., *heuristic));
+        let (x, y) = bot(&state.game, *heuristic);
         state.ai_thinking_time = Some(start.elapsed().as_millis());
         println!("AI move computed in {:?} ms", state.ai_thinking_time.unwrap()); // TODO: show in UI and delete this println (MANDATORY!)
-        state.do_move(x, y);
+        state.game.do_move(x, y);
     }
 
-    if state.winner.is_none() && state.current_player().is_human() {
+    if state.game.winner.is_none() && state.game.current_player().is_human() {
         state.hover = mouse_to_board(app, state);
     }
 

@@ -23,10 +23,10 @@ pub fn view(app: &App, state: &State, frame: Frame) {
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, state);
-    match state.winner {
+    match state.game.winner {
         Some(winner) => draw_game_over_overlay(&draw, winner),
         None => {
-            if state.forced_moves.is_empty() {
+            if state.game.forced_moves.is_empty() {
                 draw_invalid_moves(&draw, state);
             } else {
                 draw_valid_moves(&draw, state);
@@ -91,14 +91,14 @@ fn draw_stones(draw: &Draw, state: &State) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if let Some(color) = state.board[y][x] {
+            if let Some(color) = state.game.board[y][x] {
                 draw_stone(draw, x, y, color);
             }
         }
     }
 
     if let Some((x, y)) = state.hover {
-        let color = match state.current_color {
+        let color = match state.game.current_color {
             PlayerColor::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
             PlayerColor::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
         };
@@ -116,7 +116,7 @@ fn draw_valid_moves(draw: &Draw, state: &State) {
     const COLOR_VALID_MOVE: Srgb<u8> =
         Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
 
-    for &(x, y) in &state.forced_moves {
+    for &(x, y) in &state.game.forced_moves {
         if Some((x, y)) != state.hover {
             draw_circle(draw, x, y, COLOR_VALID_MOVE);
         }
@@ -130,8 +130,8 @@ fn draw_invalid_moves(draw: &Draw, state: &State) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if state.board[y][x].is_none()
-                && creates_double_three(&state.board, state.current_color, x, y)
+            if state.game.board[y][x].is_none()
+                && creates_double_three(&state.game.board, state.game.current_color, x, y)
             {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);
             }
