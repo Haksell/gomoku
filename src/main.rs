@@ -5,7 +5,7 @@ mod gui;
 mod heuristics;
 mod player;
 
-use crate::player::{Player, PlayerColor};
+use crate::player::Player;
 use clap::Parser;
 
 #[derive(Debug, Parser)]

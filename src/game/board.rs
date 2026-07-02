@@ -11,7 +11,7 @@ pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
 pub const DIRECTIONS8: [(isize, isize); 8] =
     [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)];
 
-pub fn is_same_player(board: &Board, player: Option<PlayerColor>, x: isize, y: isize) -> bool {
+pub fn is_same_color(board: &Board, player: Option<PlayerColor>, x: isize, y: isize) -> bool {
     x >= 0
         && y >= 0
         && x < BOARD_SIZE as isize
@@ -28,9 +28,9 @@ pub fn is_capture(
     dy: isize,
 ) -> bool {
     let (x, y) = (x as isize, y as isize);
-    is_same_player(board, Some(player_color), x + 3 * dx, y + 3 * dy)
-        && is_same_player(board, Some(!player_color), x + 2 * dx, y + 2 * dy)
-        && is_same_player(board, Some(!player_color), x + dx, y + dy)
+    is_same_color(board, Some(player_color), x + 3 * dx, y + 3 * dy)
+        && is_same_color(board, Some(!player_color), x + 2 * dx, y + 2 * dy)
+        && is_same_color(board, Some(!player_color), x + dx, y + dy)
 }
 
 #[cfg(test)]

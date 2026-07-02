@@ -1,6 +1,6 @@
 use crate::game::{
     Game,
-    board::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_player},
+    board::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_color},
 };
 
 impl Game {
@@ -31,41 +31,41 @@ impl Game {
         // TODO: test if it is faster directly with booleans
 
         let straight_border = || {
-            is_same_player(board, Some(*player), xp1, yp1)
-                && is_same_player(board, Some(*player), xp2, yp2)
-                && is_same_player(board, None, xp3, yp3)
-                && is_same_player(board, None, xm1, ym1)
+            is_same_color(board, Some(*player), xp1, yp1)
+                && is_same_color(board, Some(*player), xp2, yp2)
+                && is_same_color(board, None, xp3, yp3)
+                && is_same_color(board, None, xm1, ym1)
         };
 
         let straight_center = || {
-            is_same_player(board, Some(*player), xp1, yp1)
-                && is_same_player(board, Some(*player), xm1, ym1)
-                && is_same_player(board, None, xp2, yp2)
-                && is_same_player(board, None, xm2, ym2)
+            is_same_color(board, Some(*player), xp1, yp1)
+                && is_same_color(board, Some(*player), xm1, ym1)
+                && is_same_color(board, None, xp2, yp2)
+                && is_same_color(board, None, xm2, ym2)
         };
 
         let separated_alone = || {
-            is_same_player(board, Some(*player), xp2, yp2)
-                && is_same_player(board, Some(*player), xp3, yp3)
-                && is_same_player(board, None, xm1, ym1)
-                && is_same_player(board, None, xp1, yp1)
-                && is_same_player(board, None, xp4, yp4)
+            is_same_color(board, Some(*player), xp2, yp2)
+                && is_same_color(board, Some(*player), xp3, yp3)
+                && is_same_color(board, None, xm1, ym1)
+                && is_same_color(board, None, xp1, yp1)
+                && is_same_color(board, None, xp4, yp4)
         };
 
         let separated_center = || {
-            is_same_player(board, Some(*player), xm1, ym1)
-                && is_same_player(board, Some(*player), xp2, yp2)
-                && is_same_player(board, None, xm2, ym2)
-                && is_same_player(board, None, xp1, yp1)
-                && is_same_player(board, None, xp3, yp3)
+            is_same_color(board, Some(*player), xm1, ym1)
+                && is_same_color(board, Some(*player), xp2, yp2)
+                && is_same_color(board, None, xm2, ym2)
+                && is_same_color(board, None, xp1, yp1)
+                && is_same_color(board, None, xp3, yp3)
         };
 
         let separated_border = || {
-            is_same_player(board, Some(*player), xp1, yp1)
-                && is_same_player(board, Some(*player), xp3, yp3)
-                && is_same_player(board, None, xm1, ym1)
-                && is_same_player(board, None, xp2, yp2)
-                && is_same_player(board, None, xp4, yp4)
+            is_same_color(board, Some(*player), xp1, yp1)
+                && is_same_color(board, Some(*player), xp3, yp3)
+                && is_same_color(board, None, xm1, ym1)
+                && is_same_color(board, None, xp2, yp2)
+                && is_same_color(board, None, xp4, yp4)
         };
 
         // TODO: order by most common to optimize short-circuiting
