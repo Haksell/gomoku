@@ -18,7 +18,7 @@ impl Game {
     }
 
     fn is_open_three(&self, x: usize, y: usize, dx: isize, dy: isize) -> bool {
-        let Self { board, current_color: player, .. } = self;
+        let Self { board, current_color, .. } = self;
 
         let (x, y) = (x as isize, y as isize);
         let (xm1, ym1) = (x - dx, y - dy);
@@ -31,38 +31,38 @@ impl Game {
         // TODO: test if it is faster directly with booleans
 
         let straight_border = || {
-            is_same_color(board, Some(*player), xp1, yp1)
-                && is_same_color(board, Some(*player), xp2, yp2)
+            is_same_color(board, Some(*current_color), xp1, yp1)
+                && is_same_color(board, Some(*current_color), xp2, yp2)
                 && is_same_color(board, None, xp3, yp3)
                 && is_same_color(board, None, xm1, ym1)
         };
 
         let straight_center = || {
-            is_same_color(board, Some(*player), xp1, yp1)
-                && is_same_color(board, Some(*player), xm1, ym1)
+            is_same_color(board, Some(*current_color), xp1, yp1)
+                && is_same_color(board, Some(*current_color), xm1, ym1)
                 && is_same_color(board, None, xp2, yp2)
                 && is_same_color(board, None, xm2, ym2)
         };
 
         let separated_alone = || {
-            is_same_color(board, Some(*player), xp2, yp2)
-                && is_same_color(board, Some(*player), xp3, yp3)
+            is_same_color(board, Some(*current_color), xp2, yp2)
+                && is_same_color(board, Some(*current_color), xp3, yp3)
                 && is_same_color(board, None, xm1, ym1)
                 && is_same_color(board, None, xp1, yp1)
                 && is_same_color(board, None, xp4, yp4)
         };
 
         let separated_center = || {
-            is_same_color(board, Some(*player), xm1, ym1)
-                && is_same_color(board, Some(*player), xp2, yp2)
+            is_same_color(board, Some(*current_color), xm1, ym1)
+                && is_same_color(board, Some(*current_color), xp2, yp2)
                 && is_same_color(board, None, xm2, ym2)
                 && is_same_color(board, None, xp1, yp1)
                 && is_same_color(board, None, xp3, yp3)
         };
 
         let separated_border = || {
-            is_same_color(board, Some(*player), xp1, yp1)
-                && is_same_color(board, Some(*player), xp3, yp3)
+            is_same_color(board, Some(*current_color), xp1, yp1)
+                && is_same_color(board, Some(*current_color), xp3, yp3)
                 && is_same_color(board, None, xm1, ym1)
                 && is_same_color(board, None, xp2, yp2)
                 && is_same_color(board, None, xp4, yp4)
