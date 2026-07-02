@@ -5,8 +5,7 @@ mod view;
 
 use crate::{
     Args,
-    constants::WINDOW_SIZE,
-    game::{Game, Position},
+    game::{BOARD_SIZE, Game, Position},
     player::Player,
 };
 use clap::Parser as _;
@@ -16,6 +15,11 @@ use nannou::{App, event::Update, winit::window::CursorIcon};
 use std::time::Instant;
 use textures::init_textures;
 use view::view;
+
+pub const WINDOW_SIZE: u32 = 750;
+pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;
+pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
+pub const DOT_SPACING: usize = 6;
 
 pub fn run() {
     nannou::app(app).update(update).view(view).run();
@@ -73,4 +77,15 @@ fn update(app: &App, model: &mut Model, _: Update) {
     } else {
         CursorIcon::Default
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{game::HALF_BOARD_SIZE, gui::DOT_SPACING};
+
+    #[test]
+    fn dot_spacing() {
+        assert!(DOT_SPACING > 0);
+        assert!(DOT_SPACING < HALF_BOARD_SIZE);
+    }
 }

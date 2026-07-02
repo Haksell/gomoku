@@ -1,7 +1,6 @@
 use crate::{
-    constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE},
-    game::Position,
-    gui::Model,
+    game::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+    gui::{CELL_SIZE, Model},
     rules::creates_double_three,
 };
 use nannou::App;

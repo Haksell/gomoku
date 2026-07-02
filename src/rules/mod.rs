@@ -7,7 +7,10 @@ pub use self::{
     handle_captures::handle_captures,
 };
 
-use crate::{constants::BOARD_SIZE, game::Board, player::PlayerColor};
+use crate::{
+    game::{BOARD_SIZE, Board},
+    player::PlayerColor,
+};
 
 pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
 pub const DIRECTIONS8: [(isize, isize); 8] =

@@ -1,13 +1,16 @@
 use crate::{
     Player,
-    constants::BOARD_SIZE,
     player::PlayerColor,
     rules::{check_winner, handle_captures},
 };
 use std::collections::HashSet;
 
+pub const BOARD_SIZE: usize = 19;
+pub const HALF_BOARD_SIZE: usize = BOARD_SIZE / 2;
+pub const BOARD_CENTER: Position = (HALF_BOARD_SIZE, HALF_BOARD_SIZE);
+
 pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
-pub type Position = (usize, usize); // TODO: !usize 
+pub type Position = (usize, usize); // TODO: !usize
 
 #[derive(Clone)]
 pub struct Game {
@@ -93,5 +96,16 @@ impl Game {
             let (x, y) = bot(self, *heuristic);
             self.do_move(x, y);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn board_size() {
+        assert!(BOARD_SIZE % 2 == 1);
+        assert!(BOARD_SIZE >= 3);
     }
 }

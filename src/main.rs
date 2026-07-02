@@ -1,6 +1,5 @@
 mod arena;
 mod bots;
-mod constants;
 mod game;
 mod gui;
 mod heuristics;

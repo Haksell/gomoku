@@ -1,7 +1,7 @@
 use crate::{
-    constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
+    game::{BOARD_SIZE, HALF_BOARD_SIZE},
     gui::{
-        Model,
+        CELL_SIZE, DOT_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,
         textures::{TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_WHITE},
     },
