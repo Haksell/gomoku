@@ -1,7 +1,7 @@
 use super::get_close_moves;
 use crate::{
     game::{
-        Game,
+        Game, GameState,
         board::{BOARD_CENTER, Position},
     },
     heuristics::Heuristic,
@@ -11,9 +11,10 @@ use crate::{
 const MAX_DEPTH: usize = 4;
 
 pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
-    if game.moves.is_empty() {
+    if game.plies == 0 {
         return BOARD_CENTER;
     }
+
     get_close_moves(game, 1, true)
         .into_iter()
         .max_by_key(|&(x, y)| {
@@ -31,16 +32,21 @@ fn minimax_helper(
     heuristic: Heuristic,
     depth: usize,
 ) -> i64 {
-    if let Some(winner) = game.winner {
-        return if winner == current_player { i64::MAX } else { i64::MIN };
+    match game.state {
+        GameState::Playing => {}
+        GameState::Draw => return 0,
+        GameState::Won(winner) => {
+            return if winner == current_player { i64::MAX } else { i64::MIN };
+        }
     }
+
     if depth == MAX_DEPTH {
         return heuristic(game);
     }
+
     let close_moves = get_close_moves(game, 1, false);
-    if close_moves.is_empty() {
-        return 0;
-    }
+    debug_assert!(!close_moves.is_empty());
+
     let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
     for (x, y) in close_moves {
@@ -51,5 +57,6 @@ fn minimax_helper(
             if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
         // model.undo_move(x, y);
     }
+
     best_score
 }

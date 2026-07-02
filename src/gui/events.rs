@@ -6,7 +6,7 @@ use nannou::{
 
 pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     if button == MouseButton::Left
-        && model.game.winner.is_none()
+        && model.game.state.is_playing()
         && model.game.current_player().is_human()
         && let Some((x, y)) = mouse_to_board(app, model)
     {

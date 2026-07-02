@@ -60,7 +60,7 @@ fn app(app: &App) -> Model {
 fn update(app: &App, model: &mut Model, _: Update) {
     model.hover = None;
 
-    if model.game.winner.is_none()
+    if model.game.state.is_playing()
         && let Player::Bot { bot, heuristic } = model.game.current_player()
     {
         let start = Instant::now();
@@ -71,7 +71,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
         model.game.do_move(x, y);
     }
 
-    if model.game.winner.is_none() && model.game.current_player().is_human() {
+    if model.game.state.is_playing() && model.game.current_player().is_human() {
         model.hover = mouse_to_board(app, model);
     }
 

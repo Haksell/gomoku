@@ -1,7 +1,7 @@
 use crate::{
     game::{
         Game, Position,
-        board::{DIRECTIONS4, DIRECTIONS8, is_same_color},
+        board::{BOARD_SIZE, DIRECTIONS4, DIRECTIONS8, is_same_color},
     },
     player::PlayerColor,
 };
@@ -12,21 +12,23 @@ const REQUIRED_CAPTURES: usize = 5;
 
 impl Game {
     pub fn check_winner(&self, x: usize, y: usize) -> (bool, HashSet<Position>) {
-        let mut breakable_positions: HashSet<Position> = HashSet::new();
         let captures = match self.current_color {
             PlayerColor::Black => self.black_captures,
             PlayerColor::White => self.white_captures,
         };
         if captures >= REQUIRED_CAPTURES {
-            return (true, breakable_positions);
+            return (true, HashSet::new());
         }
-        let mut potential_winners: Vec<Vec<Position>> = Vec::new();
+
+        let mut potential_winners = Vec::new();
         for &(dx, dy) in &DIRECTIONS4 {
             let longest_row_in_dir = self.get_longest_row_in_dir(x, y, dx, dy);
             if longest_row_in_dir.len() >= STONES_IN_A_ROW {
                 potential_winners.push(longest_row_in_dir);
             }
         }
+
+        let mut breakable_positions = HashSet::new();
         for potential_winner in &mut potential_winners {
             let break_possibilities = self.get_break_possibilities(potential_winner);
             if break_possibilities.is_empty() {
@@ -41,7 +43,12 @@ impl Game {
                 return (true, breakable_positions);
             }
         }
+
         (false, breakable_positions)
+    }
+
+    pub const fn check_draw(&self) -> bool {
+        self.plies == BOARD_SIZE * BOARD_SIZE + 2 * (self.black_captures + self.white_captures)
     }
 
     fn get_break_possibilities(&self, potential_winner: &mut [Position]) -> HashSet<Position> {

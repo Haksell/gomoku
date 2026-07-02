@@ -44,18 +44,21 @@ fn get_legal_moves(game: &Game, shuffle: bool) -> Vec<Position> {
 // TODO: precompute
 // TODO: manhattan?
 fn get_close_moves(game: &Game, max_dist: usize, shuffle: bool) -> Vec<Position> {
-    let neighborhood = |z: usize| {
-        (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)
-    };
+    get_legal_moves(game, shuffle)
 
-    let mut is_close = [[false; BOARD_SIZE]; BOARD_SIZE];
-    for &(x, y) in &game.moves {
-        for ny in neighborhood(y) {
-            for nx in neighborhood(x) {
-                is_close[ny][nx] = true;
-            }
-        }
-    }
+    // let neighborhood = |z: usize| {
+    //     (z as isize - max_dist as isize).max(0) as usize..=(z + max_dist).min(BOARD_SIZE - 1)
+    // };
 
-    get_legal_moves(game, shuffle).into_iter().filter(|&(x, y)| is_close[y][x]).collect()
+    // let mut is_close = [[true; BOARD_SIZE]; BOARD_SIZE];
+    // FIXME: incorrect because some moves have been captured
+    // for &(x, y) in &game.moves {
+    //     for ny in neighborhood(y) {
+    //         for nx in neighborhood(x) {
+    //             is_close[ny][nx] = true;
+    //         }
+    //     }
+    // }
+
+    // get_legal_moves(game, shuffle).into_iter().filter(|&(x, y)| is_close[y][x]).collect()
 }

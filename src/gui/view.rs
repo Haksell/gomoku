@@ -1,5 +1,8 @@
 use crate::{
-    game::board::{BOARD_SIZE, HALF_BOARD_SIZE},
+    game::{
+        GameState,
+        board::{BOARD_SIZE, HALF_BOARD_SIZE},
+    },
     gui::{
         CELL_SIZE, DOT_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,
@@ -20,20 +23,28 @@ const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 #[expect(clippy::needless_pass_by_value)]
 pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
+
     draw_background(&draw);
     draw_grid(&draw);
     draw_dots(&draw);
     draw_stones(&draw, model);
-    match model.game.winner {
-        Some(winner) => draw_game_over_overlay(&draw, winner),
-        None => {
-            if model.game.forced_moves.is_empty() {
-                draw_invalid_moves(&draw, model);
-            } else {
-                draw_valid_moves(&draw, model);
-            }
+
+    if model.game.state.is_playing() {
+        if model.game.forced_moves.is_empty() {
+            draw_invalid_moves(&draw, model);
+        } else {
+            draw_forced_moves(&draw, model);
         }
     }
+
+    draw_hover_coords(&draw, model);
+
+    match model.game.state {
+        GameState::Playing => {}
+        GameState::Draw => draw_game_over_overlay(&draw, None),
+        GameState::Won(winner) => draw_game_over_overlay(&draw, Some(winner)),
+    }
+
     draw_hover_coords(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
@@ -115,7 +126,7 @@ fn draw_circle(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
     draw.ellipse().x_y(px, py).w_h(STONE_SIZE, STONE_SIZE).color(color);
 }
 
-fn draw_valid_moves(draw: &Draw, model: &Model) {
+fn draw_forced_moves(draw: &Draw, model: &Model) {
     // Tailwind green-500
     const COLOR_VALID_MOVE: Srgb<u8> =
         Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
@@ -141,10 +152,11 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     }
 }
 
-fn draw_game_over_overlay(draw: &Draw, winner: PlayerColor) {
+fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
     let msg = match winner {
-        PlayerColor::Black => "Black wins",
-        PlayerColor::White => "White wins",
+        None => "Draw",
+        Some(PlayerColor::Black) => "Black wins",
+        Some(PlayerColor::White) => "White wins",
     };
 
     draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0.0, 0.0, 0.0, 0.55));

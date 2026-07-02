@@ -1,7 +1,7 @@
 use super::get_close_moves;
 use crate::{
     game::{
-        Game,
+        Game, GameState,
         board::{BOARD_CENTER, Position},
     },
     heuristics::Heuristic,
@@ -14,9 +14,10 @@ const DFS: &[Position] = &[(1, usize::MAX), (1, usize::MAX)];
 const MAX_DEPTH: usize = DFS.len();
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
-    if game.moves.is_empty() {
+    if game.plies == 0 {
         return BOARD_CENTER;
     }
+
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(
         game,
@@ -39,9 +40,14 @@ fn alpha_beta_pruning_helper(
     mut max_score: i64,
     best_move: &mut Position,
 ) -> i64 {
-    if let Some(winner) = game.winner {
-        return if winner == current_player { i64::MAX } else { i64::MIN };
+    match game.state {
+        GameState::Playing => {}
+        GameState::Draw => return 0,
+        GameState::Won(winner) => {
+            return if winner == current_player { i64::MAX } else { i64::MIN };
+        }
     }
+
     if depth == MAX_DEPTH {
         return heuristic(game);
     }
