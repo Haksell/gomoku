@@ -1,7 +1,6 @@
-use super::{DIRECTIONS4, DIRECTIONS8};
 use crate::game::{
     Game,
-    board::{is_capture, is_same_player},
+    board::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_player},
 };
 
 impl Game {

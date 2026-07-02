@@ -1,5 +1,7 @@
 pub mod board;
-pub mod rules;
+pub mod check_winner;
+pub mod creates_double_three;
+pub mod handle_captures;
 
 use crate::{Player, player::PlayerColor};
 use board::{BOARD_SIZE, Board, Position};
