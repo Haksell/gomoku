@@ -1,7 +1,7 @@
 use super::get_legal_moves;
 use crate::{
+    game::{Game, board::Position},
     heuristics::Heuristic,
-    game::{Game, Position},
 };
 
 pub fn random_mover(game: &Game, _: Heuristic) -> Position {

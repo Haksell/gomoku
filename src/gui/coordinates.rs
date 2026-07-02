@@ -1,5 +1,5 @@
 use crate::{
-    game::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+    game::board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
     gui::{CELL_SIZE, Model},
 };
 use nannou::App;

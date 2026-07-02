@@ -1,6 +1,9 @@
 use super::get_close_moves;
 use crate::{
-    game::{BOARD_CENTER, Game, Position},
+    game::{
+        Game,
+        board::{BOARD_CENTER, Position},
+    },
     heuristics::Heuristic,
     player::PlayerColor,
 };

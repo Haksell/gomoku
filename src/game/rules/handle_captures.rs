@@ -1,5 +1,5 @@
-use super::{DIRECTIONS8, is_capture};
-use crate::game::Game;
+use super::DIRECTIONS8;
+use crate::game::{Game, board::is_capture};
 
 impl Game {
     pub fn handle_captures(&mut self, x: usize, y: usize) {

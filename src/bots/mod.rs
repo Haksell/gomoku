@@ -3,7 +3,10 @@ pub mod minimax;
 pub mod random_mover;
 
 use crate::{
-    game::{BOARD_SIZE, Game, Position},
+    game::{
+        Game,
+        board::{BOARD_SIZE, Position},
+    },
     heuristics::Heuristic,
 };
 use nannou::rand::{seq::SliceRandom as _, thread_rng};

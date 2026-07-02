@@ -5,7 +5,10 @@ mod view;
 
 use crate::{
     Args,
-    game::{BOARD_SIZE, Game, Position},
+    game::{
+        Game,
+        board::{BOARD_SIZE, Position},
+    },
     player::Player,
 };
 use clap::Parser as _;
@@ -81,7 +84,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
 
 #[cfg(test)]
 mod tests {
-    use crate::{game::HALF_BOARD_SIZE, gui::DOT_SPACING};
+    use crate::{game::board::HALF_BOARD_SIZE, gui::DOT_SPACING};
 
     #[test]
     fn dot_spacing() {

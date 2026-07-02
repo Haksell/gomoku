@@ -1,5 +1,5 @@
 use crate::{
-    game::{BOARD_SIZE, HALF_BOARD_SIZE},
+    game::board::{BOARD_SIZE, HALF_BOARD_SIZE},
     gui::{
         CELL_SIZE, DOT_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,

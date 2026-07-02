@@ -1,5 +1,8 @@
-use super::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_player};
-use crate::game::Game;
+use super::{DIRECTIONS4, DIRECTIONS8};
+use crate::game::{
+    Game,
+    board::{is_capture, is_same_player},
+};
 
 impl Game {
     pub fn creates_double_three(&self, x: usize, y: usize) -> bool {

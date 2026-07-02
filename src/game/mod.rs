@@ -1,14 +1,9 @@
+pub mod board;
 pub mod rules;
 
 use crate::{Player, player::PlayerColor};
+use board::{BOARD_SIZE, Board, Position};
 use std::collections::HashSet;
-
-pub const BOARD_SIZE: usize = 19;
-pub const HALF_BOARD_SIZE: usize = BOARD_SIZE / 2;
-pub const BOARD_CENTER: Position = (HALF_BOARD_SIZE, HALF_BOARD_SIZE);
-
-pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
-pub type Position = (usize, usize); // TODO: !usize
 
 #[derive(Clone)]
 pub struct Game {
@@ -18,6 +13,7 @@ pub struct Game {
     pub winner: Option<PlayerColor>,
     pub black_captures: usize,
     pub white_captures: usize,
+    // TODO: outside this struct
     pub moves: Vec<Position>,
     pub forced_moves: HashSet<Position>,
     pub black_player: Player,
