@@ -2,12 +2,7 @@
 
 # TODO: remove before push
 
-if (($# > 1)); then
-    echo "Usage: $0 msg"
-    exit 1
-fi
-
-MSG=${1:-.}
+MSG=${@:-.}
 
 git add .
 git commit -m "$MSG
