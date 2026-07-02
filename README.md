@@ -45,12 +45,13 @@
 
 ### bonus ideas
 
-- [ ] bot vs bot
+- [x] bot vs bot
 - [ ] bot arena
 - [ ] alternate start rules (swap, swap2...)
 - [ ] variable board size (clap arg?)
 - [ ] gomoku vs renju rules
 - [ ] cancel move
+- [ ] ratatui version
 - [ ] mobile version
 - [ ] web version
 - [ ] board size
