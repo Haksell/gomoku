@@ -78,11 +78,11 @@ fn draw_stones(draw: &Draw, model: &Model) {
             .color(nannou::color::rgba(0.0, 0.0, 0.0, 0.65));
     }
 
-    fn draw_stone(draw: &Draw, x: usize, y: usize, turn: PlayerColor) {
+    fn draw_stone(draw: &Draw, x: usize, y: usize, player_color: PlayerColor) {
         let (px, py) = board_to_physical(x, y);
         draw_shadow(draw, px, py);
 
-        let texture_guard = match turn {
+        let texture_guard = match player_color {
             PlayerColor::Black => TEXTURE_BLACK.get().unwrap(),
             PlayerColor::White => TEXTURE_WHITE.get().unwrap(),
         };
