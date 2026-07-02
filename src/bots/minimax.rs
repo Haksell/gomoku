@@ -3,7 +3,7 @@ use crate::{
     constants::BOARD_CENTER,
     heuristics::Heuristic,
     player::PlayerColor,
-    state::{Game, Position},
+    model::{Game, Position},
 };
 
 const MAX_DEPTH: usize = 4;
@@ -42,12 +42,12 @@ fn minimax_helper(
     let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
     for (x, y) in close_moves {
-        let mut state = game.clone();
-        state.do_move(x, y);
-        let score = minimax_helper(&state, current_player, heuristic, depth + 1);
+        let mut model = game.clone();
+        model.do_move(x, y);
+        let score = minimax_helper(&model, current_player, heuristic, depth + 1);
         best_score =
             if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
-        // state.undo_move(x, y);
+        // model.undo_move(x, y);
     }
     best_score
 }

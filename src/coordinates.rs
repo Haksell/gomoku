@@ -1,11 +1,11 @@
 use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE},
+    model::{Model, Position},
     rules::creates_double_three,
-    state::{Position, State},
 };
 use nannou::App;
 
-pub fn mouse_to_board(app: &App, state: &State) -> Option<Position> {
+pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     fn split_float(z: f32) -> (isize, f32) {
         let pos = z / CELL_SIZE;
         let pos_round = pos.round();
@@ -22,9 +22,9 @@ pub fn mouse_to_board(app: &App, state: &State) -> Option<Position> {
     let (x, y) = (x as usize, y as usize);
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
-        || state.game.board[y][x].is_some()
-        || creates_double_three(&state.game.board, state.game.current_color, x, y)
-        || (!state.game.forced_moves.is_empty() && !state.game.forced_moves.contains(&(x, y)))
+        || model.game.board[y][x].is_some()
+        || creates_double_three(&model.game.board, model.game.current_color, x, y)
+        || (!model.game.forced_moves.is_empty() && !model.game.forced_moves.contains(&(x, y)))
     {
         return None;
     }

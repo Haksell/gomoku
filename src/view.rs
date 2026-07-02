@@ -1,9 +1,9 @@
 use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
     coordinates::board_to_physical,
+    model::Model,
     player::PlayerColor,
     rules::creates_double_three,
-    state::State,
     textures::TEXTURE_BACKGROUND,
 };
 use nannou::{
@@ -17,23 +17,23 @@ const LINE_WIDTH: f32 = CELL_SIZE * 0.052;
 const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
 #[expect(clippy::needless_pass_by_value)]
-pub fn view(app: &App, state: &State, frame: Frame) {
+pub fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw_background(&draw);
     draw_grid(&draw);
     draw_dots(&draw);
-    draw_stones(&draw, state);
-    match state.game.winner {
+    draw_stones(&draw, model);
+    match model.game.winner {
         Some(winner) => draw_game_over_overlay(&draw, winner),
         None => {
-            if state.game.forced_moves.is_empty() {
-                draw_invalid_moves(&draw, state);
+            if model.game.forced_moves.is_empty() {
+                draw_invalid_moves(&draw, model);
             } else {
-                draw_valid_moves(&draw, state);
+                draw_valid_moves(&draw, model);
             }
         }
     }
-    draw_hover_coords(&draw, state);
+    draw_hover_coords(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -68,7 +68,7 @@ fn draw_dots(draw: &Draw) {
     }
 }
 
-fn draw_stones(draw: &Draw, state: &State) {
+fn draw_stones(draw: &Draw, model: &Model) {
     fn draw_shadow(draw: &Draw, px: f32, py: f32) {
         draw.ellipse()
             .x_y(px + 1.5, py - 1.5)
@@ -91,14 +91,14 @@ fn draw_stones(draw: &Draw, state: &State) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if let Some(color) = state.game.board[y][x] {
+            if let Some(color) = model.game.board[y][x] {
                 draw_stone(draw, x, y, color);
             }
         }
     }
 
-    if let Some((x, y)) = state.hover {
-        let color = match state.game.current_color {
+    if let Some((x, y)) = model.hover {
+        let color = match model.game.current_color {
             PlayerColor::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
             PlayerColor::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
         };
@@ -111,27 +111,27 @@ fn draw_circle(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
     draw.ellipse().x_y(px, py).w_h(STONE_SIZE, STONE_SIZE).color(color);
 }
 
-fn draw_valid_moves(draw: &Draw, state: &State) {
+fn draw_valid_moves(draw: &Draw, model: &Model) {
     // Tailwind green-500
     const COLOR_VALID_MOVE: Srgb<u8> =
         Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
 
-    for &(x, y) in &state.game.forced_moves {
-        if Some((x, y)) != state.hover {
+    for &(x, y) in &model.game.forced_moves {
+        if Some((x, y)) != model.hover {
             draw_circle(draw, x, y, COLOR_VALID_MOVE);
         }
     }
 }
 
-fn draw_invalid_moves(draw: &Draw, state: &State) {
+fn draw_invalid_moves(draw: &Draw, model: &Model) {
     // Tailwind red-500
     const COLOR_INVALID_MOVE: Srgb<u8> =
         Srgb { red: 0xef, green: 0x44, blue: 0x44, standard: std::marker::PhantomData };
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if state.game.board[y][x].is_none()
-                && creates_double_three(&state.game.board, state.game.current_color, x, y)
+            if model.game.board[y][x].is_none()
+                && creates_double_three(&model.game.board, model.game.current_color, x, y)
             {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);
             }
@@ -157,8 +157,8 @@ fn draw_game_over_overlay(draw: &Draw, winner: PlayerColor) {
         .x_y(0.0, subtitle_y);
 }
 
-fn draw_hover_coords(draw: &Draw, state: &State) {
-    let Some((x, y)) = state.hover else {
+fn draw_hover_coords(draw: &Draw, model: &Model) {
+    let Some((x, y)) = model.hover else {
         return;
     };
 

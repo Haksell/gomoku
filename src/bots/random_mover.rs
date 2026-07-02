@@ -1,7 +1,7 @@
 use super::get_legal_moves;
 use crate::{
     heuristics::Heuristic,
-    state::{Game, Position},
+    model::{Game, Position},
 };
 
 pub fn random_mover(game: &Game, _: Heuristic) -> Position {

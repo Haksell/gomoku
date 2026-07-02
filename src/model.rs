@@ -24,13 +24,13 @@ pub struct Game {
 }
 
 #[derive(Clone)]
-pub struct State {
+pub struct Model {
     pub game: Game,
     pub hover: Option<Position>,
     pub ai_thinking_time: Option<u128>,
 }
 
-impl State {
+impl Model {
     pub fn new(black_player: Player, white_player: Player) -> Self {
         Self { game: Game::new(black_player, white_player), hover: None, ai_thinking_time: None }
     }
@@ -82,11 +82,11 @@ impl Game {
 
     // /// Assumes the sequence of moves is valid.
     // pub fn from_moves(black_player: Player, white_player: Player, moves: &[Position]) -> Self {
-    //     let mut state = Self::new(black_player, white_player);
+    //     let mut model = Self::new(black_player, white_player);
     //     for &(x, y) in moves {
-    //         state.do_move(x, y);
+    //         model.do_move(x, y);
     //     }
-    //     state
+    //     model
     // }
 
     pub const fn current_player(&self) -> &Player {

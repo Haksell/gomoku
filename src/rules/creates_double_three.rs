@@ -1,5 +1,5 @@
 use super::{DIRECTIONS4, DIRECTIONS8, is_capture, is_same_player};
-use crate::{PlayerColor, state::Board};
+use crate::{PlayerColor, model::Board};
 
 fn is_open_three(
     board: &Board,

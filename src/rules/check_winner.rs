@@ -1,7 +1,7 @@
 use super::{DIRECTIONS4, DIRECTIONS8, is_same_player};
 use crate::{
     PlayerColor,
-    state::{Board, Game, Position},
+    model::{Board, Game, Position},
 };
 use std::collections::HashSet;
 

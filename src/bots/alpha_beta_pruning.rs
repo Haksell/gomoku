@@ -3,7 +3,7 @@ use crate::{
     constants::BOARD_CENTER,
     heuristics::Heuristic,
     player::PlayerColor,
-    state::{Game, Position},
+    model::{Game, Position},
 };
 use std::cmp::{max, min};
 
@@ -55,10 +55,10 @@ fn alpha_beta_pruning_helper(
     let a = &close_moves[0..(DFS[depth].1).min(close_moves.len())];
     for &(x, y) in a {
         // TODO: do_move then undo_move
-        let mut state = game.clone();
-        state.do_move(x, y);
+        let mut model = game.clone();
+        model.do_move(x, y);
         let score = alpha_beta_pruning_helper(
-            &state,
+            &model,
             current_player,
             heuristic,
             depth + 1,
