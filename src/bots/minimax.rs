@@ -1,3 +1,5 @@
+// TODO: aled (seems broken)
+
 use crate::{
     game::{
         Game, GameState,
@@ -7,7 +9,7 @@ use crate::{
     player::PlayerColor,
 };
 
-const MAX_DEPTH: usize = 4;
+const MAX_DEPTH: usize = 3;
 
 pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
     if game.plies == 0 {
@@ -27,7 +29,7 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
 
 fn minimax_helper(
     game: &Game,
-    current_player: PlayerColor,
+    maximizing_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
 ) -> i64 {
@@ -35,12 +37,12 @@ fn minimax_helper(
         GameState::Playing => {}
         GameState::Draw => return 0,
         GameState::Won(winner) => {
-            return if winner == current_player { i64::MAX } else { i64::MIN };
+            return if winner == maximizing_player { i64::MAX } else { i64::MIN };
         }
     }
 
     if depth == MAX_DEPTH {
-        return heuristic(game);
+        return heuristic(game, maximizing_player) - heuristic(game, !maximizing_player);
     }
 
     // TODO: NOT Some(2)
@@ -52,7 +54,7 @@ fn minimax_helper(
     for (x, y) in close_moves {
         let mut model = game.clone();
         model.do_move(x, y);
-        let score = minimax_helper(&model, current_player, heuristic, depth + 1);
+        let score = minimax_helper(&model, maximizing_player, heuristic, depth + 1);
         best_score =
             if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
         // model.undo_move(x, y);

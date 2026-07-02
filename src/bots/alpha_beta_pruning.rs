@@ -31,7 +31,7 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
 
 fn alpha_beta_pruning_helper(
     game: &Game,
-    current_player: PlayerColor,
+    maximizing_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
     mut min_score: i64,
@@ -42,19 +42,23 @@ fn alpha_beta_pruning_helper(
         GameState::Playing => {}
         GameState::Draw => return 0,
         GameState::Won(winner) => {
-            return if winner == current_player { i64::MAX } else { i64::MIN };
+            return if winner == maximizing_player {
+                i64::MAX - depth as i64
+            } else {
+                i64::MIN + depth as i64
+            };
         }
     }
 
     if depth == MAX_DEPTH {
-        return heuristic(game);
+        return heuristic(game, maximizing_player) - heuristic(game, !maximizing_player);
     }
 
     // TODO: sort by depth 1 heuristic
     let close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
-    let is_maximizing_player = depth & 1 == 0;
+    let is_maximizing_player = game.current_color == maximizing_player;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
     for (x, y) in close_moves {
@@ -63,7 +67,7 @@ fn alpha_beta_pruning_helper(
         model.do_move(x, y);
         let score = alpha_beta_pruning_helper(
             &model,
-            current_player,
+            maximizing_player,
             heuristic,
             depth + 1,
             min_score,

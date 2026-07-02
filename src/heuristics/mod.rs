@@ -1,9 +1,9 @@
 pub mod capturophile;
 pub mod zero;
 
-use crate::game::Game;
+use crate::{game::Game, player::PlayerColor};
 
-pub type Heuristic = fn(&Game) -> i64;
+pub type Heuristic = fn(&Game, PlayerColor) -> i64;
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
