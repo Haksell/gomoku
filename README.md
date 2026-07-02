@@ -4,21 +4,17 @@
 
 ### misc
 
+- implement draws
 - fix move shows as hover before bot plays (async bot)
 - fast `undo_move`
 - decent heuristic
-- implement draws
-- force capturing pair if five in a row
-- finish implementing rules
 - unit test of rules
-- bot that likes center
-- arena with elo ranking
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - compute during human time (flag)
 - iterative alpha-beta pruning to always return a move in less than 1s
 - clippy lints hardcore mode
 - MCTS solver for endgame (different concept than MCTS)
-- bot arena
+- arena with elo ranking
 - check rust performance book for better compilation
 
 ### design
