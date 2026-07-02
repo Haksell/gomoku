@@ -1,11 +1,6 @@
-mod check_winner;
-mod creates_double_three;
-mod handle_captures;
-
-pub use self::{
-    check_winner::check_winner, creates_double_three::creates_double_three,
-    handle_captures::handle_captures,
-};
+pub mod check_winner;
+pub mod creates_double_three;
+pub mod handle_captures;
 
 use crate::{
     game::{BOARD_SIZE, Board},
@@ -28,16 +23,16 @@ fn is_same_player(board: &Board, player: Option<PlayerColor>, x: isize, y: isize
 
 fn is_capture(
     board: &Board,
-    player: PlayerColor,
+    player_color: PlayerColor,
     x: usize,
     y: usize,
     dx: isize,
     dy: isize,
 ) -> bool {
     let (x, y) = (x as isize, y as isize);
-    is_same_player(board, Some(player), x + 3 * dx, y + 3 * dy)
-        && is_same_player(board, Some(!player), x + 2 * dx, y + 2 * dy)
-        && is_same_player(board, Some(!player), x + dx, y + dy)
+    is_same_player(board, Some(player_color), x + 3 * dx, y + 3 * dy)
+        && is_same_player(board, Some(!player_color), x + 2 * dx, y + 2 * dy)
+        && is_same_player(board, Some(!player_color), x + dx, y + dy)
 }
 
 #[cfg(test)]

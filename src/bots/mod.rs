@@ -5,7 +5,6 @@ pub mod random_mover;
 use crate::{
     game::{BOARD_SIZE, Game, Position},
     heuristics::Heuristic,
-    rules::creates_double_three,
 };
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 
@@ -27,9 +26,7 @@ fn get_legal_moves(game: &Game, shuffle: bool) -> Vec<Position> {
     let mut legal_moves = Vec::new();
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if game.board[y][x].is_none()
-                && !creates_double_three(&game.board, game.current_color, x, y)
-            {
+            if game.board[y][x].is_none() && !game.creates_double_three(x, y) {
                 legal_moves.push((x, y));
             }
         }

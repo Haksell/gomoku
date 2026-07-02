@@ -6,7 +6,6 @@ use crate::{
         textures::{TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_WHITE},
     },
     player::PlayerColor,
-    rules::creates_double_three,
 };
 use nannou::{
     App, Draw, Frame,
@@ -135,9 +134,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.game.board[y][x].is_none()
-                && creates_double_three(&model.game.board, model.game.current_color, x, y)
-            {
+            if model.game.board[y][x].is_none() && model.game.creates_double_three(x, y) {
                 draw_circle(draw, x, y, COLOR_INVALID_MOVE);
             }
         }

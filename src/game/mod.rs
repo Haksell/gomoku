@@ -1,8 +1,6 @@
-use crate::{
-    Player,
-    player::PlayerColor,
-    rules::{check_winner, handle_captures},
-};
+pub mod rules;
+
+use crate::{Player, player::PlayerColor};
 use std::collections::HashSet;
 
 pub const BOARD_SIZE: usize = 19;
@@ -44,8 +42,8 @@ impl Game {
     /// Assumes the move is valid.
     pub fn do_move(&mut self, x: usize, y: usize) {
         self.board[y][x] = Some(self.current_color);
-        handle_captures(self, x, y);
-        let (is_winner, forced_moves) = check_winner(self, x, y);
+        self.handle_captures(x, y);
+        let (is_winner, forced_moves) = self.check_winner(x, y);
         if is_winner {
             self.winner = Some(self.current_color);
             // self.forced_moves.clear(); ???

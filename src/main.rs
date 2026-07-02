@@ -4,7 +4,6 @@ mod game;
 mod gui;
 mod heuristics;
 mod player;
-mod rules;
 
 use crate::player::{Player, PlayerColor};
 use clap::Parser;

@@ -51,8 +51,6 @@ panic = "allow"
 pattern_type_mismatch = "allow"
 print_stderr = "allow"
 print_stdout = "allow"
-# i hate it but it makes sense for this project
-pub_use = "allow"
 shadow_reuse = "allow"
 shadow_same = "allow"
 single_call_fn = "allow"

@@ -1,7 +1,6 @@
 use crate::{
     game::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
     gui::{CELL_SIZE, Model},
-    rules::creates_double_three,
 };
 use nannou::App;
 
@@ -24,7 +23,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
         || model.game.board[y][x].is_some()
-        || creates_double_three(&model.game.board, model.game.current_color, x, y)
+        || model.game.creates_double_three(x, y)
         || (!model.game.forced_moves.is_empty() && !model.game.forced_moves.contains(&(x, y)))
     {
         return None;

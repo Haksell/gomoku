@@ -8,6 +8,41 @@ use std::collections::HashSet;
 const STONES_IN_A_ROW: usize = 5;
 const REQUIRED_CAPTURES: usize = 5;
 
+impl Game {
+    pub fn check_winner(&self, x: usize, y: usize) -> (bool, HashSet<Position>) {
+        let mut breakable_positions: HashSet<Position> = HashSet::new();
+        if self.current_color.captures(self) >= REQUIRED_CAPTURES {
+            return (true, breakable_positions);
+        }
+        let mut potential_winners: Vec<Vec<Position>> = Vec::new();
+        for &(dx, dy) in &DIRECTIONS4 {
+            let longest_row_in_dir =
+                get_longest_row_in_dir(&self.board, self.current_color, x, y, dx, dy);
+            if longest_row_in_dir.len() >= STONES_IN_A_ROW {
+                potential_winners.push(longest_row_in_dir);
+            }
+        }
+        for potential_winner in &mut potential_winners {
+            let break_possibilities =
+                get_break_possibilities(potential_winner, &self.board, self.current_color);
+            if break_possibilities.is_empty() {
+                return (true, breakable_positions);
+            }
+            if breakable_positions.is_empty() {
+                breakable_positions = break_possibilities;
+            } else {
+                breakable_positions.retain(|item| break_possibilities.contains(item));
+            }
+            if breakable_positions.is_empty() {
+                return (true, breakable_positions);
+            }
+        }
+        (false, breakable_positions)
+    }
+}
+
+// TODO: put in impl (self)
+
 fn find_breakable(
     board: &Board,
     player: PlayerColor,
@@ -75,35 +110,4 @@ fn get_break_possibilities(
         break_possibilities.extend(find_breakable(board, player, x as isize, y as isize));
     }
     break_possibilities
-}
-
-pub fn check_winner(game: &Game, x: usize, y: usize) -> (bool, HashSet<Position>) {
-    let mut breakable_positions: HashSet<Position> = HashSet::new();
-    if game.current_color.captures(game) >= REQUIRED_CAPTURES {
-        return (true, breakable_positions);
-    }
-    let mut potential_winners: Vec<Vec<Position>> = Vec::new();
-    for &(dx, dy) in &DIRECTIONS4 {
-        let longest_row_in_dir =
-            get_longest_row_in_dir(&game.board, game.current_color, x, y, dx, dy);
-        if longest_row_in_dir.len() >= STONES_IN_A_ROW {
-            potential_winners.push(longest_row_in_dir);
-        }
-    }
-    for potential_winner in &mut potential_winners {
-        let break_possibilities =
-            get_break_possibilities(potential_winner, &game.board, game.current_color);
-        if break_possibilities.is_empty() {
-            return (true, breakable_positions);
-        }
-        if breakable_positions.is_empty() {
-            breakable_positions = break_possibilities;
-        } else {
-            breakable_positions.retain(|item| break_possibilities.contains(item));
-        }
-        if breakable_positions.is_empty() {
-            return (true, breakable_positions);
-        }
-    }
-    (false, breakable_positions)
 }
