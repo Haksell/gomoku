@@ -1,17 +1,37 @@
+mod coordinates;
+mod events;
+mod textures;
+mod view;
+
 use crate::{
-    Args, constants::WINDOW_SIZE, coordinates::mouse_to_board, model::Model, player::Player,
-    textures::init_textures, view::view,
+    Args,
+    constants::WINDOW_SIZE,
+    game::{Game, Position},
+    player::Player,
 };
 use clap::Parser as _;
-use nannou::{
-    App,
-    event::{Key, MouseButton, Update},
-    winit::window::CursorIcon,
-};
+use coordinates::mouse_to_board;
+use events::{key_pressed, mouse_pressed};
+use nannou::{App, event::Update, winit::window::CursorIcon};
 use std::time::Instant;
+use textures::init_textures;
+use view::view;
 
 pub fn run() {
     nannou::app(app).update(update).view(view).run();
+}
+
+#[derive(Clone)]
+struct Model {
+    game: Game,
+    hover: Option<Position>,
+    ai_thinking_time: Option<u128>,
+}
+
+impl Model {
+    fn new(black_player: Player, white_player: Player) -> Self {
+        Self { game: Game::new(black_player, white_player), hover: None, ai_thinking_time: None }
+    }
 }
 
 fn app(app: &App) -> Model {
@@ -28,32 +48,6 @@ fn app(app: &App) -> Model {
         .unwrap();
     init_textures(app);
     Model::new(args.black_player, args.white_player)
-}
-
-fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
-    if button == MouseButton::Left
-        && model.game.winner.is_none()
-        && model.game.current_player().is_human()
-        && let Some((x, y)) = mouse_to_board(app, model)
-    {
-        model.hover = None;
-        model.game.do_move(x, y);
-    }
-}
-
-fn key_pressed(_: &App, model: &mut Model, key: Key) {
-    // FIXME
-    // if key == Key::Back && !model.moves.is_empty() {
-    //     // TODO: use model.undo_move
-    //     *model = State::from_moves(
-    //         model.black_player,
-    //         model.white_player,
-    //         &model.moves[0..model.moves.len() - 1],
-    //     );
-    // }
-    if key == Key::Home {
-        *model = Model::new(model.game.black_player, model.game.white_player);
-    }
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {

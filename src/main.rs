@@ -1,15 +1,11 @@
 mod arena;
 mod bots;
 mod constants;
-mod coordinates;
 mod game;
 mod gui;
 mod heuristics;
-mod model;
 mod player;
 mod rules;
-mod textures;
-mod view;
 
 use crate::player::{Player, PlayerColor};
 use clap::Parser;

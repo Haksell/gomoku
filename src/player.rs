@@ -2,10 +2,8 @@ use crate::{
     bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
     game::Game,
     heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
-    textures::{TEXTURE_BLACK, TEXTURE_WHITE},
 };
 use itertools::Itertools as _;
-use nannou::wgpu::Texture;
 use std::ops::Not;
 
 #[derive(Debug, Clone, Copy)]
@@ -61,13 +59,6 @@ impl Not for PlayerColor {
 }
 
 impl PlayerColor {
-    pub fn texture(&self) -> &Texture {
-        match self {
-            Self::Black => TEXTURE_BLACK.get().unwrap(),
-            Self::White => TEXTURE_WHITE.get().unwrap(),
-        }
-    }
-
     pub const fn captures(self, game: &Game) -> usize {
         match self {
             Self::Black => game.black_captures,

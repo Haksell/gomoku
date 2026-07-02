@@ -1,11 +1,12 @@
 use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, HALF_BOARD_SIZE},
     game::Position,
-    model::Model,
+    gui::Model,
     rules::creates_double_three,
 };
 use nannou::App;
 
+// TODO: physical_to_board
 pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     fn split_float(z: f32) -> (isize, f32) {
         let pos = z / CELL_SIZE;

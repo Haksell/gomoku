@@ -1,10 +1,12 @@
 use crate::{
     constants::{BOARD_SIZE, CELL_SIZE, DOT_SPACING, HALF_BOARD_SIZE, WINDOW_MARGIN, WINDOW_SIZE},
-    coordinates::board_to_physical,
-    model::Model,
+    gui::{
+        Model,
+        coordinates::board_to_physical,
+        textures::{TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_WHITE},
+    },
     player::PlayerColor,
     rules::creates_double_three,
-    textures::TEXTURE_BACKGROUND,
 };
 use nannou::{
     App, Draw, Frame,
@@ -80,7 +82,10 @@ fn draw_stones(draw: &Draw, model: &Model) {
         let (px, py) = board_to_physical(x, y);
         draw_shadow(draw, px, py);
 
-        let texture_guard = turn.texture();
+        let texture_guard = match turn {
+            PlayerColor::Black => TEXTURE_BLACK.get().unwrap(),
+            PlayerColor::White => TEXTURE_WHITE.get().unwrap(),
+        };
         draw.texture(texture_guard).x_y(px, py).w_h(STONE_SIZE, STONE_SIZE);
     }
 
