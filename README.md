@@ -2,12 +2,6 @@
 
 ## todo
 
-### refactor
-
-- mod game with everything
-- mod nannou
-- no more `constants.rs`
-
 ### misc
 
 - fix move shows as hover before bot plays (async bot)
