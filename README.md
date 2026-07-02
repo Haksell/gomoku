@@ -4,7 +4,6 @@
 
 ### misc
 
-- no impl for `PlayerColor`
 - fix move shows as hover before bot plays (async bot)
 - fast `undo_move`
 - decent heuristic

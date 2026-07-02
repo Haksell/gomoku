@@ -1,6 +1,9 @@
-use crate::game::{
-    Game, Position,
-    board::{DIRECTIONS4, DIRECTIONS8, is_same_color},
+use crate::{
+    game::{
+        Game, Position,
+        board::{DIRECTIONS4, DIRECTIONS8, is_same_color},
+    },
+    player::PlayerColor,
 };
 use std::collections::HashSet;
 
@@ -10,7 +13,11 @@ const REQUIRED_CAPTURES: usize = 5;
 impl Game {
     pub fn check_winner(&self, x: usize, y: usize) -> (bool, HashSet<Position>) {
         let mut breakable_positions: HashSet<Position> = HashSet::new();
-        if self.current_color.captures(self) >= REQUIRED_CAPTURES {
+        let captures = match self.current_color {
+            PlayerColor::Black => self.black_captures,
+            PlayerColor::White => self.white_captures,
+        };
+        if captures >= REQUIRED_CAPTURES {
             return (true, breakable_positions);
         }
         let mut potential_winners: Vec<Vec<Position>> = Vec::new();

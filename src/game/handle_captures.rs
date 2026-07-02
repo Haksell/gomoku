@@ -1,6 +1,9 @@
-use crate::game::{
-    Game,
-    board::{DIRECTIONS8, is_capture},
+use crate::{
+    game::{
+        Game,
+        board::{DIRECTIONS8, is_capture},
+    },
+    player::PlayerColor,
 };
 
 impl Game {
@@ -17,6 +20,10 @@ impl Game {
                 is_capture
             })
             .count();
-        self.current_color.increment_captures(self, total_captures);
+
+        match self.current_color {
+            PlayerColor::Black => self.black_captures += total_captures,
+            PlayerColor::White => self.white_captures += total_captures,
+        }
     }
 }

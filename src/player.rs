@@ -1,6 +1,5 @@
 use crate::{
     bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
-    game::Game,
     heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
 };
 use itertools::Itertools as _;
@@ -40,7 +39,6 @@ impl From<&str> for Player {
     }
 }
 
-// very sussy baka
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum PlayerColor {
     Black,
@@ -54,22 +52,6 @@ impl Not for PlayerColor {
         match self {
             Self::Black => Self::White,
             Self::White => Self::Black,
-        }
-    }
-}
-
-impl PlayerColor {
-    pub const fn captures(self, game: &Game) -> usize {
-        match self {
-            Self::Black => game.black_captures,
-            Self::White => game.white_captures,
-        }
-    }
-
-    pub const fn increment_captures(self, game: &mut Game, captures: usize) {
-        match self {
-            Self::Black => game.black_captures += captures,
-            Self::White => game.white_captures += captures,
         }
     }
 }
