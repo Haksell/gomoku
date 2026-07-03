@@ -3,4 +3,5 @@
 # Activate with the following command: make setup_git_hooks
 
 make test
-diff src/heuristics/old.rs src/heuristics/new.rs
+sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > /tmp/old.rs
+diff /tmp/old.rs src/heuristics/old.rs

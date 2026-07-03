@@ -4,7 +4,7 @@ use crate::{
 };
 use itertools::chain;
 
-pub fn new(game: &Game) -> i64 {
+pub fn old(game: &Game) -> i64 {
     let mut black_combos = [0; 10];
     let mut white_combos = [0; 10];
 

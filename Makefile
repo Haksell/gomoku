@@ -30,6 +30,9 @@ re: fclean all
 loc:
 	@find src -name '*.rs' | sort | xargs wc -l
 
+new_to_old:
+	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
+
 setup_git_hooks:
 	@rm -rf .git/hooks
 	@ln -s ../git_hooks .git/hooks
