@@ -4,19 +4,19 @@
 
 ### misc
 
-- check open three next to border
 - fix move shows as hover before bot plays (async bot)
-- fast `undo_move`
-- decent heuristic
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - compute during human time (flag)
 - iterative alpha-beta pruning to always return a move in less than 1s
-- clippy lints hardcore mode
-- MCTS solver for endgame (different concept than MCTS)
 - arena with elo ranking
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
+
+### optimization
+
+- progressive heuristics
+- fast `undo_move`
 
 ### heuristics
 
@@ -36,6 +36,8 @@
 - [ ] MTD(f)
 - [ ] SSS*
 - [ ] MCTS
+- [ ] MCTS solver for endgame (different concept than MCTS)
+- [ ] ƎUИИ
 
 ### design
 
