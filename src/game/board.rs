@@ -11,6 +11,22 @@ pub const DIRECTIONS4: [(isize, isize); 4] = [(0, 1), (1, 1), (1, 0), (1, -1)];
 pub const DIRECTIONS8: [(isize, isize); 8] =
     [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)];
 
+pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
+    let mut out = [[0; BOARD_SIZE]; BOARD_SIZE];
+    let mut y = 0;
+    while y < BOARD_SIZE {
+        let dy = usize::abs_diff(y, HALF_BOARD_SIZE);
+        let mut x = 0;
+        while x < BOARD_SIZE {
+            let dx = usize::abs_diff(x, HALF_BOARD_SIZE);
+            out[y][x] = (dx + dy) as u64;
+            x += 1;
+        }
+        y += 1;
+    }
+    out
+};
+
 pub fn is_same_color(board: &Board, player: Option<PlayerColor>, x: isize, y: isize) -> bool {
     x >= 0
         && y >= 0

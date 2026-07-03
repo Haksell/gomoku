@@ -23,6 +23,10 @@
 - open threes `xx.x`
 - open fours `xx.xx`
 - double attacks (multiply 4 dp en gros)
+- smarter dist to center:
+  - dist to edge?
+  - dist to corner?
+  - manhattan or something else?
 
 ### algorithms
 

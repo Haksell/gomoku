@@ -25,6 +25,7 @@ pub fn new(game: &Game) -> i64 {
 
     let mut score = 0i64;
 
+    score += game.white_dist_to_center as i64 - game.black_dist_to_center as i64;
     score += game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64;
 
     for length in 2..=9 {

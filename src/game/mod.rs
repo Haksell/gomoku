@@ -4,7 +4,7 @@ pub mod creates_double_three;
 pub mod handle_captures;
 pub mod lines;
 
-use crate::{Player, player::PlayerColor};
+use crate::{Player, game::board::MANHATTAN_TO_CENTER, player::PlayerColor};
 use board::{BOARD_SIZE, Board, Position};
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 use std::collections::HashSet;
@@ -20,6 +20,8 @@ pub struct Game {
     pub forced_moves: HashSet<Position>,
     pub black_player: Player,
     pub white_player: Player,
+    pub black_dist_to_center: u64,
+    pub white_dist_to_center: u64,
     // TODO: outside this struct
     pub plies: usize,
     // pub moves: Vec<Position>,
@@ -37,6 +39,8 @@ impl Game {
             forced_moves: HashSet::new(),
             black_player,
             white_player,
+            black_dist_to_center: 0,
+            white_dist_to_center: 0,
             plies: 0,
         }
     }
@@ -46,6 +50,10 @@ impl Game {
         self.plies += 1;
 
         self.board[y][x] = Some(self.current_color);
+        match self.current_color {
+            PlayerColor::Black => self.black_dist_to_center += MANHATTAN_TO_CENTER[y][x],
+            PlayerColor::White => self.white_dist_to_center += MANHATTAN_TO_CENTER[y][x],
+        }
         self.update_close_moves(x, y);
         self.handle_captures(x, y);
 
