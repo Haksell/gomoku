@@ -11,13 +11,13 @@ pub fn new(game: &Game) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
 
-    for lines in &[ROWS, COLUMNS] {
-        for line in lines {
+    for lines in [ROWS, COLUMNS] {
+        for line in &lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
         }
     }
 
-    for lines in &[UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
+    for lines in [UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
         for line in lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
         }
