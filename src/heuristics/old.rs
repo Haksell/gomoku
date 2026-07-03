@@ -60,7 +60,11 @@ pub fn old(game: &Game) -> i64 {
     for length in 2..=9 {
         for openness in 1..=2 {
             score += (length as i64).pow(3)
-                * openness as i64
+                * (match openness {
+                    1 => 1,
+                    2 => 3,
+                    _ => unreachable!(),
+                })
                 * (black_closed[length][openness] - white_closed[length][openness]);
         }
     }

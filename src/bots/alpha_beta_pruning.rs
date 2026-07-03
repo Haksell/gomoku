@@ -50,6 +50,9 @@ fn alpha_beta_pruning_helper(
         }
     }
 
+    // let max_depth =
+    //     if std::ptr::fn_addr_eq(heuristic, old as for<'a> fn(&'a Game) -> i64) { 3 } else { 4 };
+
     if depth == MAX_DEPTH {
         return match maximizing_player {
             PlayerColor::Black => heuristic(game),
