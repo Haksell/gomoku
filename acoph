@@ -2,10 +2,13 @@
 
 set -e
 
+make new_to_old
+
 MSG=${@:-.}
 
 git add .
 git commit -m "$MSG
 
+Co-authored-by: Haksell <axel.brisse@gmail.com>
 Co-authored-by: solvictor <victor.egret.pro@gmail.com>"
 git push

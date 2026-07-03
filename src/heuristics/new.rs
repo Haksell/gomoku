@@ -55,7 +55,7 @@ pub fn new(game: &Game) -> i64 {
     }
 
     let mut score = 0i64;
-    score += game.black_captures.pow(2) as i64 - game.white_captures.pow(2) as i64;
+    score += game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64;
     for length in 2..=9 {
         score += (length as i64).pow(3) * (black_combos[length] - white_combos[length]);
     }
