@@ -17,18 +17,10 @@
 - arena with elo ranking
 - check rust performance book for better compilation
 
-### design
+### heuristics
 
-- [x] show coordinates of mouse on hover
-- [ ] show number of captures
-- [x] show winner
-- [ ] or draw
-- [ ] highlight 5-in-a-row that won
-- [x] stone shadow
-- [x] hover transparency
-- [ ] multiple themes
-- [x] draw stone before AI move
-- [ ] confetti
+- open threes `xx.x`
+- open fours `xx.xx`
 
 ### algorithms
 
@@ -42,6 +34,19 @@
 - [ ] MTD(f)
 - [ ] SSS*
 - [ ] MCTS
+
+### design
+
+- [x] show coordinates of mouse on hover
+- [ ] show number of captures
+- [x] show winner
+- [ ] or draw
+- [ ] highlight 5-in-a-row that won
+- [x] stone shadow
+- [x] hover transparency
+- [ ] multiple themes
+- [x] draw stone before AI move
+- [ ] confetti
 
 ### bonus ideas
 
