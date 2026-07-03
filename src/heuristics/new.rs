@@ -23,14 +23,15 @@ pub fn new(game: &Game) -> i64 {
         }
     }
 
-    let mut score = 0i64;
+    let mut h = 0i64;
 
-    score += 2 * (game.white_dist_to_center as i64 - game.black_dist_to_center as i64);
-    score += game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64;
+    // TODO: find better factor
+    h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
+    h += game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64;
 
     for length in 2..=9 {
         for openness in 1..=2 {
-            score += (length as i64).pow(3)
+            h += (length as i64).pow(3)
                 * (match openness {
                     1 => 1,
                     2 => 3,
@@ -40,7 +41,7 @@ pub fn new(game: &Game) -> i64 {
         }
     }
 
-    score
+    h
 }
 
 fn fill_combos(

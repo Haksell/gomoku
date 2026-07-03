@@ -4,9 +4,13 @@ pub mod creates_double_three;
 pub mod handle_captures;
 pub mod lines;
 
-use crate::{Player, game::board::MANHATTAN_TO_CENTER, player::PlayerColor};
+use crate::{
+    Player,
+    game::board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
+    player::PlayerColor,
+};
 use board::{BOARD_SIZE, Board, Position};
-use nannou::rand::{seq::SliceRandom as _, thread_rng};
+use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
 use std::collections::HashSet;
 
 #[derive(Clone)]
@@ -45,8 +49,8 @@ impl Game {
         }
     }
 
-    /// Assumes the move is valid.
     pub fn do_move(&mut self, x: usize, y: usize) {
+        debug_assert!(self.board[y][x].is_none());
         self.plies += 1;
 
         self.board[y][x] = Some(self.current_color);
@@ -164,6 +168,26 @@ impl Game {
         }
 
         legal_moves
+    }
+
+    pub fn play_random_moves(&mut self, n_moves: u32, dist_to_center: usize) {
+        assert!(n_moves <= BOARD_SIZE as u32);
+
+        let mut rng = thread_rng();
+        for _ in 0..n_moves {
+            loop {
+                let rx = rng
+                    .gen_range(HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center);
+                let ry = rng
+                    .gen_range(HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center);
+                if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
+                    && self.board[ry][rx].is_none()
+                {
+                    self.do_move(rx, ry);
+                    break;
+                }
+            }
+        }
     }
 }
 

@@ -4,6 +4,7 @@ use crate::{
     player::PlayerColor,
 };
 
+// TODO random initial position
 pub fn run(args: &Args) {
     assert!(
         args.black_player.is_bot() || args.white_player.is_bot(),
@@ -19,6 +20,8 @@ pub fn run(args: &Args) {
         };
 
         let mut game = Game::new(black, white);
+        // TODO: flags to configure random board (n_moves and dist_to_center)
+        game.play_random_moves(4, 5);
         game.play_game();
 
         match game.state {
