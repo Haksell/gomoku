@@ -1,13 +1,17 @@
 pub mod capturophile;
+pub mod heuristicos;
 pub mod zero;
 
-use crate::{game::Game, player::PlayerColor};
+use crate::game::Game;
 
-pub type Heuristic = fn(&Game, PlayerColor) -> i64;
+/// A [`Heuristic`] returns a positive score if black has a good position,
+/// and a negative score otherwise.
+pub type Heuristic = fn(&Game) -> i64;
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
         "capturophile" => Ok(capturophile::capturophile),
+        "heuristicos" => Ok(heuristicos::heuristicos),
         "zero" => Ok(zero::zero),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }

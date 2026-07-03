@@ -1,5 +1,5 @@
-use crate::{game::Game, player::PlayerColor};
+use crate::game::Game;
 
-pub const fn zero(_: &Game, _: PlayerColor) -> i64 {
+pub const fn zero(_: &Game) -> i64 {
     0
 }

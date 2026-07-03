@@ -51,7 +51,10 @@ fn alpha_beta_pruning_helper(
     }
 
     if depth == MAX_DEPTH {
-        return heuristic(game, maximizing_player) - heuristic(game, !maximizing_player);
+        return match maximizing_player {
+            PlayerColor::Black => heuristic(game),
+            PlayerColor::White => -heuristic(game),
+        };
     }
 
     // TODO: sort by depth 1 heuristic

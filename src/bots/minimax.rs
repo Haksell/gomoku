@@ -37,12 +37,19 @@ fn minimax_helper(
         GameState::Playing => {}
         GameState::Draw => return 0,
         GameState::Won(winner) => {
-            return if winner == maximizing_player { i64::MAX } else { i64::MIN };
+            return if winner == maximizing_player {
+                i64::MAX - depth as i64
+            } else {
+                i64::MIN + depth as i64
+            };
         }
     }
 
     if depth == MAX_DEPTH {
-        return heuristic(game, maximizing_player) - heuristic(game, !maximizing_player);
+        return match maximizing_player {
+            PlayerColor::Black => heuristic(game),
+            PlayerColor::White => -heuristic(game),
+        };
     }
 
     // TODO: NOT Some(2)
@@ -51,6 +58,7 @@ fn minimax_helper(
 
     let is_maximizing_player = depth & 1 == 0;
     let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
+
     for (x, y) in close_moves {
         let mut model = game.clone();
         model.do_move(x, y);
