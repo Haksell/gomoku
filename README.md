@@ -16,6 +16,7 @@
 - MCTS solver for endgame (different concept than MCTS)
 - arena with elo ranking
 - check rust performance book for better compilation
+- fix buggy open threes `w.xxx.o`
 
 ### heuristics
 
