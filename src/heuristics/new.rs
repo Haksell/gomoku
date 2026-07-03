@@ -38,7 +38,7 @@ pub fn new(game: &Game) -> i64 {
     }
 
     // Downward diagonals
-    for x in 1..BOARD_SIZE {
+    for x in 0..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE - x).map(|y| game.board[BOARD_SIZE - y - 1][x + y]),
             &mut black_closed,
