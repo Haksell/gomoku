@@ -23,11 +23,11 @@ pub fn new(game: &Game) -> i64 {
         }
     }
 
-    let mut h = 0i64;
+    let mut h = 0;
 
     // TODO: find better factor
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
-    h += game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64;
+    h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
 
     for length in 2..=9 {
         for openness in 1..=2 {
