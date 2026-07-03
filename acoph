@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TODO: remove before push
+set -e
 
 MSG=${@:-.}
 

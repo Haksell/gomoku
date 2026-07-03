@@ -95,6 +95,8 @@
 
 - ctrl+f `todo`
 - ctrl+f `unimplemented`
+- `rm acoph`
+- src/heuristics/old.rs + src/heuristics/new.rs -> src/heuristics/heuristic.rs
 
 ## evaluation
 
