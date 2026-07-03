@@ -1,5 +1,9 @@
 use crate::{
-    game::{Game, board::BOARD_SIZE},
+    game::{
+        Game,
+        board::{Board, Position},
+        lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
+    },
     player::PlayerColor,
 };
 
@@ -7,50 +11,16 @@ pub fn old(game: &Game) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
 
-    // Lines
-    for y in 0..BOARD_SIZE {
-        fill_combos(game.board[y], &mut black_combos, &mut white_combos);
+    for lines in &[ROWS, COLUMNS] {
+        for line in lines {
+            fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
+        }
     }
 
-    // Columns
-    for x in 0..BOARD_SIZE {
-        fill_combos(
-            (0..BOARD_SIZE).map(|y| game.board[y][x]),
-            &mut black_combos,
-            &mut white_combos,
-        );
-    }
-
-    // Upward diagonals
-    for x in 0..BOARD_SIZE {
-        fill_combos(
-            (0..BOARD_SIZE - x).map(|y| game.board[y][x + y]),
-            &mut black_combos,
-            &mut white_combos,
-        );
-    }
-    for y in 1..BOARD_SIZE {
-        fill_combos(
-            (0..BOARD_SIZE - y).map(|x| game.board[y + x][x]),
-            &mut black_combos,
-            &mut white_combos,
-        );
-    }
-
-    // Downward diagonals
-    for x in 0..BOARD_SIZE {
-        fill_combos(
-            (0..BOARD_SIZE - x).map(|y| game.board[BOARD_SIZE - y - 1][x + y]),
-            &mut black_combos,
-            &mut white_combos,
-        );
-    }
-    for y in 1..BOARD_SIZE {
-        fill_combos(
-            (0..BOARD_SIZE - y).map(|x| game.board[BOARD_SIZE - y - x - 1][x]),
-            &mut black_combos,
-            &mut white_combos,
-        );
+    for lines in &[UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
+        for line in lines {
+            fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
+        }
     }
 
     let mut score = 0i64;
@@ -73,7 +43,8 @@ pub fn old(game: &Game) -> i64 {
 }
 
 fn fill_combos(
-    line: impl IntoIterator<Item = Option<PlayerColor>>,
+    board: &Board,
+    line: &[Position],
     black_combos: &mut [[i64; 3]; 10],
     white_combos: &mut [[i64; 3]; 10],
 ) {
@@ -81,7 +52,8 @@ fn fill_combos(
     let mut cur_color = None;
     let mut cur_length = 0;
 
-    for player_color in line {
+    for &(x, y) in line {
+        let player_color = board[y][x];
         if player_color == cur_color {
             cur_length += 1;
         } else {

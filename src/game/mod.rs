@@ -2,6 +2,7 @@ pub mod board;
 pub mod check_finished;
 pub mod creates_double_three;
 pub mod handle_captures;
+pub mod lines;
 
 use crate::{Player, player::PlayerColor};
 use board::{BOARD_SIZE, Board, Position};
