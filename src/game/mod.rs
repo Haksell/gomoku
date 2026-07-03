@@ -87,15 +87,6 @@ impl Game {
     //     self.moves.pop();
     // }
 
-    // /// Assumes the sequence of moves is valid.
-    // pub fn from_moves(black_player: Player, white_player: Player, moves: &[Position]) -> Self {
-    //     let mut model = Self::new(black_player, white_player);
-    //     for &(x, y) in moves {
-    //         model.do_move(x, y);
-    //     }
-    //     model
-    // }
-
     pub const fn current_player(&self) -> &Player {
         match self.current_color {
             PlayerColor::Black => &self.black_player,
