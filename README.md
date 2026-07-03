@@ -21,6 +21,7 @@
 
 - open threes `xx.x`
 - open fours `xx.xx`
+- double attacks (multiply 4 dp en gros)
 
 ### algorithms
 
