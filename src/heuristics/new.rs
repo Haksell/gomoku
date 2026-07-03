@@ -4,20 +4,20 @@ use crate::{
 };
 
 pub fn new(game: &Game) -> i64 {
-    let mut black_closed = [[0; 3]; 10];
-    let mut white_closed = [[0; 3]; 10];
+    let mut black_combos = [[0; 3]; 10];
+    let mut white_combos = [[0; 3]; 10];
 
     // Lines
     for y in 0..BOARD_SIZE {
-        fill_combos(game.board[y], &mut black_closed, &mut white_closed);
+        fill_combos(game.board[y], &mut black_combos, &mut white_combos);
     }
 
     // Columns
     for x in 0..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE).map(|y| game.board[y][x]),
-            &mut black_closed,
-            &mut white_closed,
+            &mut black_combos,
+            &mut white_combos,
         );
     }
 
@@ -25,15 +25,15 @@ pub fn new(game: &Game) -> i64 {
     for x in 0..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE - x).map(|y| game.board[y][x + y]),
-            &mut black_closed,
-            &mut white_closed,
+            &mut black_combos,
+            &mut white_combos,
         );
     }
     for y in 1..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE - y).map(|x| game.board[y + x][x]),
-            &mut black_closed,
-            &mut white_closed,
+            &mut black_combos,
+            &mut white_combos,
         );
     }
 
@@ -41,15 +41,15 @@ pub fn new(game: &Game) -> i64 {
     for x in 0..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE - x).map(|y| game.board[BOARD_SIZE - y - 1][x + y]),
-            &mut black_closed,
-            &mut white_closed,
+            &mut black_combos,
+            &mut white_combos,
         );
     }
     for y in 1..BOARD_SIZE {
         fill_combos(
             (0..BOARD_SIZE - y).map(|x| game.board[BOARD_SIZE - y - x - 1][x]),
-            &mut black_closed,
-            &mut white_closed,
+            &mut black_combos,
+            &mut white_combos,
         );
     }
 
@@ -65,7 +65,7 @@ pub fn new(game: &Game) -> i64 {
                     2 => 3,
                     _ => unreachable!(),
                 })
-                * (black_closed[length][openness] - white_closed[length][openness]);
+                * (black_combos[length][openness] - white_combos[length][openness]);
         }
     }
 
