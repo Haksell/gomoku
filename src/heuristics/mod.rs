@@ -1,5 +1,6 @@
 pub mod capturophile;
-pub mod heuristicos;
+pub mod new;
+pub mod old;
 pub mod zero;
 
 use crate::game::Game;
@@ -11,7 +12,8 @@ pub type Heuristic = fn(&Game) -> i64;
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
         "capturophile" => Ok(capturophile::capturophile),
-        "heuristicos" => Ok(heuristicos::heuristicos),
+        "new" => Ok(new::new),
+        "old" => Ok(old::old),
         "zero" => Ok(zero::zero),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }

@@ -1,6 +1,6 @@
 use crate::{
     bots::{Bot, alpha_beta_pruning::alpha_beta_pruning, parse_bot, random_mover::random_mover},
-    heuristics::{Heuristic, capturophile::capturophile, parse_heuristic, zero::zero},
+    heuristics::{Heuristic, new::new, old::old, parse_heuristic, zero::zero},
 };
 use itertools::Itertools as _;
 use std::ops::Not;
@@ -26,7 +26,8 @@ impl From<&str> for Player {
     fn from(v: &str) -> Self {
         match v {
             "human" => return Self::Human,
-            "best" => return Self::Bot { bot: alpha_beta_pruning, heuristic: capturophile },
+            "old" => return Self::Bot { bot: alpha_beta_pruning, heuristic: old },
+            "new" => return Self::Bot { bot: alpha_beta_pruning, heuristic: new },
             "random" => return Self::Bot { bot: random_mover, heuristic: zero },
             _ => {}
         }
