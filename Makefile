@@ -1,7 +1,7 @@
-BIN_NAME := gomoku
-SYMLINK  := Gomoku
-CARGO    := cargo
-PROFILE  := release
+NAME    := gomoku
+SYMLINK := Gomoku
+CARGO   := cargo
+PROFILE := release
 
 ifeq ($(PROFILE),release)
 	CARGO_FLAGS := --release
@@ -15,7 +15,7 @@ all: build
 
 build:
 	$(CARGO) build $(CARGO_FLAGS)
-	ln -sf target/release/$(BIN_NAME) $(SYMLINK)
+	ln -sf target/release/$(NAME) $(SYMLINK)
 
 run:
 	$(CARGO) run $(CARGO_FLAGS)
@@ -38,8 +38,7 @@ loc:
 clean:
 	$(CARGO) clean
 
-fclean:
-	rm -rf target
+fclean: clean
 	rm -f $(SYMLINK)
 
 re: fclean all
