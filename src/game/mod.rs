@@ -6,7 +6,7 @@ pub mod lines;
 
 use crate::{
     Player,
-    game::board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
+    game::board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
@@ -151,14 +151,12 @@ impl Game {
         }
 
         let mut legal_moves = Vec::new();
-        for y in 0..BOARD_SIZE {
-            for x in 0..BOARD_SIZE {
-                if (max_dist.is_none() || self.close_moves[y][x])
-                    && self.board[y][x].is_none()
-                    && !self.creates_double_three(x, y)
-                {
-                    legal_moves.push((x, y));
-                }
+        for (x, y) in SPIRALLING_POSITIONS {
+            if (max_dist.is_none() || self.close_moves[y][x])
+                && self.board[y][x].is_none()
+                && !self.creates_double_three(x, y)
+            {
+                legal_moves.push((x, y));
             }
         }
 

@@ -1,8 +1,8 @@
 // TODO: in mod board
 
-use super::board::BOARD_SIZE;
+use crate::game::board::{BOARD_SIZE, Position};
 
-pub const ROWS: [[(usize, usize); BOARD_SIZE]; BOARD_SIZE] = {
+pub const ROWS: [[Position; BOARD_SIZE]; BOARD_SIZE] = {
     let mut out = [[(0, 0); BOARD_SIZE]; BOARD_SIZE];
     let mut y = 0;
     while y < BOARD_SIZE {
@@ -16,7 +16,7 @@ pub const ROWS: [[(usize, usize); BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
-pub const COLUMNS: [[(usize, usize); BOARD_SIZE]; BOARD_SIZE] = {
+pub const COLUMNS: [[Position; BOARD_SIZE]; BOARD_SIZE] = {
     let mut out = [[(0, 0); BOARD_SIZE]; BOARD_SIZE];
     let mut y = 0;
     while y < BOARD_SIZE {
@@ -34,7 +34,7 @@ pub const COLUMNS: [[(usize, usize); BOARD_SIZE]; BOARD_SIZE] = {
 // TODO: generate with const or macro
 
 #[rustfmt::skip]
-pub const UPWARD_DIAGONALS: [&[(usize, usize)]; 2 * BOARD_SIZE - 1] = [
+pub const UPWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE - 1] = [
     &[(0, 18)],
     &[(0, 17), (1, 18)],
     &[(0, 16), (1, 17), (2, 18)],
@@ -75,7 +75,7 @@ pub const UPWARD_DIAGONALS: [&[(usize, usize)]; 2 * BOARD_SIZE - 1] = [
 ];
 
 #[rustfmt::skip]
-pub const DOWNWARD_DIAGONALS: [&[(usize, usize)]; 2 * BOARD_SIZE - 1] = [
+pub const DOWNWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE - 1] = [
     &[(0, 0)],
     &[(0, 1), (1, 0)],
     &[(0, 2), (1, 1), (2, 0)],

@@ -4,7 +4,7 @@ import sys
 def print_lines(diag_name, lines):
     print("#[rustfmt::skip]")
     print(
-        f"pub const {diag_name.upper()}WARD_DIAGONALS: [&[(usize, usize)]; 2 * BOARD_SIZE - 1] = ["
+        f"pub const {diag_name.upper()}WARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE - 1] = ["
     )
     print("\n".join(f"    &{line}," for line in lines))
     print("];")

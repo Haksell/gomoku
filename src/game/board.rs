@@ -27,6 +27,42 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
+const fn bubble_sort<const N: usize>(arr: &mut [Position; N]) {
+    let mut i = 0;
+    while i < N {
+        let mut j = 1;
+        while j < N {
+            let (prev_x, prev_y) = arr[j - 1];
+            let (curr_x, curr_y) = arr[j];
+            let prev_dist = MANHATTAN_TO_CENTER[prev_y][prev_x];
+            let curr_dist = MANHATTAN_TO_CENTER[curr_y][curr_x];
+            if prev_dist > curr_dist {
+                let left = arr[j - 1];
+                let right = arr[j];
+                arr[j - 1] = right;
+                arr[j] = left;
+            }
+            j += 1;
+        }
+        i += 1;
+    }
+}
+
+pub const SPIRALLING_POSITIONS: [Position; BOARD_SIZE * BOARD_SIZE] = {
+    let mut out = [(0, 0); BOARD_SIZE * BOARD_SIZE];
+    let mut y = 0;
+    while y < BOARD_SIZE {
+        let mut x = 0;
+        while x < BOARD_SIZE {
+            out[y * BOARD_SIZE + x] = (x, y);
+            x += 1;
+        }
+        y += 1;
+    }
+    bubble_sort(&mut out);
+    out
+};
+
 pub fn is_same_color(board: &Board, player: Option<PlayerColor>, x: isize, y: isize) -> bool {
     x >= 0
         && y >= 0
