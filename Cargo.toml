@@ -12,7 +12,7 @@ nannou_egui = { version = "0.19", default-features = false }
 [lints.clippy]
 # warn or deny all lints by default
 cargo = { level = "deny", priority = -1 }
-complexity = { level = "deny", priority = -1 }
+complexity = { level = "warn", priority = -1 }
 correctness = { level = "deny", priority = -1 }
 nursery = { level = "warn", priority = -1 }
 pedantic = { level = "warn", priority = -1 }

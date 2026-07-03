@@ -12,7 +12,7 @@ use crate::{
 const MAX_DEPTH: usize = 3;
 
 pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
-    if game.plies == 0 {
+    if game.ply == 0 {
         return BOARD_CENTER;
     }
 

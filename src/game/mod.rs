@@ -6,12 +6,19 @@ pub mod lines;
 
 use crate::{
     Player,
-    game::board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+    game::{
+        board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+        check_finished::REQUIRED_CAPTURES,
+    },
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
 use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
 use std::collections::HashSet;
+
+const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
+const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
+const MAX_POSSIBLE_FORCED_POSITIONS: usize = 16; // TODO: find the real value
 
 #[derive(Clone)]
 pub struct Game {
@@ -27,8 +34,10 @@ pub struct Game {
     pub black_dist_to_center: u64,
     pub white_dist_to_center: u64,
     // TODO: outside this struct
-    pub plies: usize,
-    // pub moves: Vec<Position>,
+    pub ply: usize,
+    pub moves: Vec<Position>,
+    pub captures: Vec<(usize, Position)>,
+    pub forced_moves_history: Vec<(usize, HashSet<Position>)>,
 }
 
 impl Game {
@@ -45,13 +54,16 @@ impl Game {
             white_player,
             black_dist_to_center: 0,
             white_dist_to_center: 0,
-            plies: 0,
+            ply: 0,
+            moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
+            captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
+            forced_moves_history: Vec::with_capacity(MAX_POSSIBLE_FORCED_POSITIONS),
         }
     }
 
     pub fn do_move(&mut self, x: usize, y: usize) {
         debug_assert!(self.board[y][x].is_none());
-        self.plies += 1;
+        self.ply += 1;
 
         self.board[y][x] = Some(self.current_color);
         match self.current_color {
@@ -67,25 +79,41 @@ impl Game {
         } else if self.check_draw() {
             self.state = GameState::Draw;
         } else {
+            if !forced_moves.is_empty() {
+                self.forced_moves_history.push((self.ply, forced_moves.clone()));
+            }
             self.forced_moves = forced_moves;
         }
 
         self.current_color = !self.current_color;
+        self.moves.push((x, y));
     }
 
     // Assumes the move is valid
     // TODO: use for backspace
     // TODO: undo captures
-    // pub fn undo_move(&self, x: usize, y: usize) {
-    //     self.board[y][x] = Turn::None;
-    //     if self.winner != Turn::None {
-    //         self.winner = Turn::None;
-    //     } else {
-    //         self.current_player = !self.current_player;
-    //     }
-    //     self.forced_moves.clear();
-    //     self.moves.pop();
-    // }
+    pub fn undo_move(&mut self) {
+        self.moves.pop();
+        self.current_color = !self.current_color;
+        self.state = GameState::Playing;
+        self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
+        if let Some((ply, forced_moves)) = self.forced_moves_history.last()
+            && *ply == self.ply - 1
+        {}
+
+        while self.captures.last().is_some_and(|(ply, _)| *ply == self.ply) {
+            let (_, (lx, ly)) = self.captures.pop().unwrap();
+            self.board[ly][lx] = Some(!self.current_color);
+            match !self.current_color {
+                PlayerColor::Black => self.black_captures -= 1,
+                PlayerColor::White => self.white_captures -= 1,
+            }
+        }
+        self.ply -= 1;
+        // self.forced_moves.clear();h
+        self.current_color = !self.current_color;
+        self.moves.pop();
+    }
 
     pub const fn current_player(&self) -> &Player {
         match self.current_color {
@@ -202,4 +230,7 @@ mod tests {
         assert!(BOARD_SIZE % 2 == 1);
         assert!(BOARD_SIZE >= 3);
     }
+
+    // TODO: test undo_move by doing random game and undoing everything,
+    // then checking game is empty CLONE EVERY INTERMEDIATE STATE
 }

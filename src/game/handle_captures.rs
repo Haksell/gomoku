@@ -18,6 +18,8 @@ impl Game {
                     let captured_y1 = (y + dy) as usize;
                     let captured_x2 = (x + 2 * dx) as usize;
                     let captured_y2 = (y + 2 * dy) as usize;
+                    self.captures.push((self.ply, (captured_x1, captured_y1)));
+                    self.captures.push((self.ply, (captured_x2, captured_y2)));
                     self.board[captured_y1][captured_x1] = None;
                     self.board[captured_y2][captured_x2] = None;
                     let dist1 = MANHATTAN_TO_CENTER[captured_y1][captured_x1];

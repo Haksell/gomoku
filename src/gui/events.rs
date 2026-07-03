@@ -16,15 +16,9 @@ pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 }
 
 pub fn key_pressed(_: &App, model: &mut Model, key: Key) {
-    // FIXME
-    // if key == Key::Back && !model.moves.is_empty() {
-    //     // TODO: use model.undo_move
-    //     *model = State::from_moves(
-    //         model.black_player,
-    //         model.white_player,
-    //         &model.moves[0..model.moves.len() - 1],
-    //     );
-    // }
+    if key == Key::Back && model.game.ply > 0 {
+        model.game.undo_move();
+    }
 
     // TODO: remove (flag or button in gui)
     if Key::Key1 <= key && key <= Key::Key9 {

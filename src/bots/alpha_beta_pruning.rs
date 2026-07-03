@@ -12,7 +12,7 @@ use std::cmp::{max, min};
 const MAX_DEPTH: usize = 3;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
-    if game.plies == 0 {
+    if game.ply == 0 {
         return BOARD_CENTER;
     }
 

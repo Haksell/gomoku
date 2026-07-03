@@ -8,7 +8,7 @@ use crate::{
 use std::collections::HashSet;
 
 const STONES_IN_A_ROW: usize = 5;
-const REQUIRED_CAPTURES: usize = 5;
+pub const REQUIRED_CAPTURES: usize = 5;
 
 impl Game {
     pub fn check_winner(&self, x: usize, y: usize) -> (bool, HashSet<Position>) {
@@ -28,27 +28,27 @@ impl Game {
             }
         }
 
-        let mut breakable_positions = HashSet::new();
+        let mut forced_moves = HashSet::new();
         for potential_winner in &mut potential_winners {
             let break_possibilities = self.get_break_possibilities(potential_winner);
             if break_possibilities.is_empty() {
-                return (true, breakable_positions);
+                return (true, forced_moves);
             }
-            if breakable_positions.is_empty() {
-                breakable_positions = break_possibilities;
+            if forced_moves.is_empty() {
+                forced_moves = break_possibilities;
             } else {
-                breakable_positions.retain(|item| break_possibilities.contains(item));
+                forced_moves.retain(|item| break_possibilities.contains(item));
             }
-            if breakable_positions.is_empty() {
-                return (true, breakable_positions);
+            if forced_moves.is_empty() {
+                return (true, forced_moves);
             }
         }
 
-        (false, breakable_positions)
+        (false, forced_moves)
     }
 
     pub const fn check_draw(&self) -> bool {
-        self.plies == BOARD_SIZE * BOARD_SIZE + 2 * (self.black_captures + self.white_captures)
+        self.ply == BOARD_SIZE * BOARD_SIZE + 2 * (self.black_captures + self.white_captures)
     }
 
     fn get_break_possibilities(&self, potential_winner: &mut [Position]) -> HashSet<Position> {
