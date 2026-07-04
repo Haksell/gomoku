@@ -22,7 +22,7 @@ use view::view;
 pub const WINDOW_SIZE: u32 = 750;
 pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
-pub const DOT_SPACING: usize = 6;
+pub const MARKER_DOTS_SPACING: usize = 6;
 
 pub fn run() {
     nannou::app(app).update(update).view(view).run();
@@ -84,11 +84,11 @@ fn update(app: &App, model: &mut Model, _: Update) {
 
 #[cfg(test)]
 mod tests {
-    use crate::{game::board::HALF_BOARD_SIZE, gui::DOT_SPACING};
+    use crate::{game::board::HALF_BOARD_SIZE, gui::MARKER_DOTS_SPACING};
 
     #[test]
-    fn dot_spacing() {
-        assert!(DOT_SPACING > 0);
-        assert!(DOT_SPACING < HALF_BOARD_SIZE);
+    fn marker_dots_spacing() {
+        assert!(MARKER_DOTS_SPACING > 0);
+        assert!(MARKER_DOTS_SPACING < HALF_BOARD_SIZE);
     }
 }

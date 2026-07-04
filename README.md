@@ -4,7 +4,6 @@
 
 ### misc
 
-- fix move shows as hover before bot plays (async bot)
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - compute during human time (flag)
@@ -16,6 +15,16 @@
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
+
+### design
+
+- highlight 5-in-a-row that won
+- show last capture
+- show number of captures
+- fix move shows as hover before bot plays (async bot)
+- multiple themes
+- confetti
+- eval bar
 
 ### heuristics
 
@@ -42,21 +51,6 @@
 - [ ] MCTS
 - [ ] MCTS solver for endgame (different concept than MCTS)
 - [ ] ƎUИИ
-
-### design
-
-- [ ] show number of captures
-- [ ] show last move
-- [ ] show last capture
-- [ ] highlight 5-in-a-row that won
-- [x] show coordinates of mouse on hover
-- [x] show winner or draw
-- [x] stone shadow
-- [x] hover transparency
-- [ ] multiple themes
-- [x] draw stone before AI move
-- [ ] confetti
-- [ ] eval bar
 
 ### bonus ideas
 

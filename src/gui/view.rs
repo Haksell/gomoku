@@ -1,10 +1,10 @@
 use crate::{
     game::{
         GameState,
-        board::{BOARD_SIZE, HALF_BOARD_SIZE},
+        board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
     },
     gui::{
-        CELL_SIZE, DOT_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
+        CELL_SIZE, MARKER_DOTS_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,
         textures::{TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_WHITE},
     },
@@ -16,7 +16,9 @@ use nannou::{
     geom::{Point2, pt2},
 };
 
-const DOT_SIZE: f32 = CELL_SIZE * 0.25;
+const DOT_SIZE_MARKER: f32 = CELL_SIZE * 0.25;
+const DOT_SIZE_LAST_MOVE: f32 = CELL_SIZE * 0.125;
+
 const LINE_WIDTH: f32 = CELL_SIZE * 0.052;
 const STONE_SIZE: f32 = CELL_SIZE * 0.77;
 
@@ -26,7 +28,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 
     draw_background(&draw);
     draw_grid(&draw);
-    draw_dots(&draw);
+    draw_marker_dots(&draw);
     draw_stones(&draw, model);
 
     if model.game.state.is_playing() {
@@ -39,13 +41,20 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 
     draw_hover_coords(&draw, model);
 
+    if let Some(&pos) = model.game.moves.last() {
+        let color = match model.game.current_color {
+            PlayerColor::Black => BLACK,
+            PlayerColor::White => WHITE,
+        };
+        draw_dot(&draw, pos, DOT_SIZE_LAST_MOVE, color);
+    }
+
     match model.game.state {
         GameState::Playing => {}
         GameState::Draw => draw_game_over_overlay(&draw, None),
         GameState::Won(winner) => draw_game_over_overlay(&draw, Some(winner)),
     }
 
-    draw_hover_coords(&draw, model);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -68,16 +77,19 @@ fn draw_grid(draw: &Draw) {
     }
 }
 
-fn draw_dots(draw: &Draw) {
+fn draw_marker_dots(draw: &Draw) {
     for y in -1..=1 {
         for x in -1..=1 {
-            let (px, py) = board_to_physical(
-                (HALF_BOARD_SIZE as isize + x * DOT_SPACING as isize) as usize,
-                (HALF_BOARD_SIZE as isize + y * DOT_SPACING as isize) as usize,
-            );
-            draw.ellipse().x_y(px, py).w_h(DOT_SIZE, DOT_SIZE).color(BLACK);
+            let x = (HALF_BOARD_SIZE as isize + x * MARKER_DOTS_SPACING as isize) as usize;
+            let y = (HALF_BOARD_SIZE as isize + y * MARKER_DOTS_SPACING as isize) as usize;
+            draw_dot(draw, (x, y), DOT_SIZE_MARKER, BLACK);
         }
     }
+}
+
+fn draw_dot(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
+    let (px, py) = board_to_physical(x, y);
+    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
 }
 
 fn draw_stones(draw: &Draw, model: &Model) {

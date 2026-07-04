@@ -16,6 +16,7 @@ pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 }
 
 pub fn key_pressed(_: &App, model: &mut Model, key: Key) {
+    // TODO: left, right with history, not undo
     if key == Key::Back && model.game.ply > 0 {
         model.game.undo_last_move();
     }
