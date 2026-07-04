@@ -4,9 +4,9 @@
 
 ### misc
 
-- fast `undo_move`
-- idabp
 - old/new for bot too for better 1v1
+- retry rayon
+- idabp
 - fix move shows as hover before bot plays (async bot)
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
