@@ -31,7 +31,7 @@ pub fn new(game: &Game) -> i64 {
 
     for length in 2..=9 {
         for openness in 1..=2 {
-            h += (length as i64).pow(3)
+            h += (length as i64).pow(4)
                 * (match openness {
                     1 => 1,
                     2 => 3,
