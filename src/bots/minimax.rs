@@ -64,8 +64,8 @@ fn minimax_helper(
     for (x, y) in close_moves {
         game.do_move(x, y);
         let h = minimax_helper(game, maximizing_player, heuristic, depth + 1);
-        best_h = if is_maximizing_player { best_h.max(h) } else { best_h.min(h) };
         game.undo_last_move();
+        best_h = if is_maximizing_player { best_h.max(h) } else { best_h.min(h) };
     }
 
     best_h

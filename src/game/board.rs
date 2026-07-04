@@ -27,6 +27,23 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
+#[expect(unused)]
+pub fn print_board(board: &Board) {
+    for row in board {
+        for player_color in row {
+            print!(
+                "{}",
+                match player_color {
+                    Some(PlayerColor::Black) => 'B',
+                    Some(PlayerColor::White) => 'W',
+                    None => '.',
+                }
+            );
+        }
+        println!();
+    }
+}
+
 const fn bubble_sort<const N: usize>(arr: &mut [Position; N]) {
     let mut i = 0;
     while i < N {

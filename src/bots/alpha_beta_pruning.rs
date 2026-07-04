@@ -9,7 +9,7 @@ use crate::{
 use std::cmp::{max, min};
 
 // TODO: different max_dist and number of best moves to check depending on depth
-const MAX_DEPTH: usize = 4;
+const MAX_DEPTH: usize = 3;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
@@ -69,6 +69,7 @@ fn alpha_beta_pruning_helper(
 
     for (x, y) in close_moves {
         game.do_move(x, y);
+
         let h = alpha_beta_pruning_helper(
             game,
             maximizing_player,
@@ -78,6 +79,9 @@ fn alpha_beta_pruning_helper(
             max_h,
             best_move,
         );
+
+        game.undo_last_move();
+
         if is_maximizing_player {
             best_h = max(best_h, h);
             if depth == 0 && h == best_h {
@@ -94,8 +98,6 @@ fn alpha_beta_pruning_helper(
             }
             max_h = min(max_h, h);
         }
-
-        game.undo_last_move();
     }
 
     best_h
