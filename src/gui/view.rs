@@ -41,6 +41,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 
     draw_hover_coords(&draw, model);
     draw_last_move(&draw, model);
+    // draw_last_captures(&draw, model);
 
     match model.game.state {
         GameState::Playing => {}
@@ -57,9 +58,22 @@ fn draw_last_move(draw: &Draw, model: &Model) {
             PlayerColor::Black => BLACK,
             PlayerColor::White => WHITE,
         };
-        draw_dot(draw, pos, DOT_SIZE_LAST_MOVE, color);
+        draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color);
     }
 }
+
+// fn draw_last_captures(draw: &Draw, model: &Model) {
+//     for &(_, pos1, pos2) in
+//         model.game.captures.iter().take_while(|(ply, _, _)| *ply == model.game.ply)
+//     {
+//         let color = match model.game.current_color {
+//             PlayerColor::Black => BLACK,
+//             PlayerColor::White => WHITE,
+//         };
+//         draw_circle(draw, pos1, STONE_SIZE, color);
+//         draw_circle(draw, pos2, STONE_SIZE, color);
+//     }
+// }
 
 fn draw_background(draw: &Draw) {
     let background_texture = TEXTURE_BACKGROUND.get().unwrap();
@@ -85,14 +99,9 @@ fn draw_marker_dots(draw: &Draw) {
         for x in -1..=1 {
             let x = (HALF_BOARD_SIZE as isize + x * MARKER_DOTS_SPACING as isize) as usize;
             let y = (HALF_BOARD_SIZE as isize + y * MARKER_DOTS_SPACING as isize) as usize;
-            draw_dot(draw, (x, y), DOT_SIZE_MARKER, BLACK);
+            draw_circle(draw, (x, y), DOT_SIZE_MARKER, BLACK);
         }
     }
-}
-
-fn draw_dot(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
-    let (px, py) = board_to_physical(x, y);
-    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
 }
 
 fn draw_stones(draw: &Draw, model: &Model) {
@@ -136,19 +145,14 @@ fn draw_stones(draw: &Draw, model: &Model) {
     }
 }
 
-fn draw_circle(draw: &Draw, x: usize, y: usize, color: Srgb<u8>) {
-    let (px, py) = board_to_physical(x, y);
-    draw.ellipse().x_y(px, py).w_h(STONE_SIZE, STONE_SIZE).color(color);
-}
-
 fn draw_forced_moves(draw: &Draw, model: &Model) {
     // Tailwind green-500
     const COLOR_VALID_MOVE: Srgb<u8> =
         Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
 
-    for &(x, y) in &model.game.forced_moves {
-        if Some((x, y)) != model.hover {
-            draw_circle(draw, x, y, COLOR_VALID_MOVE);
+    for &pos in &model.game.forced_moves {
+        if model.hover != Some(pos) {
+            draw_circle(draw, pos, STONE_SIZE, COLOR_VALID_MOVE);
         }
     }
 }
@@ -161,7 +165,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if model.game.board[y][x].is_none() && model.game.creates_double_three(x, y) {
-                draw_circle(draw, x, y, COLOR_INVALID_MOVE);
+                draw_circle(draw, (x, y), STONE_SIZE, COLOR_INVALID_MOVE);
             }
         }
     }
@@ -194,4 +198,9 @@ fn draw_hover_coords(draw: &Draw, model: &Model) {
     let (px, py) = board_to_physical(x, y);
     let text = format!("({x}, {y})");
     draw.text(&text).x_y(px, py - CELL_SIZE * 0.65).font_size(16).color(rgba(1.0, 1.0, 1.0, 0.75));
+}
+
+fn draw_circle(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
+    let (px, py) = board_to_physical(x, y);
+    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
 }
