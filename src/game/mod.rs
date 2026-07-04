@@ -20,7 +20,7 @@ const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTUR
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
 const MAX_POSSIBLE_FORCED_POSITIONS: usize = 16; // TODO: find the real value
 
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Game {
     pub state: GameState,
     pub board: Board,
@@ -63,7 +63,9 @@ impl Game {
     }
 
     pub fn do_move(&mut self, x: usize, y: usize) {
+        debug_assert!(self.state.is_playing());
         debug_assert!(self.board[y][x].is_none());
+
         self.ply += 1;
 
         self.board[y][x] = Some(self.current_color);
@@ -150,7 +152,6 @@ impl Game {
         assert!(self.black_player.is_bot());
         assert!(self.white_player.is_bot());
 
-        // TODO: handle draws properly
         while self.state.is_playing() {
             let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
             let (x, y) = bot(self, *heuristic);
@@ -234,7 +235,7 @@ impl Game {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GameState {
     Playing,
     Draw,
@@ -264,6 +265,24 @@ mod tests {
         assert!(BOARD_SIZE >= 3);
     }
 
-    // TODO: test undo_move by doing random game and undoing everything,
-    // then checking game is empty CLONE EVERY INTERMEDIATE STATE
+    // TODO: seed
+    #[test]
+    fn test_undo_last_move() {
+        for _ in 0..10 {
+            let mut game = Game::new(Player::RANDOM, Player::RANDOM);
+            let mut game_states = Vec::new();
+
+            while game.state.is_playing() {
+                game_states.push(game.clone());
+                let Player::Bot { bot, heuristic } = game.current_player() else { unreachable!() };
+                let (x, y) = bot(&game, *heuristic);
+                game.do_move(x, y);
+            }
+
+            while let Some(game_state) = game_states.pop() {
+                game.undo_last_move();
+                assert_eq!(game_state, game);
+            }
+        }
+    }
 }
