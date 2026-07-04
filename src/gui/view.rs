@@ -40,14 +40,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     }
 
     draw_hover_coords(&draw, model);
-
-    if let Some(&pos) = model.game.moves.last() {
-        let color = match model.game.current_color {
-            PlayerColor::Black => BLACK,
-            PlayerColor::White => WHITE,
-        };
-        draw_dot(&draw, pos, DOT_SIZE_LAST_MOVE, color);
-    }
+    draw_last_move(&draw, model);
 
     match model.game.state {
         GameState::Playing => {}
@@ -56,6 +49,16 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     }
 
     draw.to_frame(app, &frame).unwrap();
+}
+
+fn draw_last_move(draw: &Draw, model: &Model) {
+    if let Some(&pos) = model.game.moves.last() {
+        let color = match model.game.current_color {
+            PlayerColor::Black => BLACK,
+            PlayerColor::White => WHITE,
+        };
+        draw_dot(draw, pos, DOT_SIZE_LAST_MOVE, color);
+    }
 }
 
 fn draw_background(draw: &Draw) {
