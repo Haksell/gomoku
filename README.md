@@ -4,7 +4,6 @@
 
 ### misc
 
-- idabp (correct Player::OLD and NEW before push)
 - fix move shows as hover before bot plays (async bot)
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
@@ -16,6 +15,7 @@
 - feature nannou: don't compile the lib if running headless arena
 - remove most `usize`s
 - lazy update legal moves for both black and white
+- transposition table for iterative deepening
 
 ### heuristics
 
@@ -32,6 +32,7 @@
 - [x] Random
 - [x] Minimax
 - [x] Alpha-Beta Pruning
+- [x] Iterative Deepening Alpha-Beta Pruning
 - [ ] ProbCut
 - [ ] Principal Variation Search
 - [ ] NegaScout
