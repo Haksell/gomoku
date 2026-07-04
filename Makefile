@@ -32,6 +32,7 @@ loc:
 
 new_to_old:
 	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
+	sed -e 's/pub fn abp_new/pub fn abp_old/g' < src/bots/abp_new.rs > src/bots/abp_old.rs
 
 setup_git_hooks:
 	@rm -rf .git/hooks

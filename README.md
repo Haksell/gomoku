@@ -4,7 +4,6 @@
 
 ### misc
 
-- old/new for bot too for better 1v1
 - retry rayon
 - idabp
 - fix move shows as hover before bot plays (async bot)

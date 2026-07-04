@@ -11,7 +11,7 @@ use std::cmp::{max, min};
 // TODO: different max_dist and number of best moves to check depending on depth
 const MAX_DEPTH: usize = 3;
 
-pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
+pub fn abp_new(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
