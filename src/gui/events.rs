@@ -17,7 +17,7 @@ pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
 
 pub fn key_pressed(_: &App, model: &mut Model, key: Key) {
     if key == Key::Back && model.game.ply > 0 {
-        model.game.undo_move();
+        model.game.undo_last_move();
     }
 
     // TODO: remove (flag or button in gui)

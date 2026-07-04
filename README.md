@@ -6,6 +6,7 @@
 
 - fast `undo_move`
 - idabp
+- old/new for bot too for better 1v1
 - fix move shows as hover before bot plays (async bot)
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
@@ -44,14 +45,14 @@
 
 - [x] show coordinates of mouse on hover
 - [ ] show number of captures
-- [x] show winner
-- [ ] or draw
+- [x] show winner or draw
 - [ ] highlight 5-in-a-row that won
 - [x] stone shadow
 - [x] hover transparency
 - [ ] multiple themes
 - [x] draw stone before AI move
 - [ ] confetti
+- [ ] eval bar
 
 ### bonus ideas
 

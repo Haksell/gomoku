@@ -24,11 +24,12 @@ const MAX_POSSIBLE_FORCED_POSITIONS: usize = 16; // TODO: find the real value
 pub struct Game {
     pub state: GameState,
     pub board: Board,
-    pub close_moves: [[bool; BOARD_SIZE]; BOARD_SIZE],
+    pub close_moves: [[u8; BOARD_SIZE]; BOARD_SIZE],
     pub current_color: PlayerColor,
     pub black_captures: usize,
     pub white_captures: usize,
     pub forced_moves: HashSet<Position>,
+    // TODO: store forbidden moves too (double threes)
     pub black_player: Player,
     pub white_player: Player,
     pub black_dist_to_center: u64,
@@ -36,7 +37,7 @@ pub struct Game {
     // TODO: outside this struct
     pub ply: usize,
     pub moves: Vec<Position>,
-    pub captures: Vec<(usize, Position)>,
+    pub captures: Vec<(usize, Position, Position)>,
     pub forced_moves_history: Vec<(usize, HashSet<Position>)>,
 }
 
@@ -45,7 +46,7 @@ impl Game {
         Self {
             state: GameState::Playing,
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
-            close_moves: [[false; BOARD_SIZE]; BOARD_SIZE],
+            close_moves: [[0; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
             white_captures: 0,
@@ -70,7 +71,7 @@ impl Game {
             PlayerColor::Black => self.black_dist_to_center += MANHATTAN_TO_CENTER[y][x],
             PlayerColor::White => self.white_dist_to_center += MANHATTAN_TO_CENTER[y][x],
         }
-        self.update_close_moves(x, y);
+        self.update_close_moves(x, y, UpdateSign::Positive);
         self.handle_captures(x, y);
 
         let (is_winner, forced_moves) = self.check_winner(x, y);
@@ -89,30 +90,53 @@ impl Game {
         self.moves.push((x, y));
     }
 
-    // Assumes the move is valid
-    // TODO: use for backspace
-    // TODO: undo captures
-    pub fn undo_move(&mut self) {
-        self.moves.pop();
+    /// Every operation from [`Self::do_move`] in reverse order.
+    pub fn undo_last_move(&mut self) {
+        let (x, y) = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
         self.state = GameState::Playing;
         self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
+
         if let Some((ply, forced_moves)) = self.forced_moves_history.last()
             && *ply == self.ply - 1
-        {}
-
-        while self.captures.last().is_some_and(|(ply, _)| *ply == self.ply) {
-            let (_, (lx, ly)) = self.captures.pop().unwrap();
-            self.board[ly][lx] = Some(!self.current_color);
-            match !self.current_color {
-                PlayerColor::Black => self.black_captures -= 1,
-                PlayerColor::White => self.white_captures -= 1,
-            }
+        {
+            self.forced_moves.clone_from(forced_moves);
+        } else {
+            self.forced_moves.clear();
         }
+
+        // undo capture
+        while self.captures.last().is_some_and(|(ply, _, _)| *ply == self.ply) {
+            let (_, (x1, y1), (x2, y2)) = self.captures.pop().unwrap();
+
+            let dist_to_center = MANHATTAN_TO_CENTER[y1][x1] + MANHATTAN_TO_CENTER[y2][x2];
+
+            match self.current_color {
+                PlayerColor::Black => {
+                    self.black_captures -= 1;
+                    self.white_dist_to_center += dist_to_center;
+                }
+                PlayerColor::White => {
+                    self.white_captures -= 1;
+                    self.black_dist_to_center += dist_to_center;
+                }
+            }
+
+            self.update_close_moves(x1, y1, UpdateSign::Positive);
+            self.update_close_moves(x2, y2, UpdateSign::Positive);
+            self.board[y1][x1] = Some(!self.current_color);
+            self.board[y2][x2] = Some(!self.current_color);
+        }
+
+        self.update_close_moves(x, y, UpdateSign::Negative);
+
+        match self.current_color {
+            PlayerColor::Black => self.black_dist_to_center -= MANHATTAN_TO_CENTER[y][x],
+            PlayerColor::White => self.white_dist_to_center -= MANHATTAN_TO_CENTER[y][x],
+        }
+        self.board[y][x] = None;
+
         self.ply -= 1;
-        // self.forced_moves.clear();h
-        self.current_color = !self.current_color;
-        self.moves.pop();
     }
 
     pub const fn current_player(&self) -> &Player {
@@ -135,7 +159,7 @@ impl Game {
     }
 
     // TODO: dynamic ajustable en tout cas
-    fn update_close_moves(&mut self, x: usize, y: usize) {
+    fn update_close_moves(&mut self, x: usize, y: usize, update_sign: UpdateSign) {
         const MANHATTAN2: [(isize, isize); 13] = [
             (0, 0),
             (0, 1),
@@ -158,7 +182,8 @@ impl Game {
             if nx < 0 || nx >= BOARD_SIZE as isize || ny < 0 || ny >= BOARD_SIZE as isize {
                 continue;
             }
-            self.close_moves[ny as usize][nx as usize] = true;
+            self.close_moves[ny as usize][nx as usize] =
+                self.close_moves[ny as usize][nx as usize].wrapping_add_signed(update_sign as i8);
         }
     }
 
@@ -169,9 +194,10 @@ impl Game {
             return self.forced_moves.clone().into_iter().collect();
         }
 
+        // TODO: preallocate with number of close moves (or forced moves)
         let mut legal_moves = Vec::new();
         for (x, y) in SPIRALLING_POSITIONS {
-            if (max_dist.is_none() || self.close_moves[y][x])
+            if (max_dist.is_none() || self.close_moves[y][x] > 0)
                 && self.board[y][x].is_none()
                 && !self.creates_double_three(x, y)
             {
@@ -219,6 +245,13 @@ impl GameState {
     pub const fn is_playing(self) -> bool {
         matches!(self, Self::Playing)
     }
+}
+
+#[derive(Clone, Copy)]
+#[repr(i8)]
+pub enum UpdateSign {
+    Positive = 1,
+    Negative = -1,
 }
 
 #[cfg(test)]
