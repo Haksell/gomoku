@@ -25,6 +25,9 @@
 - multiple themes
 - confetti
 - eval bar
+- blinking capture counter on win by capture
+- bowling alley animations
+- screen shake
 
 ### heuristics
 

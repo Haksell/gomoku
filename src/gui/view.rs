@@ -178,7 +178,7 @@ fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
         Some(PlayerColor::White) => "White wins",
     };
 
-    draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0.0, 0.0, 0.0, 0.55));
+    draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0.0, 0.0, 0.0, 0.47));
 
     let title_y = WINDOW_SIZE as f32 * 0.03;
     draw.text(msg).color(WHITE).font_size((WINDOW_SIZE as f32 * 0.05) as u32).x_y(0.0, title_y);
