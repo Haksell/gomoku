@@ -2,6 +2,7 @@ use crate::{
     game::{
         GameState,
         board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+        check_finished::REQUIRED_CAPTURES,
     },
     gui::{
         CELL_SIZE, MARKER_DOTS_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
@@ -43,6 +44,8 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_last_move(&draw, model);
     // draw_last_captures(&draw, model);
 
+    draw_win_by_alignment(&draw, model);
+
     match model.game.state {
         GameState::Playing => {}
         GameState::Draw => draw_game_over_overlay(&draw, None),
@@ -59,6 +62,21 @@ fn draw_last_move(draw: &Draw, model: &Model) {
             PlayerColor::White => WHITE,
         };
         draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color);
+    }
+}
+
+fn draw_win_by_alignment(draw: &Draw, model: &Model) {
+    if let GameState::Won(winner) = model.game.state
+        && model.game.black_captures < REQUIRED_CAPTURES
+        && model.game.white_captures < REQUIRED_CAPTURES
+    {
+        if let Some(&pos) = model.game.moves.last() {
+            let color = match model.game.current_color {
+                PlayerColor::Black => BLACK,
+                PlayerColor::White => WHITE,
+            };
+            draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color);
+        }
     }
 }
 

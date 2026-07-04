@@ -1,7 +1,8 @@
 use crate::{
     game::{
-        Game, GameState,
+        Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
+        state::GameState,
     },
     heuristics::Heuristic,
     player::PlayerColor,
@@ -57,12 +58,12 @@ fn alpha_beta_pruning_helper(
     cache: &mut Cache,
 ) -> i64 {
     let leaf_h = match game.state {
-        GameState::Playing => (depth == max_depth).then(|| match maximizing_player {
+        GameState::Playing(_) => (depth == max_depth).then(|| match maximizing_player {
             PlayerColor::Black => heuristic(game),
             PlayerColor::White => -heuristic(game),
         }),
         GameState::Draw => Some(0),
-        GameState::Won(winner) => Some(if winner == maximizing_player {
+        GameState::Won(winner, _) => Some(if winner == maximizing_player {
             i64::MAX - depth as i64
         } else {
             i64::MIN + depth as i64

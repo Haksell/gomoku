@@ -2,8 +2,9 @@
 
 use crate::{
     game::{
-        Game, GameState,
+        Game,
         board::{BOARD_CENTER, Position},
+        state::GameState,
     },
     heuristics::Heuristic,
     player::PlayerColor,
@@ -36,9 +37,9 @@ fn minimax_helper(
     depth: usize,
 ) -> i64 {
     match game.state {
-        GameState::Playing => {}
+        GameState::Playing(_) => {}
         GameState::Draw => return 0,
-        GameState::Won(winner) => {
+        GameState::Won(winner, _) => {
             return if winner == maximizing_player {
                 i64::MAX - depth as i64
             } else {

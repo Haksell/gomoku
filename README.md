@@ -15,10 +15,11 @@
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
+- prefer double wins (captures + alignment)
 
 ### design
 
-- highlight 5-in-a-row that won
+- highlight 5-in-a-row that won (stars or rings)
 - show last capture
 - show number of captures
 - fix move shows as hover before bot plays (async bot)
