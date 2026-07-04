@@ -25,7 +25,7 @@ pub fn idabp_old(game: &Game, heuristic: Heuristic) -> Position {
     }
 
     let mut best_move = (usize::MAX, usize::MAX);
-    let mut cache = HashMap::new();
+    let mut cache = Cache::new();
     for max_depth in 0..=MAX_DEPTH {
         alpha_beta_pruning_helper(
             &mut game.clone(),
@@ -82,14 +82,15 @@ fn alpha_beta_pruning_helper(
     let mut close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
-    // TODO: profile min vs median vs max vs 0 vs some other lerp
-    let median_h = i64::midpoint(min_h, max_h);
-
-    close_moves.sort_by_cached_key(|&(x, y)| {
-        cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&median_h)
-    });
-    if is_maximizing_player {
-        close_moves.reverse();
+    if depth + 1 < max_depth {
+        // TODO: profile min vs median vs max vs 0 vs some other lerp
+        let median_h = i64::midpoint(min_h, max_h);
+        close_moves.sort_by_cached_key(|&(x, y)| {
+            cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&median_h)
+        });
+        if is_maximizing_player {
+            close_moves.reverse();
+        }
     }
 
     for (x, y) in close_moves {
