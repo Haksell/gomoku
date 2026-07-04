@@ -45,10 +45,12 @@
 
 ### design
 
-- [x] show coordinates of mouse on hover
 - [ ] show number of captures
-- [x] show winner or draw
+- [ ] show last move
+- [ ] show last capture
 - [ ] highlight 5-in-a-row that won
+- [x] show coordinates of mouse on hover
+- [x] show winner or draw
 - [x] stone shadow
 - [x] hover transparency
 - [ ] multiple themes
