@@ -4,7 +4,6 @@
 
 ### misc
 
-- retry rayon
 - idabp
 - fix move shows as hover before bot plays (async bot)
 - unit test of rules
@@ -14,6 +13,7 @@
 - arena with elo ranking
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
+- feature nannou: don't compile the lib if running headless arena
 
 ### heuristics
 

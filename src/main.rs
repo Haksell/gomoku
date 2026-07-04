@@ -12,9 +12,10 @@ use clap::Parser;
 struct Args {
     black_player: Player,
     white_player: Player,
-    #[arg(short, long, default_value_t = 1)] // TODO: clap validate > 0
+    #[arg(short('g'), long, default_value_t = 1)] // TODO: clap validate > 0
     num_games: usize,
-    // TODO: arg for number of threads in algs and simulation
+    #[arg(short('t'), long)]
+    num_threads: Option<usize>,
 }
 
 fn main() {
