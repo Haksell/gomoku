@@ -1,5 +1,6 @@
-pub mod abp_new;
-pub mod abp_old;
+pub mod alpha_beta_pruning;
+pub mod idabp_new;
+pub mod idabp_old;
 pub mod minimax;
 pub mod random_mover;
 
@@ -12,8 +13,9 @@ pub type Bot = fn(&Game, Heuristic) -> Position;
 
 pub fn parse_bot(s: &str) -> Result<Bot, String> {
     match s {
-        "new" => Ok(abp_new::abp_new),
-        "old" => Ok(abp_old::abp_old),
+        "new" => Ok(idabp_new::idabp_new),
+        "old" => Ok(idabp_old::idabp_old),
+        "abp" | "alpha_beta_pruning" => Ok(alpha_beta_pruning::alpha_beta_pruning),
         "minimax" => Ok(minimax::minimax),
         "random_mover" => Ok(random_mover::random_mover),
         _ => Err(format!("Invalid bot: `{s}`")),

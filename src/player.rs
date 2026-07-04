@@ -1,5 +1,7 @@
 use crate::{
-    bots::{Bot, abp_new::abp_new, abp_old::abp_old, parse_bot, random_mover::random_mover},
+    bots::{
+        Bot, idabp_new::idabp_new, idabp_old::idabp_old, parse_bot, random_mover::random_mover,
+    },
     heuristics::{Heuristic, new::new, old::old, parse_heuristic, zero::zero},
 };
 use itertools::Itertools as _;
@@ -13,8 +15,8 @@ pub enum Player {
 
 impl Player {
     pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: zero };
-    pub const OLD: Self = Self::Bot { bot: abp_old, heuristic: old };
-    pub const NEW: Self = Self::Bot { bot: abp_new, heuristic: new };
+    pub const OLD: Self = Self::Bot { bot: idabp_old, heuristic: old };
+    pub const NEW: Self = Self::Bot { bot: idabp_new, heuristic: new };
 
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)

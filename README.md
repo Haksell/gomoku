@@ -4,7 +4,7 @@
 
 ### misc
 
-- idabp
+- idabp (correct Player::OLD and NEW before push)
 - fix move shows as hover before bot plays (async bot)
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
@@ -14,6 +14,8 @@
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
 - feature nannou: don't compile the lib if running headless arena
+- remove most `usize`s
+- lazy update legal moves for both black and white
 
 ### heuristics
 
@@ -107,6 +109,7 @@
 - ctrl+f `unimplemented`
 - `rm acoph`
 - src/heuristics/old.rs + src/heuristics/new.rs -> src/heuristics/heuristic.rs
+- if some lib is not used seriously (e.g. itertools), remove the dependency
 
 ## evaluation
 
