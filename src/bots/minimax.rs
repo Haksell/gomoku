@@ -16,19 +16,21 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
+    let mut game = game.clone();
     game.get_legal_moves(Some(2), true)
         .into_iter()
         .max_by_key(|&(x, y)| {
-            // TODO: undo_move instead of clone
-            let mut game = game.clone();
             game.do_move(x, y);
-            minimax_helper(&game, game.current_color, heuristic, 1)
+            let current_color = game.current_color;
+            let h = minimax_helper(&mut game, current_color, heuristic, 1);
+            game.undo_last_move();
+            h
         })
-        .unwrap() // TODO: check get_close_moves never returns empty vector
+        .unwrap()
 }
 
 fn minimax_helper(
-    game: &Game,
+    game: &mut Game,
     maximizing_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
@@ -57,16 +59,14 @@ fn minimax_helper(
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = depth & 1 == 0;
-    let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
+    let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
     for (x, y) in close_moves {
-        let mut model = game.clone();
-        model.do_move(x, y);
-        let score = minimax_helper(&model, maximizing_player, heuristic, depth + 1);
-        best_score =
-            if is_maximizing_player { best_score.max(score) } else { best_score.min(score) };
-        // model.undo_move(x, y);
+        game.do_move(x, y);
+        let h = minimax_helper(game, maximizing_player, heuristic, depth + 1);
+        best_h = if is_maximizing_player { best_h.max(h) } else { best_h.min(h) };
+        game.undo_last_move();
     }
 
-    best_score
+    best_h
 }

@@ -5,8 +5,8 @@ pub mod zero;
 
 use crate::game::Game;
 
-/// A [`Heuristic`] returns a positive score if black has a good position,
-/// and a negative score otherwise.
+/// A [`Heuristic`] returns a positive value if black has a good position,
+/// and a negative value otherwise.
 pub type Heuristic = fn(&Game) -> i64;
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {

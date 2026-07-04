@@ -9,7 +9,7 @@ use crate::{
 use std::cmp::{max, min};
 
 // TODO: different max_dist and number of best moves to check depending on depth
-const MAX_DEPTH: usize = 3;
+const MAX_DEPTH: usize = 4;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
@@ -18,7 +18,7 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
 
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(
-        game,
+        &mut game.clone(),
         game.current_color,
         heuristic,
         0,
@@ -30,12 +30,12 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
 }
 
 fn alpha_beta_pruning_helper(
-    game: &Game,
+    game: &mut Game,
     maximizing_player: PlayerColor,
     heuristic: Heuristic,
     depth: usize,
-    mut min_score: i64,
-    mut max_score: i64,
+    mut min_h: i64,
+    mut max_h: i64,
     best_move: &mut Position,
 ) -> i64 {
     match game.state {
@@ -65,38 +65,38 @@ fn alpha_beta_pruning_helper(
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = game.current_color == maximizing_player;
-    let mut best_score = if is_maximizing_player { i64::MIN } else { i64::MAX };
+    let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
     for (x, y) in close_moves {
-        // TODO: do_move then undo_move
-        let mut model = game.clone();
-        model.do_move(x, y);
-        let score = alpha_beta_pruning_helper(
-            &model,
+        game.do_move(x, y);
+        let h = alpha_beta_pruning_helper(
+            game,
             maximizing_player,
             heuristic,
             depth + 1,
-            min_score,
-            max_score,
+            min_h,
+            max_h,
             best_move,
         );
         if is_maximizing_player {
-            best_score = max(best_score, score);
-            if depth == 0 && score == best_score {
+            best_h = max(best_h, h);
+            if depth == 0 && h == best_h {
                 *best_move = (x, y);
             }
-            if score > max_score {
+            if h > max_h {
                 break;
             }
-            min_score = max(min_score, score);
+            min_h = max(min_h, h);
         } else {
-            best_score = min(best_score, score);
-            if score < min_score {
+            best_h = min(best_h, h);
+            if h < min_h {
                 break;
             }
-            max_score = min(max_score, score);
+            max_h = min(max_h, h);
         }
+
+        game.undo_last_move();
     }
 
-    best_score
+    best_h
 }
