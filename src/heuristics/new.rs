@@ -90,23 +90,7 @@ pub fn new(game: &Game) -> i64 {
     h += (black_open_xx_x - white_open_xx_x) * 1152;
 
     h += (black_xx_xx - white_xx_xx) * 512;
-    /*
-    0 => 50
-    256 => 49.6
-    512 => 50.4 51.9
-    1024 => 50.1
-    4096 => 35.9
-    */
-
     h += (black_x_x_x - white_x_x_x) * 128;
-    /*
-    0 => 50
-    64 => 50.5
-    128 => 51.5 52.2
-    192 => 50.3
-    256 => 51.2
-    */
-
     h += (black_xxx_x - white_xxx_x) * 64;
 
     h += (white_locked_4 - black_locked_4) * 384;

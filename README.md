@@ -37,13 +37,17 @@
 
 ### heuristics
 
-- `wbb.w` | `wbb..w`
 - more patterns
 - double attacks (multiply 4 dp en gros)
 - smarter dist to center:
   - dist to edge?
   - dist to corner?
   - manhattan or something else?
+
+### flopped heuristics
+
+- locked 3: `wbbbw`
+- locked 3 of 4: `wbbb.w` | `wbb.bw` | `wb.bbw` | `w.bbbw`
 
 ### algorithms
 
