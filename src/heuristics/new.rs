@@ -72,11 +72,11 @@ pub fn new(game: &Game) -> i64 {
 
     h += (black_open_xx_x - white_open_xx_x) * 1152;
 
-    // h += (black_xx_xx - white_xx_xx) * 512;
+    h += (black_xx_xx - white_xx_xx) * 512;
     /*
     0 => 50
     256 => 49.6
-    512 => 50.4 .
+    512 => 50.4 51.9
     1024 => 50.1
     4096 => 35.9
     */
