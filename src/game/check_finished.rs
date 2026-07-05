@@ -7,7 +7,7 @@ use crate::{
 };
 use std::collections::HashSet;
 
-const STONES_IN_A_ROW: usize = 5;
+pub const STONES_IN_A_ROW: usize = 5;
 pub const REQUIRED_CAPTURES: usize = 5;
 
 impl Game {
