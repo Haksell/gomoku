@@ -6,10 +6,7 @@ use crate::{
     heuristics::Heuristic,
     player::PlayerColor,
 };
-use std::{
-    cmp::{max, min},
-    collections::HashMap,
-};
+use std::cmp::{max, min};
 
 // TODO: different max_dist and number of best moves to check depending on depth
 const MAX_DEPTH: usize = 3;
@@ -17,7 +14,8 @@ const MAX_DEPTH: usize = 3;
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
 // TODO: if MAX_DEPTH > 7, u64 is too small for the key
-type Cache = HashMap<u64, i64>;
+/// Benchmarked against rustc-hash, ahash and nohash-hasher.
+type Cache = fxhash::FxHashMap<u64, i64>;
 
 pub fn idabp_new(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
@@ -25,7 +23,7 @@ pub fn idabp_new(game: &Game, heuristic: Heuristic) -> Position {
     }
 
     let mut best_move = (usize::MAX, usize::MAX);
-    let mut cache = Cache::new();
+    let mut cache = Cache::default();
     for max_depth in 0..=MAX_DEPTH {
         alpha_beta_pruning_helper(
             &mut game.clone(),

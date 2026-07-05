@@ -4,7 +4,6 @@
 
 ### urgent
 
-- faster hash for cache
 - transparent texture for hover
 - arena: swap games with same random moves
 
