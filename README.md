@@ -37,7 +37,6 @@
 
 ### heuristics
 
-- negative too small `bwwwwb` `bwwwb` `bwwb`
 - `wbb.w` | `wbb..w`
 - more patterns
 - double attacks (multiply 4 dp en gros)
@@ -45,9 +44,6 @@
   - dist to edge?
   - dist to corner?
   - manhattan or something else?
-
-65.99
-
 
 ### algorithms
 
