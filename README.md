@@ -21,6 +21,7 @@
 
 ### design
 
+- show ply
 - transparent texture for hover
 - highlight 5-in-a-row that won
 - show last capture

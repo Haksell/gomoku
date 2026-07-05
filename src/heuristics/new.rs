@@ -164,9 +164,9 @@ fn fill_patterns(
         let player_color = board[y][x];
         stencil <<= 2;
         stencil |= match player_color {
-            None => 1,
-            Some(PlayerColor::Black) => 2,
-            Some(PlayerColor::White) => 3,
+            None => 0b01,
+            Some(PlayerColor::Black) => 0b10,
+            Some(PlayerColor::White) => 0b11,
         };
 
         match stencil & 4095 {
