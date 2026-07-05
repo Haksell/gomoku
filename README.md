@@ -35,9 +35,8 @@
 
 ### heuristics
 
-- close_moves
-- open threes `xx.x`
 - open fours `xx.xx`
+- more patterns
 - double attacks (multiply 4 dp en gros)
 - smarter dist to center:
   - dist to edge?

@@ -10,16 +10,24 @@ use crate::{
 pub fn old(game: &Game) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
+    let mut black_open_xx_x = 0;
+    let mut white_open_xx_x = 0;
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
+            let (b, w) = count_open_xx_x(&game.board, line);
+            black_open_xx_x += b;
+            white_open_xx_x += w;
         }
     }
 
     for lines in [UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
         for line in lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
+            let (b, w) = count_open_xx_x(&game.board, line);
+            black_open_xx_x += b;
+            white_open_xx_x += w;
         }
     }
 
@@ -43,6 +51,8 @@ pub fn old(game: &Game) -> i64 {
                 * (black_combos[length][openness] - white_combos[length][openness]);
         }
     }
+
+    h += (black_open_xx_x - white_open_xx_x) * 1152;
 
     h
 }
@@ -90,4 +100,24 @@ fn fill_combos(
             white_combos[cur_length][openness] += 1;
         }
     }
+}
+
+fn count_open_xx_x(board: &Board, line: &[Position]) -> (i64, i64) {
+    let mut stencil = 0;
+    let (mut b, mut w) = (0, 0);
+
+    for &(x, y) in line {
+        let player_color = board[y][x];
+        stencil = (stencil & 1023) << 2;
+        stencil |= match player_color {
+            None => 1,
+            Some(PlayerColor::Black) => 2,
+            Some(PlayerColor::White) => 3,
+        };
+
+        b += (stencil == 0b01_10_10_01_10_01 || stencil == 0b01_10_01_10_10_01) as u8 as i64;
+        w += (stencil == 0b01_11_11_01_11_01 || stencil == 0b01_11_01_11_11_01) as u8 as i64;
+    }
+
+    (b, w)
 }
