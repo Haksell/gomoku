@@ -2,6 +2,13 @@
 
 ## todo
 
+### urgent
+
+- mouse released instead of pressed
+- min max cache sort
+- arena: swap games with same random moves
+- faster hash for cache
+
 ### misc
 
 - unit test of rules
@@ -15,6 +22,7 @@
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
+- remove most allocations
 
 ### design
 
@@ -46,6 +54,8 @@
 - [x] Alpha-Beta Pruning
 - [x] Iterative Deepening Alpha-Beta Pruning
 - [ ] ProbCut
+- [ ] Multi-Cut
+- [ ] Null Move Pruning
 - [ ] Principal Variation Search
 - [ ] NegaScout
 - [ ] Quiescence Search
@@ -54,6 +64,7 @@
 - [ ] MCTS
 - [ ] MCTS solver for endgame (different concept than MCTS)
 - [ ] ƎUИИ
+- [ ] Beam Search
 
 ### bonus ideas
 
