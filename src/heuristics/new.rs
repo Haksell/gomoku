@@ -16,6 +16,8 @@ pub fn new(game: &Game) -> i64 {
     let mut white_xx_xx = 0;
     let mut black_x_x_x = 0;
     let mut white_x_x_x = 0;
+    let mut black_xxx_x = 0;
+    let mut white_xxx_x = 0;
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
@@ -29,6 +31,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_xx_xx,
                 &mut black_x_x_x,
                 &mut white_x_x_x,
+                &mut black_xxx_x,
+                &mut white_xxx_x,
             );
         }
     }
@@ -45,6 +49,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_xx_xx,
                 &mut black_x_x_x,
                 &mut white_x_x_x,
+                &mut black_xxx_x,
+                &mut white_xxx_x,
             );
         }
     }
@@ -89,6 +95,8 @@ pub fn new(game: &Game) -> i64 {
     192 => 50.3
     256 => 51.2
     */
+
+    h += (black_xxx_x - white_xxx_x) * 64;
 
     h
 }
@@ -147,6 +155,8 @@ fn fill_patterns(
     white_xx_xx: &mut i64,
     black_x_x_x: &mut i64,
     white_x_x_x: &mut i64,
+    black_xxx_x: &mut i64,
+    white_xxx_x: &mut i64,
 ) {
     let mut stencil = 0;
 
@@ -160,16 +170,18 @@ fn fill_patterns(
         };
 
         match stencil & 4095 {
-            0b01_10_10_01_10_01 | 0b01_10_01_10_10_01 => *black_open_xx_x += 1,
-            0b01_11_11_01_11_01 | 0b01_11_01_11_11_01 => *white_open_xx_x += 1,
+            0b_01_10_10_01_10_01 | 0b_01_10_01_10_10_01 => *black_open_xx_x += 1,
+            0b_01_11_11_01_11_01 | 0b_01_11_01_11_11_01 => *white_open_xx_x += 1,
             _ => {}
         }
 
         match stencil & 1023 {
-            0b10_10_01_10_10 => *black_xx_xx += 1,
-            0b11_11_01_11_11 => *white_xx_xx += 1,
-            0b10_01_10_01_10 => *black_x_x_x += 1,
-            0b11_01_11_01_11 => *white_x_x_x += 1,
+            0b_10_10_01_10_10 => *black_xx_xx += 1,
+            0b_11_11_01_11_11 => *white_xx_xx += 1,
+            0b_10_01_10_01_10 => *black_x_x_x += 1,
+            0b_11_01_11_01_11 => *white_x_x_x += 1,
+            0b_10_10_10_01_10 | 0b_10_01_10_10_10 => *black_xxx_x += 1,
+            0b_11_11_11_01_11 | 0b_11_01_11_11_11 => *white_xxx_x += 1,
             _ => {}
         }
     }

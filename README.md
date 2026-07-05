@@ -36,6 +36,7 @@
 ### heuristics
 
 - open fours `xx.xx` `x.x.x` `xxx.x`
+- negative too small
 - more patterns
 - double attacks (multiply 4 dp en gros)
 - smarter dist to center:
