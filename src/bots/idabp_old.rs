@@ -12,7 +12,7 @@ use std::{
 };
 
 // TODO: different max_dist and number of best moves to check depending on depth
-const MAX_DEPTH: usize = 4;
+const MAX_DEPTH: usize = 3;
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
