@@ -4,10 +4,9 @@
 
 ### urgent
 
-- min max cache sort
+- faster hash for cache
 - transparent texture for hover
 - arena: swap games with same random moves
-- faster hash for cache
 
 ### misc
 
