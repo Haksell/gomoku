@@ -13,7 +13,7 @@ struct Args {
     black_player: Player,
     white_player: Player,
     #[arg(short('g'), long, default_value_t = 1)] // TODO: clap validate > 0
-    num_games: usize,
+    num_games: usize, // TODO: Option like num_threads
     #[arg(short('t'), long)]
     num_threads: Option<usize>,
 }
