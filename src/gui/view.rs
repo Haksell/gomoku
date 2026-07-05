@@ -105,6 +105,7 @@ fn draw_marker_dots(draw: &Draw) {
 }
 
 fn draw_stones(draw: &Draw, model: &Model) {
+    // TODO: draw_circle
     fn draw_shadow(draw: &Draw, px: f32, py: f32) {
         draw.ellipse()
             .x_y(px + 1.5, py - 1.5)

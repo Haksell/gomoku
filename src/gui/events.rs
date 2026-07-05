@@ -4,7 +4,7 @@ use nannou::{
     event::{Key, MouseButton},
 };
 
-pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
+pub fn mouse_released(app: &App, model: &mut Model, button: MouseButton) {
     if button == MouseButton::Left
         && model.game.state.is_playing()
         && model.game.current_player().is_human()
@@ -15,7 +15,7 @@ pub fn mouse_pressed(app: &App, model: &mut Model, button: MouseButton) {
     }
 }
 
-pub fn key_pressed(_: &App, model: &mut Model, key: Key) {
+pub fn key_released(_: &App, model: &mut Model, key: Key) {
     // TODO: left, right with history, not undo
     if key == Key::Back && model.game.ply > 0 {
         model.game.undo_last_move();

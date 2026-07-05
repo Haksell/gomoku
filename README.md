@@ -4,8 +4,8 @@
 
 ### urgent
 
-- mouse released instead of pressed
 - min max cache sort
+- transparent texture for hover
 - arena: swap games with same random moves
 - faster hash for cache
 
@@ -105,7 +105,7 @@
 
 ### mandatory part
 
-- [x] The executable must be named `Gomoku`. `ln -s target/release/gomoku Gomoku`
+- [x] The executable must be named `Gomoku`. `ln -sf target/release/gomoku Gomoku`
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player's moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [x] You have to use a Minimax algorithm, or a variant.

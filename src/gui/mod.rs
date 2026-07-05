@@ -13,7 +13,7 @@ use crate::{
 };
 use clap::Parser as _;
 use coordinates::mouse_to_board;
-use events::{key_pressed, mouse_pressed};
+use events::{key_released, mouse_released};
 use nannou::{App, event::Update, winit::window::CursorIcon};
 use std::time::Instant;
 use textures::init_textures;
@@ -49,8 +49,8 @@ fn app(app: &App) -> Model {
         .title("ligomoku.org")
         .size(WINDOW_SIZE, WINDOW_SIZE)
         .resizable(false)
-        .mouse_pressed(mouse_pressed)
-        .key_pressed(key_pressed)
+        .mouse_released(mouse_released)
+        .key_released(key_released)
         .build()
         .unwrap();
     init_textures(app);
