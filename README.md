@@ -2,11 +2,6 @@
 
 ## todo
 
-### urgent
-
-- transparent texture for hover
-- arena: swap games with same random moves
-
 ### misc
 
 - unit test of rules
@@ -24,6 +19,7 @@
 
 ### design
 
+- transparent texture for hover
 - highlight 5-in-a-row that won
 - show last capture
 - show number of captures
@@ -119,6 +115,7 @@
 - `rm acoph`
 - src/heuristics/old.rs + src/heuristics/new.rs -> src/heuristics/heuristic.rs
 - if some lib is not used seriously (e.g. itertools), remove the dependency
+- avoid panics and asserts (eprintln + exit(1 | 2))
 
 ## evaluation
 

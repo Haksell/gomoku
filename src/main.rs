@@ -23,6 +23,11 @@ fn main() {
     match args.num_games {
         0 => panic!("Can't play 0 games."),
         1 => gui::run(),
-        _ => arena::run(&args),
+        n if n.is_multiple_of(2) => arena::run(&args),
+        _ => {
+            panic!(
+                "The arena requires an even amount of games to avoid the first mover advantage."
+            );
+        }
     }
 }
