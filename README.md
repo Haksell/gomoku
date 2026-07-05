@@ -18,6 +18,7 @@
 - transposition table for iterative deepening
 - remove most allocations
 - idabp: truncate based on cached heuristic
+- coup force (4 captures...)
 
 ### design
 
@@ -37,6 +38,7 @@
 ### heuristics
 
 - negative too small `bwwwwb` `bwwwb` `bwwb`
+- `wbb.w` | `wbb..w`
 - more patterns
 - double attacks (multiply 4 dp en gros)
 - smarter dist to center:

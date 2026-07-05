@@ -20,6 +20,8 @@ pub fn old(game: &Game) -> i64 {
     let mut white_xxx_x = 0;
     let mut black_capture_threats = 0;
     let mut white_capture_threats = 0;
+    let mut black_locked_4 = 0;
+    let mut white_locked_4 = 0;
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
@@ -37,6 +39,8 @@ pub fn old(game: &Game) -> i64 {
                 &mut white_xxx_x,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
+                &mut black_locked_4,
+                &mut white_locked_4,
             );
         }
     }
@@ -57,6 +61,8 @@ pub fn old(game: &Game) -> i64 {
                 &mut white_xxx_x,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
+                &mut black_locked_4,
+                &mut white_locked_4,
             );
         }
     }
@@ -102,6 +108,8 @@ pub fn old(game: &Game) -> i64 {
     */
 
     h += (black_xxx_x - white_xxx_x) * 64;
+
+    h += (white_locked_4 - black_locked_4) * 384;
 
     h
 }
@@ -151,6 +159,7 @@ fn fill_combos(
     }
 }
 
+#[expect(clippy::too_many_arguments)]
 fn fill_patterns(
     board: &Board,
     line: &[Position],
@@ -164,6 +173,8 @@ fn fill_patterns(
     white_xxx_x: &mut i64,
     black_capture_threats: &mut i64,
     white_capture_threats: &mut i64,
+    black_locked_4: &mut i64,
+    white_locked_4: &mut i64,
 ) {
     let mut stencil = 0;
 
@@ -179,6 +190,8 @@ fn fill_patterns(
         match stencil & 4095 {
             0b_01_10_10_01_10_01 | 0b_01_10_01_10_10_01 => *black_open_xx_x += 1,
             0b_01_11_11_01_11_01 | 0b_01_11_01_11_11_01 => *white_open_xx_x += 1,
+            0b_11_10_10_10_10_11 => *black_locked_4 += 1,
+            0b_10_11_11_11_11_10 => *white_locked_4 += 1,
             _ => {}
         }
 
