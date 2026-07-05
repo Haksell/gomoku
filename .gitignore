@@ -2,3 +2,5 @@
 /target
 /rust_analyzer
 Gomoku
+*.svg
+perf.data*

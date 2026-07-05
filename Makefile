@@ -21,6 +21,8 @@ lint:
 
 clean:
 	$(CARGO) clean
+	rm -f perf.data*
+	rm -f *.svg
 
 fclean: clean
 	rm -f $(SYMLINK)
@@ -37,3 +39,8 @@ new_to_old:
 setup_git_hooks:
 	@rm -rf .git/hooks
 	@ln -s ../git_hooks .git/hooks
+
+# TODO: with rayon
+flamegraph:
+	@CARGO_PROFILE_RELEASE_DEBUG=true RUSTFLAGS="-Clink-arg=-Wl,--no-rosegment" \
+		cargo flamegraph -- new new -g 12

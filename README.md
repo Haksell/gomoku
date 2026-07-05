@@ -4,6 +4,7 @@
 
 ### misc
 
+- dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
 - `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
@@ -22,8 +23,9 @@
 
 ### design
 
-- show ply
+- change hover font
 - transparent texture for hover
+- show ply
 - highlight 5-in-a-row that won
 - show last capture
 - show number of captures
