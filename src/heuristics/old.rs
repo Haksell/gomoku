@@ -29,6 +29,9 @@ pub fn old(game: &Game) -> i64 {
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
     h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
 
+    // TODO: semi-open with wall shouldn't count
+    h += (white_combos[2][1] - black_combos[2][1]) * 100;
+
     for length in 2..=9 {
         for openness in 1..=2 {
             h += (length as i64).pow(5)

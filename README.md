@@ -17,6 +17,7 @@
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
 - remove most allocations
+- idabp: truncate based on cached heuristic
 
 ### design
 
@@ -34,6 +35,7 @@
 
 ### heuristics
 
+- close_moves
 - open threes `xx.x`
 - open fours `xx.xx`
 - double attacks (multiply 4 dp en gros)
