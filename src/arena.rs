@@ -103,4 +103,15 @@ pub fn run(args: &Args) {
         let percentage = 100. * wins as f64 / games_per_color as f64;
         println!("Player 1 won {wins}/{games_per_color} games as {color} ({percentage:.1}%)");
     }
+
+    let doubles = stats.win_win + stats.loss_loss;
+    if doubles == 0 {
+        println!("All pairs of game were shared!");
+    } else {
+        let percentage_double_good = 100. * stats.win_win as f64 / doubles as f64;
+        println!(
+            "Player 1 had {} double wins and {} double losses ({percentage_double_good:.1}%)",
+            stats.win_win, stats.loss_loss
+        );
+    }
 }

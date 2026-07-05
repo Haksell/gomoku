@@ -12,22 +12,40 @@ pub fn old(game: &Game) -> i64 {
     let mut white_combos = [[0; 3]; 10];
     let mut black_open_xx_x = 0;
     let mut white_open_xx_x = 0;
+    let mut black_xx_xx = 0;
+    let mut white_xx_xx = 0;
+    let mut black_x_x_x = 0;
+    let mut white_x_x_x = 0;
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
-            let (b, w) = count_open_xx_x(&game.board, line);
-            black_open_xx_x += b;
-            white_open_xx_x += w;
+            fill_patterns(
+                &game.board,
+                line,
+                &mut black_open_xx_x,
+                &mut white_open_xx_x,
+                &mut black_xx_xx,
+                &mut white_xx_xx,
+                &mut black_x_x_x,
+                &mut white_x_x_x,
+            );
         }
     }
 
     for lines in [UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
         for line in lines {
             fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
-            let (b, w) = count_open_xx_x(&game.board, line);
-            black_open_xx_x += b;
-            white_open_xx_x += w;
+            fill_patterns(
+                &game.board,
+                line,
+                &mut black_open_xx_x,
+                &mut white_open_xx_x,
+                &mut black_xx_xx,
+                &mut white_xx_xx,
+                &mut black_x_x_x,
+                &mut white_x_x_x,
+            );
         }
     }
 
@@ -53,6 +71,24 @@ pub fn old(game: &Game) -> i64 {
     }
 
     h += (black_open_xx_x - white_open_xx_x) * 1152;
+
+    // h += (black_xx_xx - white_xx_xx) * 512;
+    /*
+    0 => 50
+    256 => 49.6
+    512 => 50.4 .
+    1024 => 50.1
+    4096 => 35.9
+    */
+
+    h += (black_x_x_x - white_x_x_x) * 128;
+    /*
+    0 => 50
+    64 => 50.5
+    128 => 51.5 52.2
+    192 => 50.3
+    256 => 51.2
+    */
 
     h
 }
@@ -102,22 +138,39 @@ fn fill_combos(
     }
 }
 
-fn count_open_xx_x(board: &Board, line: &[Position]) -> (i64, i64) {
+fn fill_patterns(
+    board: &Board,
+    line: &[Position],
+    black_open_xx_x: &mut i64,
+    white_open_xx_x: &mut i64,
+    black_xx_xx: &mut i64,
+    white_xx_xx: &mut i64,
+    black_x_x_x: &mut i64,
+    white_x_x_x: &mut i64,
+) {
     let mut stencil = 0;
-    let (mut b, mut w) = (0, 0);
 
     for &(x, y) in line {
         let player_color = board[y][x];
-        stencil = (stencil & 1023) << 2;
+        stencil <<= 2;
         stencil |= match player_color {
             None => 1,
             Some(PlayerColor::Black) => 2,
             Some(PlayerColor::White) => 3,
         };
 
-        b += (stencil == 0b01_10_10_01_10_01 || stencil == 0b01_10_01_10_10_01) as u8 as i64;
-        w += (stencil == 0b01_11_11_01_11_01 || stencil == 0b01_11_01_11_11_01) as u8 as i64;
-    }
+        match stencil & 4095 {
+            0b01_10_10_01_10_01 | 0b01_10_01_10_10_01 => *black_open_xx_x += 1,
+            0b01_11_11_01_11_01 | 0b01_11_01_11_11_01 => *white_open_xx_x += 1,
+            _ => {}
+        }
 
-    (b, w)
+        match stencil & 1023 {
+            0b10_10_01_10_10 => *black_xx_xx += 1,
+            0b11_11_01_11_11 => *white_xx_xx += 1,
+            0b10_01_10_01_10 => *black_x_x_x += 1,
+            0b11_01_11_01_11 => *white_x_x_x += 1,
+            _ => {}
+        }
+    }
 }
