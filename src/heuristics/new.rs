@@ -18,6 +18,8 @@ pub fn new(game: &Game) -> i64 {
     let mut white_x_x_x = 0;
     let mut black_xxx_x = 0;
     let mut white_xxx_x = 0;
+    let mut black_capture_threats = 0;
+    let mut white_capture_threats = 0;
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
@@ -33,6 +35,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_capture_threats,
+                &mut white_capture_threats,
             );
         }
     }
@@ -51,6 +55,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_capture_threats,
+                &mut white_capture_threats,
             );
         }
     }
@@ -61,8 +67,7 @@ pub fn new(game: &Game) -> i64 {
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
     h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
 
-    // TODO: semi-open with wall shouldn't count
-    h += (white_combos[2][1] - black_combos[2][1]) * 100;
+    h += (black_capture_threats - white_capture_threats) * 200;
 
     for length in 2..=9 {
         for openness in 1..=2 {
@@ -157,6 +162,8 @@ fn fill_patterns(
     white_x_x_x: &mut i64,
     black_xxx_x: &mut i64,
     white_xxx_x: &mut i64,
+    black_capture_threats: &mut i64,
+    white_capture_threats: &mut i64,
 ) {
     let mut stencil = 0;
 
@@ -182,6 +189,12 @@ fn fill_patterns(
             0b_11_01_11_01_11 => *white_x_x_x += 1,
             0b_10_10_10_01_10 | 0b_10_01_10_10_10 => *black_xxx_x += 1,
             0b_11_11_11_01_11 | 0b_11_01_11_11_11 => *white_xxx_x += 1,
+            _ => {}
+        }
+
+        match stencil & 255 {
+            0b_11_10_10_01 | 0b_01_10_10_11 => *white_capture_threats += 1,
+            0b_10_11_11_01 | 0b_01_11_11_10 => *black_capture_threats += 1,
             _ => {}
         }
     }
