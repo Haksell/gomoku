@@ -67,8 +67,13 @@ fn update(app: &App, model: &mut Model, _: Update) {
         // let bot_thread = std::thread::spawn(|| bot(model., *heuristic));
         let (x, y) = bot(&model.game, *heuristic);
         model.ai_thinking_time = Some(start.elapsed().as_millis());
-        println!("AI move computed in {:?} ms", model.ai_thinking_time.unwrap()); // TODO: show in UI and delete this println (MANDATORY!)
         model.game.do_move(x, y);
+        // TODO: show in UI and delete this println (MANDATORY!)
+        println!("AI move computed in {:?} ms", model.ai_thinking_time.unwrap());
+        println!(
+            "Captures: black={}, white={}",
+            model.game.black_captures, model.game.white_captures
+        );
     }
 
     if model.game.state.is_playing() && model.game.current_player().is_human() {
