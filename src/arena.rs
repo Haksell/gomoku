@@ -56,9 +56,10 @@ pub fn run(args: &Args) {
     // TODO: flags to configure random board (n_moves and dist_to_center)
     // TODO: rehandle draws
     ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
-    (1..=args.num_games / 2).into_par_iter().for_each(|_| {
+    (1..=args.num_games / 2).into_par_iter().for_each(|i| {
         let mut game = Game::new(args.black_player, args.white_player);
-        game.play_random_moves(4, 5);
+        let random_moves = 3 + (i & 1) as u32;
+        game.play_random_moves(random_moves, 5);
 
         let mut switched_game = game.clone();
         (switched_game.black_player, switched_game.white_player) =
