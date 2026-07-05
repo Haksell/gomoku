@@ -136,3 +136,33 @@ fn alpha_beta_pruning_helper(
 const fn update_cache_key(cache_key: u64, x: usize, y: usize) -> u64 {
     (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as u64
 }
+
+// Cache key with transpositions
+// 13.940 new
+// 13.538 old
+// 3:01 new
+// 3:42
+
+// TODO: handle captures
+// TODO: test
+// const fn update_cache_key(mut cache_key: u64, x: usize, y: usize) -> u64 {
+//     const MASK: u64 = (1 << BITS_PER_MOVE) - 1;
+//     // [B].B.B
+//     let new_value = (y * BOARD_SIZE + x + 1) as u64;
+//     cache_key = (cache_key << BITS_PER_MOVE) | new_value;
+//     let mut shift = 0;
+//     loop {
+//         let old_value = (cache_key >> (shift + 2 * BITS_PER_MOVE)) & MASK;
+//         if new_value >= old_value {
+//             break;
+//         }
+
+//         let mask_except_swapped = !(MASK << shift) & !(MASK << (shift + 2 * BITS_PER_MOVE));
+//         cache_key = (cache_key & mask_except_swapped)
+//             | (old_value << shift)
+//             | (new_value << (shift + 2 * BITS_PER_MOVE));
+
+//         shift += 2 * BITS_PER_MOVE;
+//     }
+//     cache_key
+// }
