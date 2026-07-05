@@ -14,7 +14,9 @@ use nannou::{
     App, Draw, Frame,
     color::{BLACK, LinSrgba, Srgb, WHITE, rgba},
     geom::{Point2, pt2},
+    text::Font,
 };
+use std::sync::LazyLock;
 
 const DOT_SIZE_MARKER: f32 = CELL_SIZE * 0.25;
 const DOT_SIZE_LAST_MOVE: f32 = CELL_SIZE * 0.125;
@@ -191,17 +193,25 @@ fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
         .x_y(0.0, subtitle_y);
 }
 
+fn draw_circle(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
+    let (px, py) = board_to_physical(x, y);
+    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
+}
+
 fn draw_hover_coords(draw: &Draw, model: &Model) {
+    static FONT: LazyLock<Font> = LazyLock::new(|| {
+        Font::from_bytes(include_bytes!("../../assets/roboto_mono_semibold.ttf")).unwrap()
+    });
+
     let Some((x, y)) = model.hover else {
         return;
     };
 
     let (px, py) = board_to_physical(x, y);
     let text = format!("({x}, {y})");
-    draw.text(&text).x_y(px, py - CELL_SIZE * 0.65).font_size(16).color(rgba(1.0, 1.0, 1.0, 0.75));
-}
-
-fn draw_circle(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
-    let (px, py) = board_to_physical(x, y);
-    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
+    draw.text(&text)
+        .x_y(px, py - CELL_SIZE * 0.65)
+        .font(FONT.clone())
+        .font_size(16)
+        .color(rgba(1., 1., 1., 1.));
 }
