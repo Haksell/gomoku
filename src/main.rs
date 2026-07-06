@@ -24,6 +24,6 @@ fn main() {
         0 => panic!("Can't play 0 games."),
         1 => gui::run(),
         n if n.is_multiple_of(4) => arena::run(&args),
-        _ => panic!("TODO: good error message pls"),
+        _ => panic!("TODO: good error message pls"), // TODO: warn instead, but run arena anyway
     }
 }

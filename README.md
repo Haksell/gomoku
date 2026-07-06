@@ -55,8 +55,11 @@
 
 - [x] Random
 - [x] Minimax
+- [ ] Negamax
 - [x] Alpha-Beta Pruning
+- [ ] Nega-ABP
 - [x] Iterative Deepening Alpha-Beta Pruning
+- [ ] Nega-IDABP
 - [ ] ProbCut
 - [ ] Multi-Cut
 - [ ] Null Move Pruning

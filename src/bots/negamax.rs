@@ -10,17 +10,17 @@ use std::cmp::{max, min};
 
 const MAX_DEPTH: usize = 2;
 
-pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
+pub fn negamax(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
 
     let mut best_move = (usize::MAX, usize::MAX);
-    minimax_helper(&mut game.clone(), heuristic, game.current_color, 0, &mut best_move);
+    negamax_helper(&mut game.clone(), heuristic, game.current_color, 0, &mut best_move);
     best_move
 }
 
-fn minimax_helper(
+fn negamax_helper(
     game: &mut Game,
     heuristic: Heuristic,
     maximizing_player: PlayerColor,
@@ -30,20 +30,12 @@ fn minimax_helper(
     match game.state {
         GameState::Playing => {
             if depth == MAX_DEPTH {
-                return match maximizing_player {
-                    PlayerColor::Black => heuristic(game),
-                    PlayerColor::White => -heuristic(game),
-                };
+                return heuristic(game);
             }
         }
         GameState::Draw => return 0,
-        GameState::Won(winner) => {
-            return if winner == maximizing_player {
-                i64::MAX - depth as i64
-            } else {
-                i64::MIN + depth as i64
-            };
-        }
+        GameState::Won(PlayerColor::Black) => return i64::MAX - depth as i64,
+        GameState::Won(PlayerColor::White) => return -(i64::MAX - depth as i64),
     }
 
     let close_moves = game.get_legal_moves(Some(2), depth == 0);
@@ -54,7 +46,7 @@ fn minimax_helper(
 
     for (x, y) in close_moves {
         game.do_move(x, y);
-        let h = minimax_helper(game, heuristic, maximizing_player, depth + 1, best_move);
+        let h = negamax_helper(game, heuristic, maximizing_player, depth + 1, best_move);
         game.undo_last_move();
 
         if is_maximizing_player {
