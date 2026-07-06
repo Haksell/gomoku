@@ -25,17 +25,20 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
     }
 }
 
+// TODO: different max_dist and number of best moves to check depending on depth
+const MAX_DEPTH: usize = 2;
+
+/// Maximizes for the current player, not necessarily black.
 fn leaf_value(game: &Game, heuristic: Heuristic, depth: usize, max_depth: usize) -> Option<i64> {
-    match game.state {
-        GameState::Playing => (depth == max_depth).then(|| match game.current_color {
-            PlayerColor::Black => heuristic(game),
-            PlayerColor::White => -heuristic(game),
-        }),
+    let leaf_value = match game.state {
+        GameState::Playing => (depth == max_depth).then(|| heuristic(game)),
         GameState::Draw => Some(0),
-        GameState::Won(winner) => Some(if winner == game.current_color {
-            i64::MAX - depth as i64
-        } else {
-            -(i64::MAX - depth as i64)
-        }),
-    }
+        GameState::Won(PlayerColor::Black) => Some(i64::MAX - depth as i64),
+        GameState::Won(PlayerColor::White) => Some(depth as i64 - i64::MAX),
+    };
+
+    leaf_value.map(|leaf_value| match game.current_color {
+        PlayerColor::Black => leaf_value,
+        PlayerColor::White => -leaf_value,
+    })
 }

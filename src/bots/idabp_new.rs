@@ -1,4 +1,5 @@
 use crate::{
+    bots::MAX_DEPTH,
     game::{
         Game, GameState,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
@@ -7,9 +8,6 @@ use crate::{
     player::PlayerColor,
 };
 use std::cmp::{max, min};
-
-// TODO: different max_dist and number of best moves to check depending on depth
-const MAX_DEPTH: usize = 3;
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 

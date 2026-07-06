@@ -1,4 +1,5 @@
 use crate::{
+    bots::MAX_DEPTH,
     game::{
         Game, GameState,
         board::{BOARD_CENTER, Position},
@@ -7,8 +8,6 @@ use crate::{
     player::PlayerColor,
 };
 use std::cmp::{max, min};
-
-const MAX_DEPTH: usize = 3;
 
 pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
