@@ -79,7 +79,13 @@ pub fn new(game: &Game) -> i64 {
         for openness in 1..=2 {
             h += (length as i64).pow(5)
                 * (match openness {
-                    1 => 1,
+                    1 => {
+                        if length >= 5 {
+                            2
+                        } else {
+                            1
+                        }
+                    }
                     2 => 3,
                     _ => unreachable!(),
                 })
