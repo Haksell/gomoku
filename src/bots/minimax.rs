@@ -57,14 +57,12 @@ fn minimax_helper(
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = game.current_color == maximizing_player;
-    let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
+    let initial_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
-    for (x, y) in close_moves {
+    game.get_legal_moves(Some(2), false).into_iter().fold(initial_h, |best_h, (x, y)| {
         game.do_move(x, y);
         let h = minimax_helper(game, heuristic, maximizing_player, depth + 1);
         game.undo_last_move();
-        best_h = if is_maximizing_player { max(best_h, h) } else { min(best_h, h) };
-    }
-
-    best_h
+        if is_maximizing_player { max(best_h, h) } else { min(best_h, h) }
+    })
 }
