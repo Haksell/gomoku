@@ -84,19 +84,18 @@ fn ease_out_bounce(x: f32) -> f32 {
 }
 
 fn compute_screen_shake(finished_time: Option<SystemTime>) -> ScreenPosition {
-    const SCREEN_SHAKE_DURATION: f32 = 0.5;
-    const MAGNITUDE: f32 = 12.;
-    const SPEED: f32 = 9.;
+    const SCREEN_SHAKE_DURATION: f32 = 0.42;
+    const MAGNITUDE: f32 = 14.;
+    const SPEED: f32 = 11.;
     const EASING_EXPONENT: f32 = 1.5;
 
     let Some(finished_time) = finished_time else {
         return NO_SCREEN_SHAKE;
     };
 
-    let elapsed = finished_time.elapsed().unwrap().as_secs_f32();
-    let done_factor = (elapsed / SCREEN_SHAKE_DURATION).min(1.);
-    let magnitude_factor = (1. - done_factor).powf(EASING_EXPONENT);
-    let y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * magnitude_factor;
+    let elapsed = finished_time.elapsed().unwrap().as_secs_f32().min(SCREEN_SHAKE_DURATION);
+    let factor = (1. - (elapsed / SCREEN_SHAKE_DURATION)).powf(EASING_EXPONENT);
+    let y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * factor;
     let x = ease_out_bounce(y * -0.2);
 
     (x, y)
