@@ -71,8 +71,8 @@ pub fn old(game: &Game) -> i64 {
 
     // TODO: find better factor
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
-    h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
 
+    h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
     h += (black_capture_threats - white_capture_threats) * 200;
 
     h += (black_combos[2][0] - white_combos[2][0]) * 0;
