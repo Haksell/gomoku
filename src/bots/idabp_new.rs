@@ -1,13 +1,12 @@
 use crate::{
-    bots::MAX_DEPTH,
+    bots::{MAX_DEPTH, leaf_value},
     game::{
-        Game, GameState,
+        Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
     },
     heuristics::Heuristic,
-    player::PlayerColor,
 };
-use std::cmp::{max, min};
+use std::cmp::max;
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
@@ -22,18 +21,18 @@ pub fn idabp_new(game: &Game, heuristic: Heuristic) -> Position {
 
     let mut best_move = (usize::MAX, usize::MAX);
     let mut cache = Cache::default();
+    let mut game = game.clone();
     for max_depth in 0..=MAX_DEPTH {
         alpha_beta_pruning_helper(
-            &mut game.clone(),
+            &mut game,
             heuristic,
-            game.current_color,
             0,
             max_depth,
-            i64::MIN,
+            -i64::MAX,
             i64::MAX,
             &mut best_move,
-            0,
             &mut cache,
+            0,
         );
     }
     best_move
@@ -43,40 +42,24 @@ pub fn idabp_new(game: &Game, heuristic: Heuristic) -> Position {
 fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: Heuristic,
-    maximizing_player: PlayerColor,
     depth: usize,
     max_depth: usize,
     mut min_h: i64,
-    mut max_h: i64,
+    max_h: i64,
     best_move: &mut Position,
-    cache_key: u64,
     cache: &mut Cache,
+    cache_key: u64,
 ) -> i64 {
-    let leaf_h = match game.state {
-        GameState::Playing => (depth == max_depth).then(|| match maximizing_player {
-            PlayerColor::Black => heuristic(game),
-            PlayerColor::White => -heuristic(game),
-        }),
-        GameState::Draw => Some(0),
-        GameState::Won(winner) => Some(if winner == maximizing_player {
-            i64::MAX - depth as i64
-        } else {
-            -(i64::MAX - depth as i64)
-        }),
-    };
-
-    if let Some(leaf_h) = leaf_h {
-        let previous = cache.insert(cache_key, leaf_h);
+    if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
+        let previous = cache.insert(cache_key, leaf_value);
         debug_assert!(previous.is_none());
-        return leaf_h;
+        return leaf_value;
     }
 
-    let is_maximizing_player = game.current_color == maximizing_player;
-    let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
-
-    // TODO: sort by depth 1 heuristic
     let mut close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
+
+    let mut best_h = i64::MIN;
 
     if depth + 1 < max_depth {
         // TODO: profile min vs median vs max vs 0 vs some other lerp
@@ -84,48 +67,31 @@ fn alpha_beta_pruning_helper(
         close_moves.sort_by_cached_key(|&(x, y)| {
             cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&median_h)
         });
-        if is_maximizing_player {
-            close_moves.reverse();
-        }
     }
 
     for (x, y) in close_moves {
         game.do_move(x, y);
-
-        // TODO: NO ALREADY DONE
-        let new_cache_key = update_cache_key(cache_key, x, y);
-
-        let h = alpha_beta_pruning_helper(
+        let h = -alpha_beta_pruning_helper(
             game,
             heuristic,
-            maximizing_player,
             depth + 1,
             max_depth,
-            min_h,
-            max_h,
+            -max_h,
+            -min_h,
             best_move,
-            new_cache_key,
             cache,
+            update_cache_key(cache_key, x, y), // TODO: NO ALREADY DONE in sort
         );
-
         game.undo_last_move();
 
-        if is_maximizing_player {
-            best_h = max(best_h, h);
-            if depth == 0 && h == best_h {
-                *best_move = (x, y);
-            }
-            if h > max_h {
-                break;
-            }
-            min_h = max(min_h, h);
-        } else {
-            best_h = min(best_h, h);
-            if h < min_h {
-                break;
-            }
-            max_h = min(max_h, h);
+        best_h = max(best_h, h);
+        if depth == 0 && h == best_h {
+            *best_move = (x, y);
         }
+        if best_h > max_h {
+            break;
+        }
+        min_h = max(min_h, h);
     }
 
     best_h
