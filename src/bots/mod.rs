@@ -15,12 +15,12 @@ pub type Bot = fn(&Game, Heuristic) -> Position;
 
 pub fn parse_bot(s: &str) -> Result<Bot, String> {
     match s {
-        "new" => Ok(idabp_new::idabp_new),
-        "old" => Ok(idabp_old::idabp_old),
-        "abp" | "alpha_beta_pruning" => Ok(alpha_beta_pruning::alpha_beta_pruning),
+        "random_mover" | "random" => Ok(random_mover::random_mover),
         "minimax" => Ok(minimax::minimax),
         "negamax" => Ok(negamax::negamax),
-        "random_mover" | "random" => Ok(random_mover::random_mover),
+        "abp" | "alpha_beta_pruning" => Ok(alpha_beta_pruning::alpha_beta_pruning),
+        "old" => Ok(idabp_old::idabp_old),
+        "new" => Ok(idabp_new::idabp_new),
         _ => Err(format!("Invalid bot: `{s}`")),
     }
 }
