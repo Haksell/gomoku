@@ -15,7 +15,7 @@ pub type Bot = fn(&Game, Heuristic) -> Position;
 
 pub fn parse_bot(s: &str) -> Result<Bot, String> {
     match s {
-        "random_mover" | "random" => Ok(random_mover::random_mover),
+        "random" | "random_mover" => Ok(random_mover::random_mover),
         "minimax" => Ok(minimax::minimax),
         "negamax" => Ok(negamax::negamax),
         "abp" | "alpha_beta_pruning" => Ok(alpha_beta_pruning::alpha_beta_pruning),
