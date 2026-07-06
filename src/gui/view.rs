@@ -70,26 +70,26 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-/// Shamelessly stolen from <https://easings.net/#easeOutBounce>.
-fn ease_out_bounce(x: f32) -> f32 {
-    const N1: f32 = 7.5625;
-    const D1: f32 = 2.75;
-
-    if x < 1. / D1 {
-        N1 * x * x
-    } else if x < 2. / D1 {
-        N1 * (x - 1.5 / D1) * x + 0.75
-    } else if x < 2.5 / D1 {
-        N1 * (x - 2.25 / D1) * x + 0.9375
-    } else {
-        N1 * (x - 2.625 / D1) * x + 0.984_375
-    }
-}
-
 fn compute_screen_shake(
     finished_time: Option<SystemTime>,
     (board_x, board_y): Position,
 ) -> ScreenPosition {
+    /// Shamelessly stolen from <https://easings.net/#easeOutBounce>.
+    fn ease_out_bounce(x: f32) -> f32 {
+        const N1: f32 = 7.5625;
+        const D1: f32 = 2.75;
+
+        if x < 1. / D1 {
+            N1 * x * x
+        } else if x < 2. / D1 {
+            N1 * (x - 1.5 / D1) * x + 0.75
+        } else if x < 2.5 / D1 {
+            N1 * (x - 2.25 / D1) * x + 0.9375
+        } else {
+            N1 * (x - 2.625 / D1) * x + 0.984_375
+        }
+    }
+
     static NOISE: LazyLock<OpenSimplex> = LazyLock::new(|| OpenSimplex::new().set_seed(random()));
 
     const SCREEN_SHAKE_DURATION: f32 = 0.5;
