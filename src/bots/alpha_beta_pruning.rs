@@ -36,14 +36,14 @@ fn alpha_beta_pruning_helper(
 
     let mut best_h = i64::MIN;
 
-    for (x, y) in close_moves {
-        game.do_move(x, y);
+    for pos in close_moves {
+        game.do_move(pos);
         let h = -alpha_beta_pruning_helper(game, heuristic, depth + 1, -max_h, -min_h, best_move);
         game.undo_last_move();
 
         best_h = max(best_h, h);
         if depth == 0 && h == best_h {
-            *best_move = (x, y);
+            *best_move = pos;
         }
         min_h = max(min_h, best_h);
         if best_h > max_h {

@@ -19,6 +19,8 @@ use std::time::{Instant, SystemTime};
 use textures::init_textures;
 use view::view;
 
+type ScreenPosition = (f32, f32);
+
 pub const WINDOW_SIZE: u32 = 750;
 pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
@@ -75,9 +77,9 @@ fn update(app: &App, model: &mut Model, _: Update) {
     {
         let start = Instant::now();
         // let bot_thread = std::thread::spawn(|| bot(model., *heuristic));
-        let (x, y) = bot(&model.game, *heuristic);
+        let pos = bot(&model.game, *heuristic);
         model.ai_thinking_time = Some(start.elapsed().as_millis());
-        model.game.do_move(x, y);
+        model.game.do_move(pos);
         // TODO: show in UI and delete this println (MANDATORY!)
         println!("AI move computed in {:?} ms", model.ai_thinking_time.unwrap());
         println!(

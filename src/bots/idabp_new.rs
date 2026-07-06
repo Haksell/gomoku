@@ -63,13 +63,13 @@ fn alpha_beta_pruning_helper(
 
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
-        close_moves.sort_by_cached_key(|&(x, y)| {
-            cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&default_h)
+        close_moves.sort_by_cached_key(|&pos| {
+            cache.get(&update_cache_key(cache_key, pos)).unwrap_or(&default_h)
         });
     }
 
-    for (x, y) in close_moves {
-        game.do_move(x, y);
+    for pos in close_moves {
+        game.do_move(pos);
         let h = -alpha_beta_pruning_helper(
             game,
             heuristic,
@@ -79,13 +79,13 @@ fn alpha_beta_pruning_helper(
             -min_h,
             best_move,
             cache,
-            update_cache_key(cache_key, x, y), // TODO: NO ALREADY DONE in sort
+            update_cache_key(cache_key, pos), // TODO: NO ALREADY DONE in sort
         );
         game.undo_last_move();
 
         best_h = max(best_h, h);
         if depth == 0 && h == best_h {
-            *best_move = (x, y);
+            *best_move = pos;
         }
         if best_h > max_h {
             break;
@@ -96,7 +96,7 @@ fn alpha_beta_pruning_helper(
     best_h
 }
 
-const fn update_cache_key(cache_key: u64, x: usize, y: usize) -> u64 {
+const fn update_cache_key(cache_key: u64, (x, y): Position) -> u64 {
     (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as u64
 }
 
@@ -108,7 +108,7 @@ const fn update_cache_key(cache_key: u64, x: usize, y: usize) -> u64 {
 
 // TODO: handle captures
 // TODO: test
-// const fn update_cache_key(mut cache_key: u64, x: usize, y: usize) -> u64 {
+// const fn update_cache_key(mut cache_key: u64, (x, y): Position) -> u64 {
 //     const MASK: u64 = (1 << BITS_PER_MOVE) - 1;
 //     // [B].B.B
 //     let new_value = (y * BOARD_SIZE + x + 1) as u64;

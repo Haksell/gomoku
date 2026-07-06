@@ -3,7 +3,7 @@ use crate::{
         board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
         state::GameState,
     },
-    gui::{CELL_SIZE, Model},
+    gui::{CELL_SIZE, Model, ScreenPosition},
 };
 use nannou::App;
 
@@ -27,7 +27,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
         || model.game.board[y][x].is_some()
-        || model.game.creates_double_three(x, y)
+        || model.game.creates_double_three((x, y))
     {
         return None;
     }
@@ -42,7 +42,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     Some((x, y))
 }
 
-pub fn board_to_physical(x: usize, y: usize) -> (f32, f32) {
+pub fn board_to_physical((x, y): Position) -> ScreenPosition {
     fn b2p1d(z: usize) -> f32 {
         (z as isize - HALF_BOARD_SIZE as isize) as f32 * CELL_SIZE
     }

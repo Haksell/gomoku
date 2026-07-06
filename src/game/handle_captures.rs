@@ -1,15 +1,15 @@
 use crate::{
     game::{
         Game, UpdateSign,
-        board::{DIRECTIONS8, MANHATTAN_TO_CENTER, is_capture},
+        board::{DIRECTIONS8, MANHATTAN_TO_CENTER, Position, is_capture},
     },
     player::PlayerColor,
 };
 
 impl Game {
-    pub fn handle_captures(&mut self, x: usize, y: usize) {
+    pub fn handle_captures(&mut self, (x, y): Position) {
         for (dx, dy) in DIRECTIONS8 {
-            if !is_capture(&self.board, self.current_color, x, y, dx, dy) {
+            if !is_capture(&self.board, self.current_color, (x, y), (dx, dy)) {
                 continue;
             }
 
@@ -24,8 +24,8 @@ impl Game {
 
             self.board[captured_y1][captured_x1] = None;
             self.board[captured_y2][captured_x2] = None;
-            self.update_close_moves(captured_x1, captured_y1, UpdateSign::Negative);
-            self.update_close_moves(captured_x2, captured_y2, UpdateSign::Negative);
+            self.update_close_moves((captured_x1, captured_y1), UpdateSign::Negative);
+            self.update_close_moves((captured_x2, captured_y2), UpdateSign::Negative);
 
             match self.current_color {
                 PlayerColor::Black => {

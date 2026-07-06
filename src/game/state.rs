@@ -1,7 +1,7 @@
 use crate::{
     game::{
         Game,
-        board::{BOARD_SIZE, DIRECTIONS4, DIRECTIONS8, Position, is_same_color},
+        board::{BOARD_SIZE, DIRECTIONS4, DIRECTIONS8, Direction, Position, is_same_color},
     },
     player::PlayerColor,
 };
@@ -38,15 +38,15 @@ pub struct WinningWay {
 }
 
 impl Game {
-    pub fn update_state(&self, x: usize, y: usize) -> GameState {
+    pub fn update_state(&self, pos: Position) -> GameState {
         let captures = match self.current_color {
             PlayerColor::Black => self.black_captures,
             PlayerColor::White => self.white_captures,
         };
 
         let mut alignments = Vec::new();
-        for &(dx, dy) in &DIRECTIONS4 {
-            let longest_row_in_dir = self.get_longest_row_in_dir(x, y, dx, dy);
+        for &dir in &DIRECTIONS4 {
+            let longest_row_in_dir = self.get_longest_row_in_dir(pos, dir);
             if longest_row_in_dir.len() >= STONES_IN_A_ROW {
                 alignments.push(longest_row_in_dir);
             }
@@ -88,28 +88,27 @@ impl Game {
         potential_winner.sort_unstable();
         let overflow = potential_winner.len() - STONES_IN_A_ROW;
         for &(x, y) in &potential_winner[overflow..STONES_IN_A_ROW] {
-            break_possibilities.extend(self.find_breakable(x as isize, y as isize));
+            break_possibilities.extend(self.find_breakable((x as isize, y as isize)));
         }
         break_possibilities
     }
 
-    fn find_breakable(&self, new_x: isize, new_y: isize) -> HashSet<Position> {
+    fn find_breakable(&self, (new_x, new_y): (isize, isize)) -> HashSet<Position> {
         let mut breaking_positions = HashSet::new();
         for (dx, dy) in &DIRECTIONS8 {
-            if is_same_color(&self.board, None, new_x - dx, new_y - dy)
-                && is_same_color(&self.board, Some(self.current_color), new_x + dx, new_y + dy)
+            if is_same_color(&self.board, None, (new_x - dx, new_y - dy))
+                && is_same_color(&self.board, Some(self.current_color), (new_x + dx, new_y + dy))
                 && is_same_color(
                     &self.board,
                     Some(!self.current_color),
-                    new_x + 2 * dx,
-                    new_y + 2 * dy,
+                    (new_x + 2 * dx, new_y + 2 * dy),
                 )
             {
                 breaking_positions.insert(((new_x - dx) as usize, (new_y - dy) as usize));
             }
-            if is_same_color(&self.board, Some(!self.current_color), new_x - dx, new_y - dy)
-                && is_same_color(&self.board, Some(self.current_color), new_x + dx, new_y + dy)
-                && is_same_color(&self.board, None, new_x + 2 * dx, new_y + 2 * dy)
+            if is_same_color(&self.board, Some(!self.current_color), (new_x - dx, new_y - dy))
+                && is_same_color(&self.board, Some(self.current_color), (new_x + dx, new_y + dy))
+                && is_same_color(&self.board, None, (new_x + 2 * dx, new_y + 2 * dy))
             {
                 breaking_positions.insert(((new_x + 2 * dx) as usize, (new_y + 2 * dy) as usize));
             }
@@ -117,7 +116,7 @@ impl Game {
         breaking_positions
     }
 
-    fn get_longest_row_in_dir(&self, x: usize, y: usize, dx: isize, dy: isize) -> Vec<Position> {
+    fn get_longest_row_in_dir(&self, (x, y): Position, (dx, dy): Direction) -> Vec<Position> {
         let mut row: Vec<Position> = vec![(x, y)];
 
         let mut advance = |reverse: bool| {
@@ -127,7 +126,7 @@ impl Game {
                 }
                 let new_x = x as isize + step * dx;
                 let new_y = y as isize + step * dy;
-                if is_same_color(&self.board, Some(self.current_color), new_x, new_y) {
+                if is_same_color(&self.board, Some(self.current_color), (new_x, new_y)) {
                     row.push((new_x as usize, new_y as usize));
                 } else {
                     return;

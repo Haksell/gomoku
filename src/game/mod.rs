@@ -7,7 +7,7 @@ pub mod state;
 use crate::{
     Player,
     game::{
-        board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
     player::PlayerColor,
@@ -59,7 +59,7 @@ impl Game {
         }
     }
 
-    pub fn do_move(&mut self, x: usize, y: usize) {
+    pub fn do_move(&mut self, (x, y): Position) {
         debug_assert!(self.state.is_playing());
         debug_assert!(self.board[y][x].is_none());
 
@@ -70,10 +70,10 @@ impl Game {
             PlayerColor::Black => self.black_dist_to_center += MANHATTAN_TO_CENTER[y][x],
             PlayerColor::White => self.white_dist_to_center += MANHATTAN_TO_CENTER[y][x],
         }
-        self.update_close_moves(x, y, UpdateSign::Positive);
-        self.handle_captures(x, y);
+        self.update_close_moves((x, y), UpdateSign::Positive);
+        self.handle_captures((x, y));
 
-        self.state = self.update_state(x, y);
+        self.state = self.update_state((x, y));
 
         if let GameState::Playing(forced_moves) = &self.state
             && !forced_moves.is_empty()
@@ -116,13 +116,13 @@ impl Game {
                 }
             }
 
-            self.update_close_moves(x1, y1, UpdateSign::Positive);
-            self.update_close_moves(x2, y2, UpdateSign::Positive);
+            self.update_close_moves((x1, y1), UpdateSign::Positive);
+            self.update_close_moves((x2, y2), UpdateSign::Positive);
             self.board[y1][x1] = Some(!self.current_color);
             self.board[y2][x2] = Some(!self.current_color);
         }
 
-        self.update_close_moves(x, y, UpdateSign::Negative);
+        self.update_close_moves((x, y), UpdateSign::Negative);
 
         match self.current_color {
             PlayerColor::Black => self.black_dist_to_center -= MANHATTAN_TO_CENTER[y][x],
@@ -146,14 +146,14 @@ impl Game {
 
         while self.state.is_playing() {
             let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
-            let (x, y) = bot(self, *heuristic);
-            self.do_move(x, y);
+            let pos = bot(self, *heuristic);
+            self.do_move(pos);
         }
     }
 
     // TODO: dynamic ajustable en tout cas
-    fn update_close_moves(&mut self, x: usize, y: usize, update_sign: UpdateSign) {
-        const MANHATTAN2: [(isize, isize); 13] = [
+    fn update_close_moves(&mut self, (x, y): Position, update_sign: UpdateSign) {
+        const MANHATTAN2: [Direction; 13] = [
             (0, 0),
             (0, 1),
             (1, 1),
@@ -194,7 +194,7 @@ impl Game {
         for (x, y) in SPIRALLING_POSITIONS {
             if (max_dist.is_none() || self.close_moves[y][x] > 0)
                 && self.board[y][x].is_none()
-                && !self.creates_double_three(x, y)
+                && !self.creates_double_three((x, y))
             {
                 legal_moves.push((x, y));
             }
@@ -221,7 +221,7 @@ impl Game {
                 if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
                     && self.board[ry][rx].is_none()
                 {
-                    self.do_move(rx, ry);
+                    self.do_move((rx, ry));
                     break;
                 }
             }
@@ -256,8 +256,8 @@ mod tests {
             while game.state.is_playing() {
                 game_states.push(game.clone());
                 let Player::Bot { bot, heuristic } = game.current_player() else { unreachable!() };
-                let (x, y) = bot(&game, *heuristic);
-                game.do_move(x, y);
+                let pos = bot(&game, *heuristic);
+                game.do_move(pos);
             }
 
             while let Some(game_state) = game_states.pop() {

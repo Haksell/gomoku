@@ -2,14 +2,11 @@
 
 ## todo
 
-x: usize, y: usize
-
 ### misc
 
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
-- `Vec2<f32>` (physical pos), `Vec2<usize>` (board pos) and `Vec2<isize>` (direction)
 - compute during human time (flag)
 - iterative alpha-beta pruning to always return a move in less than 1s
 - arena with elo ranking

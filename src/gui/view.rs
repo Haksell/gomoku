@@ -4,7 +4,7 @@ use crate::{
         state::{ForcedMoves, GameState},
     },
     gui::{
-        CELL_SIZE, MARKER_DOTS_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
+        CELL_SIZE, MARKER_DOTS_SPACING, Model, ScreenPosition, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,
         textures::{
             TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_HOVER_BLACK, TEXTURE_HOVER_WHITE,
@@ -24,7 +24,6 @@ use nannou::{
 };
 use std::{f32::consts::TAU, sync::LazyLock, time::SystemTime};
 
-type ScreenPosition = (f32, f32);
 const NO_SCREEN_SHAKE: ScreenPosition = (0., 0.);
 
 const DOT_SIZE_MARKER: f32 = CELL_SIZE * 0.25;
@@ -204,12 +203,12 @@ fn draw_stones(draw: &Draw, model: &Model) {
 
     fn draw_stone(
         draw: &Draw,
-        (x, y): Position,
+        pos: Position,
         player_color: PlayerColor,
         transparent: bool,
         (shake_x, shake_y): ScreenPosition,
     ) {
-        let (mut px, mut py) = board_to_physical(x, y);
+        let (mut px, mut py) = board_to_physical(pos);
         px += shake_x;
         py += shake_y;
 
@@ -270,7 +269,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.game.board[y][x].is_none() && model.game.creates_double_three(x, y) {
+            if model.game.board[y][x].is_none() && model.game.creates_double_three((x, y)) {
                 draw_circle(draw, (x, y), STONE_SIZE, COLOR_INVALID_MOVE, NO_SCREEN_SHAKE);
             }
         }
@@ -319,24 +318,24 @@ fn draw_game_over_overlay(
 
 fn draw_circle(
     draw: &Draw,
-    (x, y): Position,
+    pos: Position,
     size: f32,
     color: Srgb<u8>,
     (shake_x, shake_y): ScreenPosition,
 ) {
-    let (px, py) = board_to_physical(x, y);
+    let (px, py) = board_to_physical(pos);
     draw.ellipse().x_y(px + shake_x, py + shake_y).w_h(size, size).color(color);
 }
 
 fn draw_ring(
     draw: &Draw,
-    (x, y): Position,
+    pos: Position,
     ring_size: f32,
     stroke_weight: f32,
     color: Srgb<u8>,
     (shake_x, shake_y): ScreenPosition,
 ) {
-    let (px, py) = board_to_physical(x, y);
+    let (px, py) = board_to_physical(pos);
     draw.ellipse()
         .x_y(px + shake_x, py + shake_y)
         .w_h(ring_size, ring_size)
