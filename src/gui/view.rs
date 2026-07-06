@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use crate::{
     game::{
         board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
@@ -20,6 +18,7 @@ use nannou::{
     color::{BLACK, Srgb, Srgba, WHITE, rgba},
     geom::{Point2, pt2},
 };
+use std::{f32::consts::TAU, time::SystemTime};
 
 type ScreenPosition = (f32, f32);
 const NO_SCREEN_SHAKE: ScreenPosition = (0., 0.);
@@ -38,16 +37,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_grid(&draw);
     draw_marker_dots(&draw);
 
-    let screen_shake = if let Some(finished_time) = model.finished_time {
-        const SCREEN_SHAKE_DURATION: f32 = 0.5;
-        let elapsed = finished_time.elapsed().unwrap().as_secs_f32();
-        let factor = (SCREEN_SHAKE_DURATION - elapsed).max(0.);
-        let y = (elapsed * 20. * PI).cos() * 16. * factor;
-        let x = y * -0.2;
-        (x, y)
-    } else {
-        NO_SCREEN_SHAKE
-    };
+    let screen_shake = compute_screen_shake(model.finished_time);
 
     draw_stones(&draw, model, screen_shake);
     draw_last_move(&draw, model, screen_shake);
@@ -75,6 +65,41 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     }
 
     draw.to_frame(app, &frame).unwrap();
+}
+
+/// Shamelessly stolen from <https://easings.net/#easeOutBounce>.
+fn ease_out_bounce(x: f32) -> f32 {
+    const N1: f32 = 7.5625;
+    const D1: f32 = 2.75;
+
+    if x < 1. / D1 {
+        N1 * x * x
+    } else if x < 2. / D1 {
+        N1 * (x - 1.5 / D1) * x + 0.75
+    } else if x < 2.5 / D1 {
+        N1 * (x - 2.25 / D1) * x + 0.9375
+    } else {
+        N1 * (x - 2.625 / D1) * x + 0.984_375
+    }
+}
+
+fn compute_screen_shake(finished_time: Option<SystemTime>) -> ScreenPosition {
+    const SCREEN_SHAKE_DURATION: f32 = 0.5;
+    const MAGNITUDE: f32 = 12.;
+    const SPEED: f32 = 9.;
+    const EASING_EXPONENT: f32 = 1.5;
+
+    let Some(finished_time) = finished_time else {
+        return NO_SCREEN_SHAKE;
+    };
+
+    let elapsed = finished_time.elapsed().unwrap().as_secs_f32();
+    let done_factor = (elapsed / SCREEN_SHAKE_DURATION).min(1.);
+    let magnitude_factor = (1. - done_factor).powf(EASING_EXPONENT);
+    let y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * magnitude_factor;
+    let x = ease_out_bounce(y * -0.2);
+
+    (x, y)
 }
 
 fn draw_last_move(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {

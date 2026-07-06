@@ -30,7 +30,7 @@ x: usize, y: usize
 - change hover font
 - show ply
 - prefer double wins (captures + alignment)
-- show last capture
+- show last capture (screen shake)
 - show number of captures
 - fix move shows as hover before bot plays (async bot)
 - multiple themes
@@ -38,7 +38,6 @@ x: usize, y: usize
 - eval bar
 - blinking capture counter on win by capture
 - bowling alley animations
-- screen shake
 
 ### heuristics
 
