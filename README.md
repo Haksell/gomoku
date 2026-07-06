@@ -22,6 +22,8 @@ GAME STATE!!!!!!!!!!!!!!!
 - remove most allocations
 - idabp: truncate based on cached heuristic
 - coup force (4 captures...)
+- clock in human vs (human | bot)
+- no depth in leaf_value, if win found in iterative deepening, stop
 
 ### design
 
