@@ -8,7 +8,7 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-const MAX_DEPTH: usize = 2;
+const MAX_DEPTH: usize = 3;
 
 pub fn negamax(game: &Game, heuristic: Heuristic) -> Position {
     if game.ply == 0 {
