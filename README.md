@@ -2,6 +2,8 @@
 
 ## todo
 
+GAME STATE!!!!!!!!!!!!!!!
+
 ### misc
 
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
@@ -58,12 +60,12 @@
 - [x] Negamax
 - [x] Alpha-Beta Pruning
 - [x] Iterative Deepening Alpha-Beta Pruning
+- [ ] Principal Variation Search
+- [ ] Quiescence Search
 - [ ] ProbCut
 - [ ] Multi-Cut
 - [ ] Null Move Pruning
-- [ ] Principal Variation Search
 - [ ] NegaScout
-- [ ] Quiescence Search
 - [ ] MTD(f)
 - [ ] SSS*
 - [ ] MCTS
