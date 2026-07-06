@@ -6,7 +6,7 @@ pub mod negamax;
 pub mod random_mover;
 
 use crate::{
-    game::{Game, GameState, board::Position},
+    game::{Game, board::Position, state::GameState},
     heuristics::Heuristic,
     player::PlayerColor,
 };
@@ -31,10 +31,10 @@ const MAX_DEPTH: usize = 3;
 /// Maximizes for the current player, not necessarily black.
 fn leaf_value(game: &Game, heuristic: Heuristic, depth: usize, max_depth: usize) -> Option<i64> {
     let leaf_value = match game.state {
-        GameState::Playing => (depth == max_depth).then(|| heuristic(game)),
+        GameState::Playing(_) => (depth == max_depth).then(|| heuristic(game)),
         GameState::Draw => Some(0),
-        GameState::Won(PlayerColor::Black) => Some(i64::MAX - depth as i64),
-        GameState::Won(PlayerColor::White) => Some(depth as i64 - i64::MAX),
+        GameState::Won(PlayerColor::Black, _) => Some(i64::MAX - depth as i64),
+        GameState::Won(PlayerColor::White, _) => Some(depth as i64 - i64::MAX),
     };
 
     leaf_value.map(|leaf_value| match game.current_color {

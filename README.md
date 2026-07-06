@@ -31,6 +31,10 @@ GAME STATE!!!!!!!!!!!!!!!
 - transparent texture for hover
 - show ply
 - highlight 5-in-a-row that won
+- prefer double wins (captures + alignment)
+
+### design
+
 - show last capture
 - show number of captures
 - fix move shows as hover before bot plays (async bot)

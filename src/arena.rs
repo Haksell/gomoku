@@ -1,6 +1,6 @@
 use crate::{
     Args,
-    game::{Game, GameState},
+    game::{Game, state::GameState},
     player::PlayerColor,
 };
 use rayon::{ThreadPoolBuilder, prelude::*};
@@ -59,6 +59,7 @@ pub fn run(args: &Args) {
     (1..=args.num_games / 2).into_par_iter().for_each(|i| {
         let mut game = Game::new(args.black_player, args.white_player);
         let random_moves = 3 + (i & 1) as u32;
+        // TODO: clap args to configure random board (number and distance to center)
         game.play_random_moves(random_moves, 5);
 
         let mut switched_game = game.clone();
@@ -67,16 +68,16 @@ pub fn run(args: &Args) {
 
         game.play_game();
         let black_win = match game.state {
-            GameState::Playing => unreachable!(),
-            GameState::Won(PlayerColor::Black) => true,
-            GameState::Draw | GameState::Won(PlayerColor::White) => false,
+            GameState::Playing(_) => unreachable!(),
+            GameState::Won(PlayerColor::Black, _) => true,
+            GameState::Draw | GameState::Won(PlayerColor::White, _) => false,
         };
 
         switched_game.play_game();
         let white_win = match switched_game.state {
-            GameState::Playing => unreachable!(),
-            GameState::Won(PlayerColor::White) => true,
-            GameState::Draw | GameState::Won(PlayerColor::Black) => false,
+            GameState::Playing(_) => unreachable!(),
+            GameState::Won(PlayerColor::White, _) => true,
+            GameState::Draw | GameState::Won(PlayerColor::Black, _) => false,
         };
 
         let mut stats = stats.lock().unwrap();

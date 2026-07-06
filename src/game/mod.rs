@@ -1,20 +1,19 @@
 pub mod board;
-pub mod check_finished;
 pub mod creates_double_three;
 pub mod handle_captures;
 pub mod lines;
+pub mod state;
 
 use crate::{
     Player,
     game::{
         board::{HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
-        check_finished::REQUIRED_CAPTURES,
+        state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
 use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
-use std::collections::HashSet;
 
 const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
@@ -28,7 +27,6 @@ pub struct Game {
     pub current_color: PlayerColor,
     pub black_captures: usize,
     pub white_captures: usize,
-    pub forced_moves: HashSet<Position>,
     // TODO: store forbidden moves too (double threes)
     pub black_player: Player,
     pub white_player: Player,
@@ -38,19 +36,18 @@ pub struct Game {
     pub ply: usize,
     pub moves: Vec<Position>,
     pub captures: Vec<(usize, Position, Position)>,
-    pub forced_moves_history: Vec<(usize, HashSet<Position>)>,
+    pub forced_moves_history: Vec<(usize, ForcedMoves)>,
 }
 
 impl Game {
     pub fn new(black_player: Player, white_player: Player) -> Self {
         Self {
-            state: GameState::Playing,
+            state: GameState::init(),
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
             close_moves: [[0; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
             white_captures: 0,
-            forced_moves: HashSet::new(),
             black_player,
             white_player,
             black_dist_to_center: 0,
@@ -76,16 +73,12 @@ impl Game {
         self.update_close_moves(x, y, UpdateSign::Positive);
         self.handle_captures(x, y);
 
-        let (is_winner, forced_moves) = self.check_winner(x, y);
-        if is_winner {
-            self.state = GameState::Won(self.current_color);
-        } else if self.check_draw() {
-            self.state = GameState::Draw;
-        } else {
-            if !forced_moves.is_empty() {
-                self.forced_moves_history.push((self.ply, forced_moves.clone()));
-            }
-            self.forced_moves = forced_moves;
+        self.state = self.update_state(x, y);
+
+        if let GameState::Playing(forced_moves) = &self.state
+            && !forced_moves.is_empty()
+        {
+            self.forced_moves_history.push((self.ply, forced_moves.clone()));
         }
 
         self.current_color = !self.current_color;
@@ -96,15 +89,14 @@ impl Game {
     pub fn undo_last_move(&mut self) {
         let (x, y) = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
-        self.state = GameState::Playing;
         self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
 
         if let Some((ply, forced_moves)) = self.forced_moves_history.last()
             && *ply == self.ply - 1
         {
-            self.forced_moves.clone_from(forced_moves);
+            self.state = GameState::Playing(forced_moves.clone());
         } else {
-            self.forced_moves.clear();
+            self.state = GameState::Playing(ForcedMoves::new());
         }
 
         // undo capture
@@ -191,8 +183,10 @@ impl Game {
     pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
-        if !self.forced_moves.is_empty() {
-            return self.forced_moves.clone().into_iter().collect();
+        if let GameState::Playing(forced_moves) = &self.state
+            && !forced_moves.is_empty()
+        {
+            return forced_moves.clone().into_iter().collect();
         }
 
         // TODO: preallocate with number of close moves (or forced moves)
@@ -232,19 +226,6 @@ impl Game {
                 }
             }
         }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum GameState {
-    Playing,
-    Draw,
-    Won(PlayerColor),
-}
-
-impl GameState {
-    pub const fn is_playing(self) -> bool {
-        matches!(self, Self::Playing)
     }
 }
 

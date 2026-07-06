@@ -1,5 +1,8 @@
 use crate::{
-    game::board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+    game::{
+        board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+        state::GameState,
+    },
     gui::{CELL_SIZE, Model},
 };
 use nannou::App;
@@ -19,15 +22,23 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     if x < 0 || y < 0 || intersection_distance > 0.4 {
         return None;
     }
+
     let (x, y) = (x as usize, y as usize);
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
         || model.game.board[y][x].is_some()
         || model.game.creates_double_three(x, y)
-        || (!model.game.forced_moves.is_empty() && !model.game.forced_moves.contains(&(x, y)))
     {
         return None;
     }
+
+    if let GameState::Playing(forced_moves) = &model.game.state
+        && !forced_moves.is_empty()
+        && !forced_moves.contains(&(x, y))
+    {
+        return None;
+    }
+
     Some((x, y))
 }
 

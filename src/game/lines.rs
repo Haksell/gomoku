@@ -2,7 +2,7 @@
 
 use crate::game::{
     board::{BOARD_SIZE, Position},
-    check_finished::STONES_IN_A_ROW,
+    state::STONES_IN_A_ROW,
 };
 
 pub const ROWS: [[Position; BOARD_SIZE]; BOARD_SIZE] = {
@@ -37,7 +37,7 @@ pub const COLUMNS: [[Position; BOARD_SIZE]; BOARD_SIZE] = {
 // TODO: generate with const or macro
 
 #[rustfmt::skip]
-pub const UPWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE -2*STONES_IN_A_ROW + 1] = [
+pub const UPWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE - 2 * STONES_IN_A_ROW + 1] = [
     // &[(0, 18)],
     // &[(0, 17), (1, 18)],
     // &[(0, 16), (1, 17), (2, 18)],
@@ -78,7 +78,7 @@ pub const UPWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE -2*STONES_IN_A_ROW + 1]
 ];
 
 #[rustfmt::skip]
-pub const DOWNWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE -2*STONES_IN_A_ROW + 1] = [
+pub const DOWNWARD_DIAGONALS: [&[Position]; 2 * BOARD_SIZE - 2 * STONES_IN_A_ROW + 1] = [
     // &[(0, 0)],
     // &[(0, 1), (1, 0)],
     // &[(0, 2), (1, 1), (2, 0)],

@@ -1,7 +1,7 @@
 use crate::{
     game::{
-        GameState,
         board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+        state::{ForcedMoves, GameState},
     },
     gui::{
         CELL_SIZE, MARKER_DOTS_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
@@ -12,7 +12,7 @@ use crate::{
 };
 use nannou::{
     App, Draw, Frame,
-    color::{BLACK, LinSrgba, Srgb, WHITE, rgba},
+    color::{BLACK, LinSrgba, Srgb, Srgba, WHITE, rgba},
     geom::{Point2, pt2},
 };
 
@@ -32,10 +32,12 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_stones(&draw, model);
 
     if model.game.state.is_playing() {
-        if model.game.forced_moves.is_empty() {
-            draw_invalid_moves(&draw, model);
+        if let GameState::Playing(forced_moves) = &model.game.state
+            && !forced_moves.is_empty()
+        {
+            draw_forced_moves(&draw, forced_moves, model.hover);
         } else {
-            draw_forced_moves(&draw, model);
+            draw_invalid_moves(&draw, model);
         }
     }
 
@@ -43,10 +45,13 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_last_move(&draw, model);
     // draw_last_captures(&draw, model);
 
+    draw_win_by_alignment(&draw, model);
+
+    // TODO: use winning way
     match model.game.state {
-        GameState::Playing => {}
+        GameState::Playing(_) => {}
         GameState::Draw => draw_game_over_overlay(&draw, None),
-        GameState::Won(winner) => draw_game_over_overlay(&draw, Some(winner)),
+        GameState::Won(winner, _) => draw_game_over_overlay(&draw, Some(winner)),
     }
 
     draw.to_frame(app, &frame).unwrap();
@@ -59,6 +64,20 @@ fn draw_last_move(draw: &Draw, model: &Model) {
             PlayerColor::White => WHITE,
         };
         draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color);
+    }
+}
+
+fn draw_win_by_alignment(draw: &Draw, model: &Model) {
+    if let GameState::Won(player_color, winning_way) = &model.game.state {
+        let (color, stroke_weight) = match player_color {
+            PlayerColor::Black => (WHITE, CELL_SIZE * 0.05),
+            PlayerColor::White => (BLACK, CELL_SIZE * 0.065),
+        };
+        for alignment in &winning_way.winning_alignments {
+            for &pos in alignment {
+                draw_ring(draw, pos, CELL_SIZE * 0.425, stroke_weight, color);
+            }
+        }
     }
 }
 
@@ -146,13 +165,13 @@ fn draw_stones(draw: &Draw, model: &Model) {
     }
 }
 
-fn draw_forced_moves(draw: &Draw, model: &Model) {
+fn draw_forced_moves(draw: &Draw, forced_moves: &ForcedMoves, hover: Option<Position>) {
     // Tailwind green-500
     const COLOR_VALID_MOVE: Srgb<u8> =
         Srgb { red: 0x22, green: 0xc5, blue: 0x5e, standard: std::marker::PhantomData };
 
-    for &pos in &model.game.forced_moves {
-        if model.hover != Some(pos) {
+    for &pos in forced_moves {
+        if hover != Some(pos) {
             draw_circle(draw, pos, STONE_SIZE, COLOR_VALID_MOVE);
         }
     }
@@ -204,4 +223,14 @@ fn draw_hover_coords(draw: &Draw, model: &Model) {
 fn draw_circle(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
     let (px, py) = board_to_physical(x, y);
     draw.ellipse().x_y(px, py).w_h(size, size).color(color);
+}
+
+fn draw_ring(draw: &Draw, (x, y): Position, ring_size: f32, stroke_weight: f32, color: Srgb<u8>) {
+    let (px, py) = board_to_physical(x, y);
+    draw.ellipse()
+        .x_y(px, py)
+        .w_h(ring_size, ring_size)
+        .stroke_weight(stroke_weight)
+        .stroke_color(color)
+        .color(Srgba { color, alpha: 0 });
 }
