@@ -8,7 +8,6 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-// TODO: different max_dist and number of best moves to check depending on depth
 const MAX_DEPTH: usize = 3;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
@@ -19,8 +18,8 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
     let mut best_move = (usize::MAX, usize::MAX);
     alpha_beta_pruning_helper(
         &mut game.clone(),
-        game.current_color,
         heuristic,
+        game.current_color,
         0,
         i64::MIN,
         i64::MAX,
@@ -31,8 +30,8 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
 
 fn alpha_beta_pruning_helper(
     game: &mut Game,
-    maximizing_player: PlayerColor,
     heuristic: Heuristic,
+    maximizing_player: PlayerColor,
     depth: usize,
     mut min_h: i64,
     mut max_h: i64,
@@ -50,9 +49,6 @@ fn alpha_beta_pruning_helper(
         }
     }
 
-    // let max_depth =
-    //     if std::ptr::fn_addr_eq(heuristic, old as for<'a> fn(&'a Game) -> i64) { 3 } else { 4 };
-
     if depth == MAX_DEPTH {
         return match maximizing_player {
             PlayerColor::Black => heuristic(game),
@@ -60,7 +56,6 @@ fn alpha_beta_pruning_helper(
         };
     }
 
-    // TODO: sort by depth 1 heuristic
     let close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
@@ -69,17 +64,15 @@ fn alpha_beta_pruning_helper(
 
     for (x, y) in close_moves {
         game.do_move(x, y);
-
         let h = alpha_beta_pruning_helper(
             game,
-            maximizing_player,
             heuristic,
+            maximizing_player,
             depth + 1,
             min_h,
             max_h,
             best_move,
         );
-
         game.undo_last_move();
 
         if is_maximizing_player {

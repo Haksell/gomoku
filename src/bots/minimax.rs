@@ -1,5 +1,3 @@
-// TODO: aled (seems broken)
-
 use crate::{
     game::{
         Game, GameState,
@@ -8,6 +6,7 @@ use crate::{
     heuristics::Heuristic,
     player::PlayerColor,
 };
+use std::cmp::{max, min};
 
 const MAX_DEPTH: usize = 3;
 
@@ -16,24 +15,17 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
-    let mut game = game.clone();
-    game.get_legal_moves(Some(2), true)
-        .into_iter()
-        .max_by_key(|&(x, y)| {
-            game.do_move(x, y);
-            let current_color = game.current_color;
-            let h = minimax_helper(&mut game, current_color, heuristic, 1);
-            game.undo_last_move();
-            h
-        })
-        .unwrap()
+    let mut best_move = (usize::MAX, usize::MAX);
+    minimax_helper(&mut game.clone(), heuristic, game.current_color, 0, &mut best_move);
+    best_move
 }
 
 fn minimax_helper(
     game: &mut Game,
-    maximizing_player: PlayerColor,
     heuristic: Heuristic,
+    maximizing_player: PlayerColor,
     depth: usize,
+    best_move: &mut Position,
 ) -> i64 {
     match game.state {
         GameState::Playing => {}
@@ -54,18 +46,25 @@ fn minimax_helper(
         };
     }
 
-    // TODO: NOT Some(2)
-    let close_moves = game.get_legal_moves(Some(2), false);
+    let close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
-    let is_maximizing_player = depth & 1 == 0;
+    let is_maximizing_player = game.current_color == maximizing_player;
     let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
     for (x, y) in close_moves {
         game.do_move(x, y);
-        let h = minimax_helper(game, maximizing_player, heuristic, depth + 1);
+        let h = minimax_helper(game, heuristic, maximizing_player, depth + 1, best_move);
         game.undo_last_move();
-        best_h = if is_maximizing_player { best_h.max(h) } else { best_h.min(h) };
+
+        if is_maximizing_player {
+            best_h = max(best_h, h);
+            if depth == 0 && h == best_h {
+                *best_move = (x, y);
+            }
+        } else {
+            best_h = min(best_h, h);
+        }
     }
 
     best_h

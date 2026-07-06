@@ -27,8 +27,8 @@ pub fn idabp_old(game: &Game, heuristic: Heuristic) -> Position {
     for max_depth in 0..=MAX_DEPTH {
         alpha_beta_pruning_helper(
             &mut game.clone(),
-            game.current_color,
             heuristic,
+            game.current_color,
             0,
             max_depth,
             i64::MIN,
@@ -44,8 +44,8 @@ pub fn idabp_old(game: &Game, heuristic: Heuristic) -> Position {
 #[expect(clippy::too_many_arguments)]
 fn alpha_beta_pruning_helper(
     game: &mut Game,
-    maximizing_player: PlayerColor,
     heuristic: Heuristic,
+    maximizing_player: PlayerColor,
     depth: usize,
     max_depth: usize,
     mut min_h: i64,
@@ -99,8 +99,8 @@ fn alpha_beta_pruning_helper(
 
         let h = alpha_beta_pruning_helper(
             game,
-            maximizing_player,
             heuristic,
+            maximizing_player,
             depth + 1,
             max_depth,
             min_h,
