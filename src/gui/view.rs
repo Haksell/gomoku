@@ -92,7 +92,7 @@ fn compute_screen_shake(
 ) -> ScreenPosition {
     static NOISE: LazyLock<OpenSimplex> = LazyLock::new(|| OpenSimplex::new().set_seed(random()));
 
-    const SCREEN_SHAKE_DURATION: f32 = 0.42;
+    const SCREEN_SHAKE_DURATION: f32 = 0.5;
     const MAGNITUDE: f32 = 13.;
     const SPEED: f32 = 11.;
     const EASING_EXPONENT: f32 = 1.5;
