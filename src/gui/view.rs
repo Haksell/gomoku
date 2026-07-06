@@ -6,13 +6,16 @@ use crate::{
     gui::{
         CELL_SIZE, MARKER_DOTS_SPACING, Model, WINDOW_MARGIN, WINDOW_SIZE,
         coordinates::board_to_physical,
-        textures::{TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_WHITE},
+        textures::{
+            TEXTURE_BACKGROUND, TEXTURE_BLACK, TEXTURE_HOVER_BLACK, TEXTURE_HOVER_WHITE,
+            TEXTURE_WHITE,
+        },
     },
     player::PlayerColor,
 };
 use nannou::{
     App, Draw, Frame,
-    color::{BLACK, LinSrgba, Srgb, Srgba, WHITE, rgba},
+    color::{BLACK, Srgb, Srgba, WHITE, rgba},
     geom::{Point2, pt2},
 };
 
@@ -132,36 +135,31 @@ fn draw_stones(draw: &Draw, model: &Model) {
             .color(nannou::color::rgba(0.0, 0.0, 0.0, 0.65));
     }
 
-    fn draw_stone(draw: &Draw, x: usize, y: usize, player_color: PlayerColor) {
+    fn draw_stone(draw: &Draw, x: usize, y: usize, player_color: PlayerColor, transparent: bool) {
         let (px, py) = board_to_physical(x, y);
-        draw_shadow(draw, px, py);
+        if !transparent {
+            draw_shadow(draw, px, py);
+        }
 
-        let texture_guard = match player_color {
-            PlayerColor::Black => TEXTURE_BLACK.get().unwrap(),
-            PlayerColor::White => TEXTURE_WHITE.get().unwrap(),
+        let texture_guard = match (player_color, transparent) {
+            (PlayerColor::Black, false) => TEXTURE_BLACK.get().unwrap(),
+            (PlayerColor::White, false) => TEXTURE_WHITE.get().unwrap(),
+            (PlayerColor::Black, true) => TEXTURE_HOVER_BLACK.get().unwrap(),
+            (PlayerColor::White, true) => TEXTURE_HOVER_WHITE.get().unwrap(),
         };
         draw.texture(texture_guard).x_y(px, py).w_h(STONE_SIZE, STONE_SIZE);
-    }
-
-    fn draw_hover_stone(draw: &Draw, x: usize, y: usize, color: LinSrgba) {
-        let (px, py) = board_to_physical(x, y);
-        draw.ellipse().x_y(px, py).w_h(STONE_SIZE, STONE_SIZE).color(color);
     }
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if let Some(color) = model.game.board[y][x] {
-                draw_stone(draw, x, y, color);
+                draw_stone(draw, x, y, color, false);
             }
         }
     }
 
     if let Some((x, y)) = model.hover {
-        let color = match model.game.current_color {
-            PlayerColor::Black => LinSrgba::new(0.0, 0.0, 0.0, 0.75),
-            PlayerColor::White => LinSrgba::new(1.0, 1.0, 1.0, 0.50),
-        };
-        draw_hover_stone(draw, x, y, color);
+        draw_stone(draw, x, y, model.game.current_color, true);
     }
 }
 

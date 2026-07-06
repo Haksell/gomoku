@@ -4,6 +4,8 @@ use std::{path::Path, sync::OnceLock};
 pub static TEXTURE_BACKGROUND: OnceLock<Texture> = OnceLock::new();
 pub static TEXTURE_BLACK: OnceLock<Texture> = OnceLock::new();
 pub static TEXTURE_WHITE: OnceLock<Texture> = OnceLock::new();
+pub static TEXTURE_HOVER_BLACK: OnceLock<Texture> = OnceLock::new();
+pub static TEXTURE_HOVER_WHITE: OnceLock<Texture> = OnceLock::new();
 
 const TEXTURES_DIRECTORY: &str = "assets";
 
@@ -23,4 +25,6 @@ pub fn init_textures(app: &App) {
     init_texture(app, &TEXTURE_BACKGROUND, "forum.png");
     init_texture(app, &TEXTURE_BLACK, "black.png");
     init_texture(app, &TEXTURE_WHITE, "white.png");
+    init_texture(app, &TEXTURE_HOVER_BLACK, "hover_black.png");
+    init_texture(app, &TEXTURE_HOVER_WHITE, "hover_white.png");
 }
