@@ -62,10 +62,9 @@ fn alpha_beta_pruning_helper(
     let mut best_h = i64::MIN;
 
     if depth + 1 < max_depth {
-        // TODO: profile min vs median vs max vs 0 vs some other lerp
-        let median_h = i64::midpoint(min_h, max_h);
+        let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&(x, y)| {
-            cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&median_h)
+            cache.get(&update_cache_key(cache_key, x, y)).unwrap_or(&default_h)
         });
     }
 
