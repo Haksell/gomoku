@@ -1,6 +1,6 @@
 use crate::{
     game::{
-        board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
+        board::{BOARD_CENTER, BOARD_SIZE, HALF_BOARD_SIZE, Position},
         state::{ForcedMoves, GameState},
     },
     gui::{
@@ -18,7 +18,11 @@ use nannou::{
     color::{BLACK, Srgb, Srgba, WHITE, rgba},
     geom::{Point2, pt2},
 };
-use std::{f32::consts::TAU, time::SystemTime};
+use nannou::{
+    noise::{NoiseFn as _, OpenSimplex, Seedable as _},
+    rand::random,
+};
+use std::{f32::consts::TAU, sync::LazyLock, time::SystemTime};
 
 type ScreenPosition = (f32, f32);
 const NO_SCREEN_SHAKE: ScreenPosition = (0., 0.);
@@ -58,8 +62,10 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     // TODO: info on the right instead of overlay
     match model.game.state {
         GameState::Playing(_) => {}
-        GameState::Draw => draw_game_over_overlay(&draw, None),
-        GameState::Won(winner, _) => draw_game_over_overlay(&draw, Some(winner)),
+        GameState::Draw => draw_game_over_overlay(&draw, None, model.finished_time),
+        GameState::Won(winner, _) => {
+            draw_game_over_overlay(&draw, Some(winner), model.finished_time);
+        }
     }
 
     draw.to_frame(app, &frame).unwrap();
@@ -85,8 +91,10 @@ fn compute_screen_shake(
     finished_time: Option<SystemTime>,
     (board_x, board_y): Position,
 ) -> ScreenPosition {
+    static NOISE: LazyLock<OpenSimplex> = LazyLock::new(|| OpenSimplex::new().set_seed(random()));
+
     const SCREEN_SHAKE_DURATION: f32 = 0.42;
-    const MAGNITUDE: f32 = 14.;
+    const MAGNITUDE: f32 = 13.;
     const SPEED: f32 = 11.;
     const EASING_EXPONENT: f32 = 1.5;
 
@@ -95,9 +103,13 @@ fn compute_screen_shake(
     };
 
     let elapsed = finished_time.elapsed().unwrap().as_secs_f32().min(SCREEN_SHAKE_DURATION);
+    let noise = NOISE.get([board_x as f64, board_y as f64, elapsed as f64]) as f32;
+
     let factor = (1. - (elapsed / SCREEN_SHAKE_DURATION)).powf(EASING_EXPONENT);
-    let shake_y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * factor;
-    let shake_x = ease_out_bounce(shake_y * -0.2);
+    let noise_factor = 1. + noise / 3.; // ~1
+    let shake_y = (elapsed * SPEED * TAU * noise_factor).cos() * MAGNITUDE * factor * noise_factor;
+    let x_factor = -0.2 - noise / 4.;
+    let shake_x = ease_out_bounce(shake_y * x_factor);
 
     (shake_x, shake_y)
 }
@@ -265,7 +277,11 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     }
 }
 
-fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
+fn draw_game_over_overlay(
+    draw: &Draw,
+    winner: Option<PlayerColor>,
+    finished_time: Option<SystemTime>,
+) {
     let msg = match winner {
         None => "Draw",
         Some(PlayerColor::Black) => "Black wins",
@@ -274,14 +290,21 @@ fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
 
     draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0., 0., 0., 0.47));
 
+    let (mut shake_x, mut shake_y) = compute_screen_shake(finished_time, BOARD_CENTER);
+    shake_x *= 4.;
+    shake_y *= 4.;
+
     let title_y = WINDOW_SIZE as f32 * 0.03;
-    draw.text(msg).color(WHITE).font_size((WINDOW_SIZE as f32 * 0.05) as u32).x_y(0., title_y);
+    draw.text(msg)
+        .color(WHITE)
+        .font_size((WINDOW_SIZE as f32 * 0.05) as u32)
+        .x_y(shake_x, title_y + shake_y);
 
     let subtitle_y = title_y - WINDOW_SIZE as f32 * 0.06;
     draw.text("Press Home to restart")
         .color(WHITE)
         .font_size((WINDOW_SIZE as f32 * 0.025) as u32)
-        .x_y(0., subtitle_y);
+        .x_y(shake_x, subtitle_y + shake_y);
 }
 
 // fn draw_hover_coords(draw: &Draw, model: &Model) {
