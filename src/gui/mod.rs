@@ -15,7 +15,7 @@ use clap::Parser as _;
 use coordinates::mouse_to_board;
 use events::{key_released, mouse_released};
 use nannou::{App, event::Update, winit::window::CursorIcon};
-use std::time::Instant;
+use std::time::{Instant, SystemTime};
 use textures::init_textures;
 use view::view;
 
@@ -32,12 +32,18 @@ pub fn run() {
 struct Model {
     game: Game,
     hover: Option<Position>,
-    ai_thinking_time: Option<u128>,
+    ai_thinking_time: Option<u128>, // TODO: duration?
+    finished_time: Option<SystemTime>,
 }
 
 impl Model {
     fn new(black_player: Player, white_player: Player) -> Self {
-        Self { game: Game::new(black_player, white_player), hover: None, ai_thinking_time: None }
+        Self {
+            game: Game::new(black_player, white_player),
+            hover: None,
+            ai_thinking_time: None,
+            finished_time: None,
+        }
     }
 }
 
@@ -60,6 +66,10 @@ fn app(app: &App) -> Model {
 fn update(app: &App, model: &mut Model, _: Update) {
     model.hover = None;
 
+    if model.game.state.is_playing() {
+        model.finished_time = None;
+    }
+
     if model.game.state.is_playing()
         && let Player::Bot { bot, heuristic } = model.game.current_player()
     {
@@ -74,6 +84,10 @@ fn update(app: &App, model: &mut Model, _: Update) {
             "Captures: black={}, white={}",
             model.game.black_captures, model.game.white_captures
         );
+    }
+
+    if !model.game.state.is_playing() && model.finished_time.is_none() {
+        model.finished_time = Some(SystemTime::now());
     }
 
     if model.game.state.is_playing() && model.game.current_player().is_human() {

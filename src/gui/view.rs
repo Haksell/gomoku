@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use crate::{
     game::{
         board::{BOARD_SIZE, HALF_BOARD_SIZE, Position},
@@ -19,6 +21,9 @@ use nannou::{
     geom::{Point2, pt2},
 };
 
+type ScreenPosition = (f32, f32);
+const NO_SCREEN_SHAKE: ScreenPosition = (0., 0.);
+
 const DOT_SIZE_MARKER: f32 = CELL_SIZE * 0.25;
 const DOT_SIZE_LAST_MOVE: f32 = CELL_SIZE * 0.125;
 
@@ -32,7 +37,21 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_background(&draw);
     draw_grid(&draw);
     draw_marker_dots(&draw);
-    draw_stones(&draw, model);
+
+    let screen_shake = if let Some(finished_time) = model.finished_time {
+        const SCREEN_SHAKE_DURATION: f32 = 0.5;
+        let elapsed = finished_time.elapsed().unwrap().as_secs_f32();
+        let factor = (SCREEN_SHAKE_DURATION - elapsed).max(0.);
+        let y = (elapsed * 20. * PI).cos() * 16. * factor;
+        let x = y * -0.2;
+        (x, y)
+    } else {
+        NO_SCREEN_SHAKE
+    };
+
+    draw_stones(&draw, model, screen_shake);
+    draw_last_move(&draw, model, screen_shake);
+    draw_win_by_alignment(&draw, model, screen_shake);
 
     if model.game.state.is_playing() {
         if let GameState::Playing(forced_moves) = &model.game.state
@@ -44,13 +63,11 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
         }
     }
 
-    draw_hover_coords(&draw, model);
-    draw_last_move(&draw, model);
+    // draw_hover_coords(&draw, model);
     // draw_last_captures(&draw, model);
 
-    draw_win_by_alignment(&draw, model);
-
     // TODO: use winning way
+    // TODO: info on the right instead of overlay
     match model.game.state {
         GameState::Playing(_) => {}
         GameState::Draw => draw_game_over_overlay(&draw, None),
@@ -60,17 +77,17 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-fn draw_last_move(draw: &Draw, model: &Model) {
+fn draw_last_move(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
     if let Some(&pos) = model.game.moves.last() {
         let color = match model.game.current_color {
             PlayerColor::Black => BLACK,
             PlayerColor::White => WHITE,
         };
-        draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color);
+        draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color, screen_shake);
     }
 }
 
-fn draw_win_by_alignment(draw: &Draw, model: &Model) {
+fn draw_win_by_alignment(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
     if let GameState::Won(player_color, winning_way) = &model.game.state {
         let (color, stroke_weight) = match player_color {
             PlayerColor::Black => (WHITE, CELL_SIZE * 0.05),
@@ -78,7 +95,7 @@ fn draw_win_by_alignment(draw: &Draw, model: &Model) {
         };
         for alignment in &winning_way.winning_alignments {
             for &pos in alignment {
-                draw_ring(draw, pos, CELL_SIZE * 0.425, stroke_weight, color);
+                draw_ring(draw, pos, CELL_SIZE * 0.425, stroke_weight, color, screen_shake);
             }
         }
     }
@@ -121,24 +138,33 @@ fn draw_marker_dots(draw: &Draw) {
         for x in -1..=1 {
             let x = (HALF_BOARD_SIZE as isize + x * MARKER_DOTS_SPACING as isize) as usize;
             let y = (HALF_BOARD_SIZE as isize + y * MARKER_DOTS_SPACING as isize) as usize;
-            draw_circle(draw, (x, y), DOT_SIZE_MARKER, BLACK);
+            draw_circle(draw, (x, y), DOT_SIZE_MARKER, BLACK, NO_SCREEN_SHAKE);
         }
     }
 }
 
-fn draw_stones(draw: &Draw, model: &Model) {
+fn draw_stones(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
     // TODO: draw_circle
-    fn draw_shadow(draw: &Draw, px: f32, py: f32) {
+    fn draw_shadow(draw: &Draw, (px, py): ScreenPosition) {
         draw.ellipse()
             .x_y(px + 1.5, py - 1.5)
             .w_h(STONE_SIZE * 1.03, STONE_SIZE * 1.03)
-            .color(nannou::color::rgba(0.0, 0.0, 0.0, 0.65));
+            .color(nannou::color::rgba(0., 0., 0., 0.65));
     }
 
-    fn draw_stone(draw: &Draw, x: usize, y: usize, player_color: PlayerColor, transparent: bool) {
-        let (px, py) = board_to_physical(x, y);
+    fn draw_stone(
+        draw: &Draw,
+        (x, y): Position,
+        player_color: PlayerColor,
+        transparent: bool,
+        (shake_x, shake_y): ScreenPosition,
+    ) {
+        let (mut px, mut py) = board_to_physical(x, y);
+        px += shake_x;
+        py += shake_y;
+
         if !transparent {
-            draw_shadow(draw, px, py);
+            draw_shadow(draw, (px, py));
         }
 
         let texture_guard = match (player_color, transparent) {
@@ -153,13 +179,13 @@ fn draw_stones(draw: &Draw, model: &Model) {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if let Some(color) = model.game.board[y][x] {
-                draw_stone(draw, x, y, color, false);
+                draw_stone(draw, (x, y), color, false, screen_shake);
             }
         }
     }
 
-    if let Some((x, y)) = model.hover {
-        draw_stone(draw, x, y, model.game.current_color, true);
+    if let Some(pos) = model.hover {
+        draw_stone(draw, pos, model.game.current_color, true, screen_shake);
     }
 }
 
@@ -170,7 +196,7 @@ fn draw_forced_moves(draw: &Draw, forced_moves: &ForcedMoves, hover: Option<Posi
 
     for &pos in forced_moves {
         if hover != Some(pos) {
-            draw_circle(draw, pos, STONE_SIZE, COLOR_VALID_MOVE);
+            draw_circle(draw, pos, STONE_SIZE, COLOR_VALID_MOVE, NO_SCREEN_SHAKE);
         }
     }
 }
@@ -183,7 +209,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if model.game.board[y][x].is_none() && model.game.creates_double_three(x, y) {
-                draw_circle(draw, (x, y), STONE_SIZE, COLOR_INVALID_MOVE);
+                draw_circle(draw, (x, y), STONE_SIZE, COLOR_INVALID_MOVE, NO_SCREEN_SHAKE);
             }
         }
     }
@@ -196,37 +222,50 @@ fn draw_game_over_overlay(draw: &Draw, winner: Option<PlayerColor>) {
         Some(PlayerColor::White) => "White wins",
     };
 
-    draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0.0, 0.0, 0.0, 0.47));
+    draw.rect().w_h(WINDOW_SIZE as f32, WINDOW_SIZE as f32).color(rgba(0., 0., 0., 0.47));
 
     let title_y = WINDOW_SIZE as f32 * 0.03;
-    draw.text(msg).color(WHITE).font_size((WINDOW_SIZE as f32 * 0.05) as u32).x_y(0.0, title_y);
+    draw.text(msg).color(WHITE).font_size((WINDOW_SIZE as f32 * 0.05) as u32).x_y(0., title_y);
 
     let subtitle_y = title_y - WINDOW_SIZE as f32 * 0.06;
     draw.text("Press Home to restart")
         .color(WHITE)
         .font_size((WINDOW_SIZE as f32 * 0.025) as u32)
-        .x_y(0.0, subtitle_y);
+        .x_y(0., subtitle_y);
 }
 
-fn draw_hover_coords(draw: &Draw, model: &Model) {
-    let Some((x, y)) = model.hover else {
-        return;
-    };
+// fn draw_hover_coords(draw: &Draw, model: &Model) {
+//     let Some((x, y)) = model.hover else {
+//         return;
+//     };
 
+//     let (px, py) = board_to_physical(x, y);
+//     let text = format!("({x}, {y})");
+//     draw.text(&text).x_y(px, py - CELL_SIZE * 0.65).font_size(16).color(rgba(1., 1., 1., 0.75));
+// }
+
+fn draw_circle(
+    draw: &Draw,
+    (x, y): Position,
+    size: f32,
+    color: Srgb<u8>,
+    (shake_x, shake_y): ScreenPosition,
+) {
     let (px, py) = board_to_physical(x, y);
-    let text = format!("({x}, {y})");
-    draw.text(&text).x_y(px, py - CELL_SIZE * 0.65).font_size(16).color(rgba(1.0, 1.0, 1.0, 0.75));
+    draw.ellipse().x_y(px + shake_x, py + shake_y).w_h(size, size).color(color);
 }
 
-fn draw_circle(draw: &Draw, (x, y): Position, size: f32, color: Srgb<u8>) {
-    let (px, py) = board_to_physical(x, y);
-    draw.ellipse().x_y(px, py).w_h(size, size).color(color);
-}
-
-fn draw_ring(draw: &Draw, (x, y): Position, ring_size: f32, stroke_weight: f32, color: Srgb<u8>) {
+fn draw_ring(
+    draw: &Draw,
+    (x, y): Position,
+    ring_size: f32,
+    stroke_weight: f32,
+    color: Srgb<u8>,
+    (shake_x, shake_y): ScreenPosition,
+) {
     let (px, py) = board_to_physical(x, y);
     draw.ellipse()
-        .x_y(px, py)
+        .x_y(px + shake_x, py + shake_y)
         .w_h(ring_size, ring_size)
         .stroke_weight(stroke_weight)
         .stroke_color(color)

@@ -2,7 +2,7 @@
 
 ## todo
 
-GAME STATE!!!!!!!!!!!!!!!
+x: usize, y: usize
 
 ### misc
 
