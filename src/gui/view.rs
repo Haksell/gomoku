@@ -37,11 +37,9 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
     draw_grid(&draw);
     draw_marker_dots(&draw);
 
-    let screen_shake = compute_screen_shake(model.finished_time);
-
-    draw_stones(&draw, model, screen_shake);
-    draw_last_move(&draw, model, screen_shake);
-    draw_win_by_alignment(&draw, model, screen_shake);
+    draw_stones(&draw, model);
+    draw_last_move(&draw, model);
+    draw_win_by_alignment(&draw, model);
 
     if model.game.state.is_playing() {
         if let GameState::Playing(forced_moves) = &model.game.state
@@ -83,7 +81,10 @@ fn ease_out_bounce(x: f32) -> f32 {
     }
 }
 
-fn compute_screen_shake(finished_time: Option<SystemTime>) -> ScreenPosition {
+fn compute_screen_shake(
+    finished_time: Option<SystemTime>,
+    (board_x, board_y): Position,
+) -> ScreenPosition {
     const SCREEN_SHAKE_DURATION: f32 = 0.42;
     const MAGNITUDE: f32 = 14.;
     const SPEED: f32 = 11.;
@@ -95,23 +96,29 @@ fn compute_screen_shake(finished_time: Option<SystemTime>) -> ScreenPosition {
 
     let elapsed = finished_time.elapsed().unwrap().as_secs_f32().min(SCREEN_SHAKE_DURATION);
     let factor = (1. - (elapsed / SCREEN_SHAKE_DURATION)).powf(EASING_EXPONENT);
-    let y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * factor;
-    let x = ease_out_bounce(y * -0.2);
+    let shake_y = (elapsed * SPEED * TAU).cos() * MAGNITUDE * factor;
+    let shake_x = ease_out_bounce(shake_y * -0.2);
 
-    (x, y)
+    (shake_x, shake_y)
 }
 
-fn draw_last_move(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
+fn draw_last_move(draw: &Draw, model: &Model) {
     if let Some(&pos) = model.game.moves.last() {
         let color = match model.game.current_color {
             PlayerColor::Black => BLACK,
             PlayerColor::White => WHITE,
         };
-        draw_circle(draw, pos, DOT_SIZE_LAST_MOVE, color, screen_shake);
+        draw_circle(
+            draw,
+            pos,
+            DOT_SIZE_LAST_MOVE,
+            color,
+            compute_screen_shake(model.finished_time, pos),
+        );
     }
 }
 
-fn draw_win_by_alignment(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
+fn draw_win_by_alignment(draw: &Draw, model: &Model) {
     if let GameState::Won(player_color, winning_way) = &model.game.state {
         let (color, stroke_weight) = match player_color {
             PlayerColor::Black => (WHITE, CELL_SIZE * 0.05),
@@ -119,7 +126,14 @@ fn draw_win_by_alignment(draw: &Draw, model: &Model, screen_shake: ScreenPositio
         };
         for alignment in &winning_way.winning_alignments {
             for &pos in alignment {
-                draw_ring(draw, pos, CELL_SIZE * 0.425, stroke_weight, color, screen_shake);
+                draw_ring(
+                    draw,
+                    pos,
+                    CELL_SIZE * 0.425,
+                    stroke_weight,
+                    color,
+                    compute_screen_shake(model.finished_time, pos),
+                );
             }
         }
     }
@@ -167,7 +181,7 @@ fn draw_marker_dots(draw: &Draw) {
     }
 }
 
-fn draw_stones(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
+fn draw_stones(draw: &Draw, model: &Model) {
     // TODO: draw_circle
     fn draw_shadow(draw: &Draw, (px, py): ScreenPosition) {
         draw.ellipse()
@@ -203,13 +217,25 @@ fn draw_stones(draw: &Draw, model: &Model, screen_shake: ScreenPosition) {
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
             if let Some(color) = model.game.board[y][x] {
-                draw_stone(draw, (x, y), color, false, screen_shake);
+                draw_stone(
+                    draw,
+                    (x, y),
+                    color,
+                    false,
+                    compute_screen_shake(model.finished_time, (x, y)),
+                );
             }
         }
     }
 
     if let Some(pos) = model.hover {
-        draw_stone(draw, pos, model.game.current_color, true, screen_shake);
+        draw_stone(
+            draw,
+            pos,
+            model.game.current_color,
+            true,
+            compute_screen_shake(model.finished_time, pos),
+        );
     }
 }
 
