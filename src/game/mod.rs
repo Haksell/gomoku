@@ -89,15 +89,14 @@ impl Game {
     pub fn undo_last_move(&mut self) {
         let (x, y) = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
-        self.state = GameState::Playing;
         self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
 
         if let Some((ply, forced_moves)) = self.forced_moves_history.last()
             && *ply == self.ply - 1
         {
-            self.forced_moves.clone_from(forced_moves);
+            self.state = GameState::Playing(forced_moves.clone());
         } else {
-            self.forced_moves.clear();
+            self.state = GameState::Playing(ForcedMoves::new());
         }
 
         // undo capture
@@ -184,8 +183,10 @@ impl Game {
     pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
-        if !self.forced_moves.is_empty() {
-            return self.forced_moves.clone().into_iter().collect();
+        if let GameState::Playing(forced_moves) = &self.state
+            && !forced_moves.is_empty()
+        {
+            return forced_moves.clone().into_iter().collect();
         }
 
         // TODO: preallocate with number of close moves (or forced moves)

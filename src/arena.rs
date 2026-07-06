@@ -1,6 +1,6 @@
 use crate::{
     Args,
-    game::{Game, GameState},
+    game::{Game, state::GameState},
     player::PlayerColor,
 };
 use rayon::{ThreadPoolBuilder, prelude::*};
@@ -43,12 +43,12 @@ pub fn run(args: &Args) {
         let mut wins_and_games = wins_and_games.lock().unwrap();
 
         match game.state {
-            GameState::Playing => unreachable!(),
+            GameState::Playing(_) => unreachable!(),
             GameState::Draw => wins_and_games.0 += 0.5,
-            GameState::Won(winner) if winner == player1_color => {
+            GameState::Won(winner, _) if winner == player1_color => {
                 wins_and_games.0 += 1.;
             }
-            GameState::Won(_) => {}
+            GameState::Won(_, _) => {}
         }
 
         wins_and_games.1 += 1;

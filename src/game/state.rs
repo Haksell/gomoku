@@ -25,18 +25,16 @@ impl GameState {
     pub fn init() -> Self {
         Self::Playing(ForcedMoves::new())
     }
+
+    pub const fn is_playing(&self) -> bool {
+        matches!(self, Self::Playing(_))
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WinningWay {
-    win_by_captures: bool,
-    winning_alignments: WinningAlignments,
-}
-
-impl GameState {
-    pub const fn is_playing(&self) -> bool {
-        matches!(self, Self::Playing(_))
-    }
+    pub win_by_captures: bool,
+    pub winning_alignments: WinningAlignments,
 }
 
 impl Game {
@@ -77,11 +75,11 @@ impl Game {
             }
         }
 
-        GameState::Playing(forced_moves)
-    }
+        if self.ply == BOARD_SIZE * BOARD_SIZE + 2 * (self.black_captures + self.white_captures) {
+            return GameState::Draw;
+        }
 
-    pub const fn check_draw(&self) -> bool {
-        self.ply == BOARD_SIZE * BOARD_SIZE + 2 * (self.black_captures + self.white_captures)
+        GameState::Playing(forced_moves)
     }
 
     fn get_break_possibilities(&self, potential_winner: &mut [Position]) -> HashSet<Position> {
