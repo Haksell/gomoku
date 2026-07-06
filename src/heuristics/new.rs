@@ -75,23 +75,32 @@ pub fn new(game: &Game) -> i64 {
 
     h += (black_capture_threats - white_capture_threats) * 200;
 
-    for length in 2..=9 {
-        for openness in 1..=2 {
-            h += (length as i64).pow(5)
-                * (match openness {
-                    1 => {
-                        if length >= 5 {
-                            2
-                        } else {
-                            1
-                        }
-                    }
-                    2 => 3,
-                    _ => unreachable!(),
-                })
-                * (black_combos[length][openness] - white_combos[length][openness]);
-        }
-    }
+    h += (black_combos[2][0] - white_combos[2][0]) * 0;
+    h += (black_combos[3][0] - white_combos[3][0]) * 0;
+    h += (black_combos[4][0] - white_combos[4][0]) * 0;
+    h += (black_combos[5][0] - white_combos[5][0]) * (1 << 15);
+    h += (black_combos[6][0] - white_combos[6][0]) * (1 << 15);
+    h += (black_combos[7][0] - white_combos[7][0]) * (1 << 15);
+    h += (black_combos[8][0] - white_combos[8][0]) * (1 << 15);
+    h += (black_combos[9][0] - white_combos[9][0]) * (1 << 15);
+
+    h += (black_combos[2][1] - white_combos[2][1]) * 32;
+    h += (black_combos[3][1] - white_combos[3][1]) * 243;
+    h += (black_combos[4][1] - white_combos[4][1]) * 1024;
+    h += (black_combos[5][1] - white_combos[5][1]) * 6250;
+    h += (black_combos[6][1] - white_combos[6][1]) * 15552;
+    h += (black_combos[7][1] - white_combos[7][1]) * 33614;
+    h += (black_combos[8][1] - white_combos[8][1]) * 65536;
+    h += (black_combos[9][1] - white_combos[9][1]) * 118098;
+
+    h += (black_combos[2][2] - white_combos[2][2]) * 96;
+    h += (black_combos[3][2] - white_combos[3][2]) * 729;
+    h += (black_combos[4][2] - white_combos[4][2]) * 3072;
+    h += (black_combos[5][2] - white_combos[5][2]) * 9375;
+    h += (black_combos[6][2] - white_combos[6][2]) * 23328;
+    h += (black_combos[7][2] - white_combos[7][2]) * 50421;
+    h += (black_combos[8][2] - white_combos[8][2]) * 98304;
+    h += (black_combos[9][2] - white_combos[9][2]) * 177147;
 
     h += (black_open_xx_x - white_open_xx_x) * 1152;
 
