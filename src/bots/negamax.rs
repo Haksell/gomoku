@@ -1,12 +1,12 @@
 use crate::{
+    bots::leaf_value,
     game::{
-        Game, GameState,
+        Game,
         board::{BOARD_CENTER, Position},
     },
     heuristics::Heuristic,
-    player::PlayerColor,
 };
-use std::cmp::{max, min};
+use std::cmp::max;
 
 const MAX_DEPTH: usize = 3;
 
@@ -15,56 +15,27 @@ pub fn negamax(game: &Game, heuristic: Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
-    let maximizing_player = game.current_color;
     let mut game = game.clone();
     game.get_legal_moves(Some(2), true)
         .into_iter()
         .max_by_key(|&(x, y)| {
             game.do_move(x, y);
-            let h = negamax_helper(&mut game, heuristic, maximizing_player, 1);
+            let h = -negamax_helper(&mut game, heuristic, 1);
             game.undo_last_move();
             h
         })
         .unwrap()
 }
 
-fn negamax_helper(
-    game: &mut Game,
-    heuristic: Heuristic,
-    maximizing_player: PlayerColor,
-    depth: usize,
-) -> i64 {
-    match game.state {
-        GameState::Playing => {
-            if depth == MAX_DEPTH {
-                return match maximizing_player {
-                    PlayerColor::Black => heuristic(game),
-                    PlayerColor::White => -heuristic(game),
-                };
-            }
-        }
-        GameState::Draw => return 0,
-        GameState::Won(winner) => {
-            return if winner == maximizing_player {
-                i64::MAX - depth as i64
-            } else {
-                i64::MIN + depth as i64
-            };
-        }
+fn negamax_helper(game: &mut Game, heuristic: Heuristic, depth: usize) -> i64 {
+    if let Some(leaf_value) = leaf_value(game, heuristic, depth, MAX_DEPTH) {
+        return leaf_value;
     }
 
-    let close_moves = game.get_legal_moves(Some(2), false);
-    debug_assert!(!close_moves.is_empty());
-
-    let is_maximizing_player = game.current_color == maximizing_player;
-    let mut best_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
-
-    for (x, y) in close_moves {
+    game.get_legal_moves(Some(2), false).into_iter().fold(i64::MIN, |best_h, (x, y)| {
         game.do_move(x, y);
-        let h = negamax_helper(game, heuristic, maximizing_player, depth + 1);
+        let h = -negamax_helper(game, heuristic, depth + 1);
         game.undo_last_move();
-        best_h = if is_maximizing_player { max(best_h, h) } else { min(best_h, h) };
-    }
-
-    best_h
+        max(best_h, h)
+    })
 }
