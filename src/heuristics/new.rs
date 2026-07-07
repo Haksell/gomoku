@@ -81,7 +81,7 @@ pub fn new(game: &Game) -> i64 {
     // TODO: exhaustive match (captures, threats)
     #[expect(clippy::items_after_statements)]
     const fn capture_heuristic(c: i64, t: i64) -> i64 {
-        16 * c * c * c + 64 * c * c + 64 * c + 192 * t + 256 * c * t
+        16 * c * c * c + 64 * c * c + 64 * c + 192 * t + 16 * t * t + 256 * c * t
     }
 
     h += capture_heuristic(game.black_captures as i64, black_capture_threats);
