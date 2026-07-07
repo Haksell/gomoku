@@ -113,7 +113,7 @@ pub fn new(game: &Game) -> i64 {
     h += (black_combos[9][1] - white_combos[9][1]) * 99999;
 
     h += (black_combos[2][2] - white_combos[2][2]) * 96;
-    h += (black_combos[3][2] - white_combos[3][2]) * 729;
+    h += (black_combos[3][2] - white_combos[3][2]) * 896;
     h += (black_combos[4][2] - white_combos[4][2]) * 3072;
     h += (black_combos[5][2] - white_combos[5][2]) * 9375;
     h += (black_combos[6][2] - white_combos[6][2]) * 23328;
