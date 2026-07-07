@@ -18,6 +18,8 @@ pub fn new(game: &Game) -> i64 {
     let mut white_x_x_x = 0;
     let mut black_xxx_x = 0;
     let mut white_xxx_x = 0;
+    let mut black_x__x = 0;
+    let mut white_x__x = 0;
     let mut black_x_x = 0;
     let mut white_x_x = 0;
     let mut black_capture_threats = 0;
@@ -39,6 +41,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_x__x,
+                &mut white_x__x,
                 &mut black_x_x,
                 &mut white_x_x,
                 &mut black_capture_threats,
@@ -63,6 +67,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_x__x,
+                &mut white_x__x,
                 &mut black_x_x,
                 &mut white_x_x,
                 &mut black_capture_threats,
@@ -78,9 +84,10 @@ pub fn new(game: &Game) -> i64 {
     // TODO: find better factor
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
 
-    // TODO: exhaustive match (captures, threats)
     #[expect(clippy::items_after_statements)]
     const fn capture_heuristic(c: i64, t: i64) -> i64 {
+        // None of these constants are properly optimized,
+        // because capture wins are much rarer than alignments.
         let h_captures = 16 * c * c * c + 64 * c * c + 192 * c;
         let h_threats = 8 * t * t * t + 16 * t * t + 192 * t;
         let cross_terms = c * t * (256 + 16 * c + 8 * t);
@@ -123,6 +130,7 @@ pub fn new(game: &Game) -> i64 {
     h += (black_x_x_x - white_x_x_x) * 128;
     h += (black_xxx_x - white_xxx_x) * 64;
 
+    h += (black_x__x - white_x__x) * 16;
     h += (black_x_x - white_x_x) * 36;
 
     h += (white_locked_4 - black_locked_4) * 384;
@@ -144,22 +152,23 @@ fn fill_combos(
         let player_color = board[y][x];
         if player_color == cur_color {
             cur_length += 1;
-        } else {
-            match cur_color {
-                None => {}
-                Some(PlayerColor::Black) => {
-                    let openness = is_open_before as usize + player_color.is_none() as usize;
-                    black_combos[cur_length][openness] += 1;
-                }
-                Some(PlayerColor::White) => {
-                    let openness = is_open_before as usize + player_color.is_none() as usize;
-                    white_combos[cur_length][openness] += 1;
-                }
-            }
-            is_open_before = cur_color.is_none();
-            cur_color = player_color;
-            cur_length = 1;
+            continue;
         }
+
+        match cur_color {
+            None => {}
+            Some(PlayerColor::Black) => {
+                let openness = is_open_before as usize + player_color.is_none() as usize;
+                black_combos[cur_length][openness] += 1;
+            }
+            Some(PlayerColor::White) => {
+                let openness = is_open_before as usize + player_color.is_none() as usize;
+                white_combos[cur_length][openness] += 1;
+            }
+        }
+        is_open_before = cur_color.is_none();
+        cur_color = player_color;
+        cur_length = 1;
     }
 
     match cur_color {
@@ -187,6 +196,8 @@ fn fill_patterns(
     white_x_x_x: &mut i64,
     black_xxx_x: &mut i64,
     white_xxx_x: &mut i64,
+    black_x__x: &mut i64,
+    white_x__x: &mut i64,
     black_x_x: &mut i64,
     white_x_x: &mut i64,
     black_capture_threats: &mut i64,
@@ -226,6 +237,8 @@ fn fill_patterns(
         match stencil & 255 {
             0b_11_10_10_01 | 0b_01_10_10_11 => *white_capture_threats += 1,
             0b_10_11_11_01 | 0b_01_11_11_10 => *black_capture_threats += 1,
+            0b_10_01_01_10 => *black_x__x += 1,
+            0b_11_01_01_11 => *white_x__x += 1,
             _ => {}
         }
 
