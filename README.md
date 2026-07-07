@@ -38,6 +38,7 @@
 
 ### heuristics
 
+- optimize constants through SPSA or simulated annealing
 - more patterns
 - double attacks (multiply 4 dp en gros)
 - smarter dist to center:

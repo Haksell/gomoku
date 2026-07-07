@@ -110,7 +110,7 @@ pub fn old(game: &Game) -> i64 {
     h += (black_combos[6][1] - white_combos[6][1]) * 15552;
     h += (black_combos[7][1] - white_combos[7][1]) * 33614;
     h += (black_combos[8][1] - white_combos[8][1]) * 65536;
-    h += (black_combos[9][1] - white_combos[9][1]) * 118098;
+    h += (black_combos[9][1] - white_combos[9][1]) * 99999;
 
     h += (black_combos[2][2] - white_combos[2][2]) * 96;
     h += (black_combos[3][2] - white_combos[3][2]) * 729;
@@ -119,7 +119,7 @@ pub fn old(game: &Game) -> i64 {
     h += (black_combos[6][2] - white_combos[6][2]) * 23328;
     h += (black_combos[7][2] - white_combos[7][2]) * 50421;
     h += (black_combos[8][2] - white_combos[8][2]) * 98304;
-    h += (black_combos[9][2] - white_combos[9][2]) * 177147;
+    h += (black_combos[9][2] - white_combos[9][2]) * 99999;
 
     h += (black_open_xx_x - white_open_xx_x) * 1152;
 
