@@ -78,9 +78,45 @@ pub fn new(game: &Game) -> i64 {
     // TODO: find better factor
     h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
 
-    // TODO: factor for both capture and threat
-    h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 16;
-    h += (black_capture_threats - white_capture_threats) * 200;
+    #[expect(clippy::items_after_statements)]
+    const fn capture_heuristic(captures: i64, threats: i64) -> i64 {
+        match (captures, threats) {
+            (0, 0) => 0,
+            (0, 1) => 200,
+            (0, 2) => 400,
+            (0, 3) => 600,
+            (0, 4) => 800,
+            (0, _) => 200 * threats,
+            (1, 0) => 16,
+            (1, 1) => 216,
+            (1, 2) => 416,
+            (1, 3) => 616,
+            (1, 4) => 816,
+            (1, _) => 16 + 200 * threats,
+            (2, 0) => 128,
+            (2, 1) => 328,
+            (2, 2) => 528,
+            (2, 3) => 728,
+            (2, 4) => 928,
+            (2, _) => 128 + 200 * threats,
+            (3, 0) => 432,
+            (3, 1) => 632,
+            (3, 2) => 832,
+            (3, 3) => 1032,
+            (3, 4) => 1232,
+            (3, _) => 432 + 200 * threats,
+            (4, 0) => 1024,
+            (4, 1) => 1224,
+            (4, 2) => 1424,
+            (4, 3) => 1624,
+            (4, 4) => 1824,
+            (4, _) => 1024 + 200 * threats,
+            _ => unreachable!(),
+        }
+    }
+
+    h += capture_heuristic(game.black_captures as i64, black_capture_threats);
+    h -= capture_heuristic(game.white_captures as i64, white_capture_threats);
 
     // h += (black_combos[2][0] - white_combos[2][0]) * 0;
     // h += (black_combos[3][0] - white_combos[3][0]) * 0;
