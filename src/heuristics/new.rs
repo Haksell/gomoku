@@ -18,6 +18,8 @@ pub fn new(game: &Game) -> i64 {
     let mut white_x_x_x = 0;
     let mut black_xxx_x = 0;
     let mut white_xxx_x = 0;
+    let mut black_x_x = 0;
+    let mut white_x_x = 0;
     let mut black_capture_threats = 0;
     let mut white_capture_threats = 0;
     let mut black_locked_4 = 0;
@@ -37,6 +39,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_x_x,
+                &mut white_x_x,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
                 &mut black_locked_4,
@@ -59,6 +63,8 @@ pub fn new(game: &Game) -> i64 {
                 &mut white_x_x_x,
                 &mut black_xxx_x,
                 &mut white_xxx_x,
+                &mut black_x_x,
+                &mut white_x_x,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
                 &mut black_locked_4,
@@ -127,6 +133,8 @@ pub fn new(game: &Game) -> i64 {
     h += (black_x_x_x - white_x_x_x) * 128;
     h += (black_xxx_x - white_xxx_x) * 64;
 
+    h += (black_x_x - white_x_x) * 36;
+
     h += (white_locked_4 - black_locked_4) * 384;
 
     h
@@ -189,6 +197,8 @@ fn fill_patterns(
     white_x_x_x: &mut i64,
     black_xxx_x: &mut i64,
     white_xxx_x: &mut i64,
+    black_x_x: &mut i64,
+    white_x_x: &mut i64,
     black_capture_threats: &mut i64,
     white_capture_threats: &mut i64,
     black_locked_4: &mut i64,
@@ -226,6 +236,12 @@ fn fill_patterns(
         match stencil & 255 {
             0b_11_10_10_01 | 0b_01_10_10_11 => *white_capture_threats += 1,
             0b_10_11_11_01 | 0b_01_11_11_10 => *black_capture_threats += 1,
+            _ => {}
+        }
+
+        match stencil & 63 {
+            0b_10_01_10 => *black_x_x += 1,
+            0b_11_01_11 => *white_x_x += 1,
             _ => {}
         }
     }
