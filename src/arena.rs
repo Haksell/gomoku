@@ -12,6 +12,9 @@ struct Stats {
     win_loss: u32,
     loss_win: u32,
     loss_loss: u32,
+    wins_by_capture: u32,
+    wins_by_alignment: u32,
+    wins_by_both: u32,
 }
 
 impl Stats {
@@ -67,13 +70,13 @@ pub fn run(args: &Args) {
             (switched_game.white_player, switched_game.black_player);
 
         game.play_game();
+        switched_game.play_game();
+
         let black_win = match game.state {
             GameState::Playing(_) => unreachable!(),
             GameState::Won(PlayerColor::Black, _) => true,
             GameState::Draw | GameState::Won(PlayerColor::White, _) => false,
         };
-
-        switched_game.play_game();
         let white_win = match switched_game.state {
             GameState::Playing(_) => unreachable!(),
             GameState::Won(PlayerColor::White, _) => true,
@@ -81,6 +84,23 @@ pub fn run(args: &Args) {
         };
 
         let mut stats = stats.lock().unwrap();
+
+        for game_state in [game.state, switched_game.state] {
+            if let GameState::Won(_, winning_way) = game_state {
+                match (winning_way.win_by_captures, !winning_way.winning_alignments.is_empty()) {
+                    (true, true) => stats.wins_by_both += 1,
+                    (true, false) => stats.wins_by_capture += 1,
+                    (false, true) => stats.wins_by_alignment += 1,
+                    (false, false) => unreachable!(),
+                }
+            }
+        }
+
+        println!(
+            "capture={} | alignment={} | both={}",
+            stats.wins_by_capture, stats.wins_by_alignment, stats.wins_by_both
+        );
+
         match (black_win, white_win) {
             (true, true) => stats.win_win += 1,
             (true, false) => stats.win_loss += 1,
@@ -94,6 +114,7 @@ pub fn run(args: &Args) {
 
         let player1_percentage = 100. * player1_wins as f64 / finished_games as f64;
         println!("Player 1 won {player1_wins}/{finished_games} games ({player1_percentage:.1}%)");
+        println!();
     });
 
     let stats = *stats.lock().unwrap();

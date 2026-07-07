@@ -74,6 +74,25 @@ pub fn old(game: &Game) -> i64 {
 
     h += (game.black_captures.pow(3) as i64 - game.white_captures.pow(3) as i64) * 3;
     h += (black_capture_threats - white_capture_threats) * 200;
+    // h += (game.black_captures.pow(2) as i64 - game.white_captures.pow(2) as i64) * 8192;
+    // h += black_capture_threats
+    //     * (match game.black_captures {
+    //         0 => 128,
+    //         1 => 256,
+    //         2 => 512,
+    //         3 => 1024,
+    //         4 => 2048,
+    //         _ => unreachable!(),
+    //     })
+    //     - white_capture_threats
+    //         * (match game.white_captures {
+    //             0 => 128,
+    //             1 => 256,
+    //             2 => 512,
+    //             3 => 1024,
+    //             4 => 2048,
+    //             _ => unreachable!(),
+    //         });
 
     h += (black_combos[2][0] - white_combos[2][0]) * 0;
     h += (black_combos[3][0] - white_combos[3][0]) * 0;
