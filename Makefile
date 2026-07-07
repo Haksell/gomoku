@@ -1,26 +1,16 @@
-NAME    := gomoku
+NAME := gomoku
 SYMLINK := Gomoku
-CARGO   := cargo
 
-.PHONY: all build test fmt lint clean fclean re loc setup_git_hooks
+.PHONY: all test fmt lint clean fclean re loc new_to_old setup_git_hooks flamegraph
 
-all: build
+# TODO: $(NAME) rule (think about relinks and cargo)
 
-build:
-	$(CARGO) build $(CARGO_FLAGS)
+all:
+	cargo build --release
 	ln -sf target/release/$(NAME) $(SYMLINK)
 
-test:
-	$(CARGO) test
-
-fmt:
-	$(CARGO) fmt
-
-lint:
-	$(CARGO) clippy -- -D warnings
-
 clean:
-	$(CARGO) clean
+	cargo clean
 	rm -f perf.data*
 	rm -f *.svg
 
@@ -28,6 +18,16 @@ fclean: clean
 	rm -f $(SYMLINK)
 
 re: fclean all
+
+test:
+	cargo test
+
+fmt:
+	cargo fmt
+
+lint:
+	cargo check
+	cargo clippy -- -D warnings
 
 loc:
 	@find src -name '*.rs' | sort | xargs wc -l
