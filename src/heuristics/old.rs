@@ -83,7 +83,7 @@ pub fn old(game: &Game) -> i64 {
     const fn capture_heuristic(c: i64, t: i64) -> i64 {
         let h_captures = 16 * c * c * c + 64 * c * c + 64 * c;
         let h_threats = 8 * t * t * t + 16 * t * t + 192 * t;
-        let cross_terms = 256 * c * t;
+        let cross_terms = 256 * c * t + 16 * c * c * t;
         h_captures + h_threats + cross_terms
     }
 
