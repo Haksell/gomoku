@@ -1,7 +1,7 @@
 use crate::{
     game::{
         Game, UpdateSign,
-        board::{DIRECTIONS8, MANHATTAN_TO_CENTER, Position, is_capture},
+        board::{DIRECTIONS8, Position, is_capture},
     },
     player::PlayerColor,
 };
@@ -19,23 +19,14 @@ impl Game {
             let captured_x2 = (x + 2 * dx) as usize;
             let captured_y2 = (y + 2 * dy) as usize;
 
-            let dist_to_center = MANHATTAN_TO_CENTER[captured_y1][captured_x1]
-                + MANHATTAN_TO_CENTER[captured_y2][captured_x2];
-
             self.board[captured_y1][captured_x1] = None;
             self.board[captured_y2][captured_x2] = None;
             self.update_close_moves((captured_x1, captured_y1), UpdateSign::Negative);
             self.update_close_moves((captured_x2, captured_y2), UpdateSign::Negative);
 
             match self.current_color {
-                PlayerColor::Black => {
-                    self.black_captures += 1;
-                    self.white_dist_to_center -= dist_to_center;
-                }
-                PlayerColor::White => {
-                    self.white_captures += 1;
-                    self.black_dist_to_center -= dist_to_center;
-                }
+                PlayerColor::Black => self.black_captures += 1,
+                PlayerColor::White => self.white_captures += 1,
             }
 
             self.captures.push((self.ply, (captured_x1, captured_y1), (captured_x2, captured_y2)));

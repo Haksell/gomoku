@@ -1,3 +1,5 @@
+#![expect(non_snake_case)]
+
 use crate::{
     game::{
         Game,
@@ -81,19 +83,6 @@ pub fn new(game: &Game) -> i64 {
 
     let mut h = 0;
 
-    // TODO: find better factor
-    h += (game.white_dist_to_center as i64 - game.black_dist_to_center as i64) / 8;
-
-    #[expect(clippy::items_after_statements)]
-    const fn capture_heuristic(c: i64, t: i64) -> i64 {
-        // None of these constants are properly optimized,
-        // because capture wins are much rarer than alignments.
-        let h_captures = 16 * c * c * c + 64 * c * c + 192 * c;
-        let h_threats = 8 * t * t * t + 16 * t * t + 192 * t;
-        let cross_terms = c * t * (256 + 16 * c + 8 * t);
-        h_captures + h_threats + cross_terms
-    }
-
     h += capture_heuristic(game.black_captures as i64, black_capture_threats);
     h -= capture_heuristic(game.white_captures as i64, white_capture_threats);
 
@@ -136,6 +125,15 @@ pub fn new(game: &Game) -> i64 {
     h += (white_locked_4 - black_locked_4) * 384;
 
     h
+}
+
+const fn capture_heuristic(c: i64, t: i64) -> i64 {
+    // None of these constants are properly optimized,
+    // because capture wins are much rarer than alignments.
+    let h_captures = 16 * c * c * c + 64 * c * c + 192 * c;
+    let h_threats = 8 * t * t * t + 16 * t * t + 192 * t;
+    let cross_terms = c * t * (256 + 16 * c + 8 * t);
+    h_captures + h_threats + cross_terms
 }
 
 fn fill_combos(

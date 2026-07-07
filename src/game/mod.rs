@@ -30,8 +30,6 @@ pub struct Game {
     // TODO: store forbidden moves too (double threes)
     pub black_player: Player,
     pub white_player: Player,
-    pub black_dist_to_center: u64,
-    pub white_dist_to_center: u64,
     // TODO: outside this struct
     pub ply: usize,
     pub moves: Vec<Position>,
@@ -50,8 +48,6 @@ impl Game {
             white_captures: 0,
             black_player,
             white_player,
-            black_dist_to_center: 0,
-            white_dist_to_center: 0,
             ply: 0,
             moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
             captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
@@ -66,10 +62,7 @@ impl Game {
         self.ply += 1;
 
         self.board[y][x] = Some(self.current_color);
-        match self.current_color {
-            PlayerColor::Black => self.black_dist_to_center += MANHATTAN_TO_CENTER[y][x],
-            PlayerColor::White => self.white_dist_to_center += MANHATTAN_TO_CENTER[y][x],
-        }
+
         self.update_close_moves((x, y), UpdateSign::Positive);
         self.handle_captures((x, y));
 
@@ -103,16 +96,12 @@ impl Game {
         while self.captures.last().is_some_and(|(ply, _, _)| *ply == self.ply) {
             let (_, (x1, y1), (x2, y2)) = self.captures.pop().unwrap();
 
-            let dist_to_center = MANHATTAN_TO_CENTER[y1][x1] + MANHATTAN_TO_CENTER[y2][x2];
-
             match self.current_color {
                 PlayerColor::Black => {
                     self.black_captures -= 1;
-                    self.white_dist_to_center += dist_to_center;
                 }
                 PlayerColor::White => {
                     self.white_captures -= 1;
-                    self.black_dist_to_center += dist_to_center;
                 }
             }
 
@@ -124,10 +113,6 @@ impl Game {
 
         self.update_close_moves((x, y), UpdateSign::Negative);
 
-        match self.current_color {
-            PlayerColor::Black => self.black_dist_to_center -= MANHATTAN_TO_CENTER[y][x],
-            PlayerColor::White => self.white_dist_to_center -= MANHATTAN_TO_CENTER[y][x],
-        }
         self.board[y][x] = None;
 
         self.ply -= 1;

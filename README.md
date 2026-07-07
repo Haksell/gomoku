@@ -41,10 +41,10 @@
 - optimize constants through SPSA or simulated annealing
 - more patterns
 - double attacks (multiply 4 dp en gros)
-- smarter dist to center:
-  - dist to edge?
-  - dist to corner?
-  - manhattan or something else?
+- centrality:
+  - sum of stone distances to center was tried and gave poor results
+  - try distance to edges?
+  - try distance to corners?
 
 ### flopped heuristics
 
