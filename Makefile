@@ -40,7 +40,14 @@ setup_git_hooks:
 	@rm -rf .git/hooks
 	@ln -s ../git_hooks .git/hooks
 
+dev_install:
+	cargo install flamegraph
+	cargo install hyperfine
+
 # TODO: with rayon
 flamegraph:
 	@CARGO_PROFILE_RELEASE_DEBUG=true RUSTFLAGS="-Clink-arg=-Wl,--no-rosegment" \
 		cargo flamegraph -- new new -g 12
+
+hyperfine:
+	hyperfine "target/release/gomoku new new -g 4" --show-output

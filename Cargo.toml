@@ -11,6 +11,11 @@ nannou = { version = "0.19", default-features = false }
 nannou_egui = { version = "0.19", default-features = false }
 rayon = "1.12"
 
+[profile.release]
+incremental = true
+debug = true
+lto = "fat"
+
 [lints.clippy]
 # warn all lints by default
 cargo = { level = "warn", priority = -1 }
