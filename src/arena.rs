@@ -96,10 +96,10 @@ pub fn run(args: &Args) {
             }
         }
 
-        println!(
-            "capture={} | alignment={} | both={}",
-            stats.wins_by_capture, stats.wins_by_alignment, stats.wins_by_both
-        );
+        // println!(
+        //     "capture={} | alignment={} | both={}",
+        //     stats.wins_by_capture, stats.wins_by_alignment, stats.wins_by_both
+        // );
 
         match (black_win, white_win) {
             (true, true) => stats.win_win += 1,
@@ -114,7 +114,7 @@ pub fn run(args: &Args) {
 
         let player1_percentage = 100. * player1_wins as f64 / finished_games as f64;
         println!("Player 1 won {player1_wins}/{finished_games} games ({player1_percentage:.1}%)");
-        println!();
+        // println!();
     });
 
     let stats = *stats.lock().unwrap();

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+make new_to_old
+
+MSG=${@:-.}
+
+git add .
+git commit -m "$MSG"
+git push
