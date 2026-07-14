@@ -8,7 +8,7 @@ use crate::{
 };
 use std::cmp::max;
 
-pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
+pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
@@ -21,7 +21,7 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: Heuristic) -> Position {
 
 fn alpha_beta_pruning_helper(
     game: &mut Game,
-    heuristic: Heuristic,
+    heuristic: &Heuristic,
     depth: usize,
     mut min_h: i64,
     max_h: i64,

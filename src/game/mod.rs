@@ -10,7 +10,6 @@ use crate::{
         board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
-    heuristics::Coeffs,
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
@@ -36,7 +35,6 @@ pub struct Game {
     pub moves: Vec<Position>,
     pub captures: Vec<(usize, Position, Position)>,
     pub forced_moves_history: Vec<(usize, ForcedMoves)>,
-    pub coeffs: Option<Coeffs>,
 }
 
 impl Game {
@@ -54,7 +52,6 @@ impl Game {
             moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
             captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
             forced_moves_history: Vec::with_capacity(MAX_POSSIBLE_FORCED_POSITIONS),
-            coeffs: None,
         }
     }
 
@@ -134,7 +131,7 @@ impl Game {
 
         while self.state.is_playing() {
             let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
-            let pos = bot(self, *heuristic);
+            let pos = bot(self, heuristic);
             self.do_move(pos);
         }
     }
@@ -244,7 +241,7 @@ mod tests {
             while game.state.is_playing() {
                 game_states.push(game.clone());
                 let Player::Bot { bot, heuristic } = game.current_player() else { unreachable!() };
-                let pos = bot(&game, *heuristic);
+                let pos = bot(&game, heuristic);
                 game.do_move(pos);
             }
 

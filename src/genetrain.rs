@@ -1,7 +1,7 @@
 use crate::{
     bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
-    heuristics::coeff_heuristic::coeff_heuristic,
+    heuristics::{Heuristic, coeff_heuristic::coeff_heuristic},
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
@@ -9,12 +9,13 @@ use nannou::rand::{Rng as _, rngs::ThreadRng};
 use rayon::iter::{IntoParallelRefMutIterator as _, ParallelIterator as _};
 use std::array;
 
-const POP_SIZE: usize = 100;
+const POP_SIZE: usize = 50;
 const ELITE_COUNT: usize = POP_SIZE / 10;
 const TEST_GAMES: usize = 8;
-const EPOCHS: usize = 1;
+const EPOCHS: usize = 25;
 const GENES_SIZE: usize = 729 + 9;
 const MUTATION_PROBABILITY: f64 = 0.05;
+const CROSSOVER_PROBABILITY: f64 = 0.3;
 
 #[derive(Clone)]
 struct Genome {
@@ -23,10 +24,18 @@ struct Genome {
 }
 
 impl Genome {
-    const PLAYER: Player = Player::Bot { bot: idabp_new, heuristic: coeff_heuristic };
-
     fn random(rng: &mut ThreadRng) -> Self {
         Self { fitness: None, genes: array::from_fn(|_| rng.r#gen()) }
+    }
+
+    fn as_player(&self) -> Player {
+        Player::Bot {
+            bot: idabp_new,
+            heuristic: Heuristic {
+                fun: coeff_heuristic,
+                coeffs: Some(self.genes.map(|x| x as i64)),
+            },
+        }
     }
 
     fn evaluate(&mut self) {
@@ -35,10 +44,13 @@ impl Genome {
         }
 
         let mut score = 0;
+        let player = self.as_player();
 
-        for _ in 0..TEST_GAMES / 2 {
-            let mut game = Game::new(Self::PLAYER, Player::RANDOM);
-            game.coeffs = Some(self.genes.map(|x| x as i64));
+        for i in 0..TEST_GAMES / 2 {
+            let mut game = Game::new(player, Player::NEW);
+
+            let random_moves = 3 + (i & 1) as u32;
+            game.play_random_moves(random_moves, 5);
 
             let mut switched_game = game.clone();
             (switched_game.black_player, switched_game.white_player) =
@@ -72,7 +84,7 @@ pub fn run() {
     let mut pop: [Genome; POP_SIZE] = array::from_fn(|_| Genome::random(&mut rng));
 
     for epoch in 0..EPOCHS {
-        pop.par_iter_mut().progress_count(POP_SIZE as u64).for_each(Genome::evaluate);
+        pop.par_iter_mut().progress().for_each(Genome::evaluate);
         pop.sort_unstable_by_key(|player| player.fitness);
 
         // update best
@@ -84,17 +96,14 @@ pub fn run() {
         println!("epoch {} best_score {}/{}", epoch, best_score.unwrap_or(0), TEST_GAMES);
 
         // crossover
-        for i in ELITE_COUNT..POP_SIZE {
-            let a = rng.gen_range(0..ELITE_COUNT);
-            let b = rng.gen_range(0..ELITE_COUNT);
+        for i in 0..POP_SIZE - ELITE_COUNT {
+            let a = rng.gen_range(POP_SIZE - ELITE_COUNT..POP_SIZE);
+            let b = rng.gen_range(POP_SIZE - ELITE_COUNT..POP_SIZE);
 
-            let crossover_point = rng.gen_range(0..GENES_SIZE);
             pop[i].fitness = None;
             for mi in 0..GENES_SIZE {
-                if mi <= crossover_point {
-                    pop[i].genes[mi] = pop[a].genes[mi];
-                } else {
-                    pop[i].genes[mi] = pop[b].genes[mi];
+                if rng.gen_bool(CROSSOVER_PROBABILITY) {
+                    pop[i].genes[mi] = i16::midpoint(pop[a].genes[mi], pop[b].genes[mi]);
                 }
             }
         }
@@ -115,7 +124,9 @@ pub fn run() {
     }
 
     match &best {
-        Some(best) => println!("Best individual parameters: {:?}", best.genes),
+        Some(best) => {
+            println!("Best individual parameters: {:?} (score {:?})", best.genes, best_score);
+        }
         None => eprintln!("No best individual :c"),
     }
 }

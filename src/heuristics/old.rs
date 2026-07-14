@@ -6,10 +6,11 @@ use crate::{
         board::{Board, Position},
         lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
     },
+    heuristics::Coeffs,
     player::PlayerColor,
 };
 
-pub fn old(game: &Game) -> i64 {
+pub fn old(game: &Game, _: Option<&Coeffs>) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
     let mut black_open_xx_x = 0;

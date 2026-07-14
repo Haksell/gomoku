@@ -8,16 +8,20 @@ use crate::game::Game;
 
 /// A [`Heuristic`] returns a positive value if black has a good position,
 /// and a negative value otherwise.
-pub type Heuristic = fn(&Game) -> i64;
+#[derive(Debug, Clone, Copy)]
+pub struct Heuristic {
+    pub fun: fn(&Game, Option<&Coeffs>) -> i64,
+    pub coeffs: Option<Coeffs>,
+}
 
 pub type Coeffs = [i64; 729 + 9];
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
-        "capturophile" => Ok(capturophile::capturophile),
-        "new" => Ok(new::new),
-        "old" => Ok(old::old),
-        "zero" => Ok(zero::zero),
+        "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
+        "new" => Ok(Heuristic { fun: new::new, coeffs: None }),
+        "old" => Ok(Heuristic { fun: old::old, coeffs: None }),
+        "zero" => Ok(Heuristic { fun: zero::zero, coeffs: None }),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }

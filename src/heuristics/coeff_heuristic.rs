@@ -8,17 +8,18 @@ use crate::{
     player::PlayerColor,
 };
 
-pub fn coeff_heuristic(game: &Game) -> i64 {
+pub fn coeff_heuristic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut h = 0;
     let mut black_capture_threats = 0;
     let mut white_capture_threats = 0;
+    let coeffs = coeffs.unwrap();
 
     for lines in [ROWS, COLUMNS] {
         for line in &lines {
             h += evaluate_patterns(
                 &game.board,
                 line,
-                &game.coeffs.unwrap(),
+                coeffs,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
             );
@@ -30,17 +31,15 @@ pub fn coeff_heuristic(game: &Game) -> i64 {
             h += evaluate_patterns(
                 &game.board,
                 line,
-                &game.coeffs.unwrap(),
+                coeffs,
                 &mut black_capture_threats,
                 &mut white_capture_threats,
             );
         }
     }
 
-    h +=
-        capture_heuristic(&game.coeffs.unwrap(), game.black_captures as i64, black_capture_threats);
-    h -=
-        capture_heuristic(&game.coeffs.unwrap(), game.white_captures as i64, white_capture_threats);
+    h += capture_heuristic(coeffs, game.black_captures as i64, black_capture_threats);
+    h -= capture_heuristic(coeffs, game.white_captures as i64, white_capture_threats);
 
     h
 }

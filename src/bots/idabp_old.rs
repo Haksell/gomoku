@@ -14,7 +14,7 @@ const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).lead
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
 type Cache = fxhash::FxHashMap<u64, i64>;
 
-pub fn idabp_old(game: &Game, heuristic: Heuristic) -> Position {
+pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
@@ -41,7 +41,7 @@ pub fn idabp_old(game: &Game, heuristic: Heuristic) -> Position {
 #[expect(clippy::too_many_arguments)]
 fn alpha_beta_pruning_helper(
     game: &mut Game,
-    heuristic: Heuristic,
+    heuristic: &Heuristic,
     depth: usize,
     max_depth: usize,
     mut min_h: i64,

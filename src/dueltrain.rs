@@ -1,7 +1,7 @@
 use crate::{
     bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
-    heuristics::coeff_heuristic::coeff_heuristic,
+    heuristics::{Heuristic, coeff_heuristic::coeff_heuristic},
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
@@ -23,10 +23,18 @@ struct Genome {
 }
 
 impl Genome {
-    const PLAYER: Player = Player::Bot { bot: idabp_new, heuristic: coeff_heuristic };
-
     fn random(rng: &mut ThreadRng) -> Self {
         Self { fitness: None, genes: array::from_fn(|_| rng.r#gen()) }
+    }
+
+    fn as_player(&self) -> Player {
+        Player::Bot {
+            bot: idabp_new,
+            heuristic: Heuristic {
+                fun: coeff_heuristic,
+                coeffs: Some(self.genes.map(|x| x as i64)),
+            },
+        }
     }
 
     fn evaluate(&mut self) {
@@ -37,8 +45,7 @@ impl Genome {
         let mut score = 0;
 
         for _ in 0..TEST_GAMES / 2 {
-            let mut game = Game::new(Self::PLAYER, Player::RANDOM);
-            game.coeffs = Some(self.genes.map(|x| x as i64));
+            let mut game = Game::new(self.as_player(), Player::RANDOM);
 
             let mut switched_game = game.clone();
             (switched_game.black_player, switched_game.white_player) =

@@ -8,7 +8,7 @@ use crate::{
 };
 use std::cmp::max;
 
-pub fn negamax(game: &Game, heuristic: Heuristic) -> Position {
+pub fn negamax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
@@ -25,7 +25,7 @@ pub fn negamax(game: &Game, heuristic: Heuristic) -> Position {
         .unwrap()
 }
 
-fn negamax_helper(game: &mut Game, heuristic: Heuristic, depth: usize) -> i64 {
+fn negamax_helper(game: &mut Game, heuristic: &Heuristic, depth: usize) -> i64 {
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, MAX_DEPTH) {
         return leaf_value;
     }

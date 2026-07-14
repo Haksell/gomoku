@@ -77,7 +77,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
     {
         let start = Instant::now();
         // let bot_thread = std::thread::spawn(|| bot(model., *heuristic));
-        let pos = bot(&model.game, *heuristic);
+        let pos = bot(&model.game, heuristic);
         model.ai_thinking_time = Some(start.elapsed().as_millis());
         model.game.do_move(pos);
         // TODO: show in UI and delete this println (MANDATORY!)

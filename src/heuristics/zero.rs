@@ -1,5 +1,5 @@
-use crate::game::Game;
+use crate::{game::Game, heuristics::Coeffs};
 
-pub const fn zero(_: &Game) -> i64 {
+pub const fn zero(_: &Game, _: Option<&Coeffs>) -> i64 {
     0
 }

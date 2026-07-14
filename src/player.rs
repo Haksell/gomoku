@@ -14,9 +14,12 @@ pub enum Player {
 }
 
 impl Player {
-    pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: zero };
-    pub const OLD: Self = Self::Bot { bot: idabp_old, heuristic: old };
-    pub const NEW: Self = Self::Bot { bot: idabp_new, heuristic: new };
+    pub const RANDOM: Self =
+        Self::Bot { bot: random_mover, heuristic: Heuristic { fun: zero, coeffs: None } };
+    pub const OLD: Self =
+        Self::Bot { bot: idabp_old, heuristic: Heuristic { fun: old, coeffs: None } };
+    pub const NEW: Self =
+        Self::Bot { bot: idabp_new, heuristic: Heuristic { fun: new, coeffs: None } };
 
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
@@ -31,9 +34,19 @@ impl PartialEq for Player {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (
-                Self::Bot { bot: l_bot, heuristic: l_heuristic },
-                Self::Bot { bot: r_bot, heuristic: r_heuristic },
-            ) => fn_addr_eq(*l_bot, *r_bot) && fn_addr_eq(*l_heuristic, *r_heuristic),
+                Self::Bot {
+                    bot: l_bot,
+                    heuristic: Heuristic { fun: l_heuristic, coeffs: l_coeffs },
+                },
+                Self::Bot {
+                    bot: r_bot,
+                    heuristic: Heuristic { fun: r_heuristic, coeffs: r_coeffs },
+                },
+            ) => {
+                fn_addr_eq(*l_bot, *r_bot)
+                    && fn_addr_eq(*l_heuristic, *r_heuristic)
+                    && l_coeffs == r_coeffs
+            }
             _ => core::mem::discriminant(self) == core::mem::discriminant(other),
         }
     }

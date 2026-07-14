@@ -10,7 +10,7 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
+pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
@@ -30,7 +30,7 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
 
 fn minimax_helper(
     game: &mut Game,
-    heuristic: Heuristic,
+    heuristic: &Heuristic,
     maximizing_player: PlayerColor,
     depth: usize,
 ) -> i64 {
@@ -38,8 +38,8 @@ fn minimax_helper(
         GameState::Playing(_) => {
             if depth == MAX_DEPTH {
                 return match maximizing_player {
-                    PlayerColor::Black => heuristic(game),
-                    PlayerColor::White => -heuristic(game),
+                    PlayerColor::Black => (heuristic.fun)(game, heuristic.coeffs.as_ref()),
+                    PlayerColor::White => -(heuristic.fun)(game, heuristic.coeffs.as_ref()),
                 };
             }
         }
