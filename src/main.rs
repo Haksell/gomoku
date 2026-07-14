@@ -17,12 +17,13 @@ struct Args {
     num_games: usize, // TODO: Option like num_threads
     #[arg(short('t'), long)]
     num_threads: Option<usize>,
-    genetrain: Option<bool>,
+    #[arg(long)]
+    genetrain: bool,
 }
 
 fn main() {
     let args = Args::parse();
-    if args.genetrain.is_some_and(|genetrain| genetrain) {
+    if args.genetrain {
         genetrain::run();
         return;
     }

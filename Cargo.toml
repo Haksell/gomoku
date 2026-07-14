@@ -10,6 +10,7 @@ itertools = "0.15"
 nannou = { version = "0.19", default-features = false }
 nannou_egui = { version = "0.19", default-features = false }
 rayon = "1.12"
+indicatif = { version = "0.18", features = ["rayon"] }
 
 [lints.clippy]
 # warn all lints by default

@@ -4,11 +4,9 @@ use crate::{
         board::{Board, Position},
         lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
     },
+    heuristics::Coefs,
     player::PlayerColor,
 };
-
-const PATTERN_COEF: [i64; 729] = [0; 729];
-const CAPTURE_COEF: [i64; 9] = [0; 9];
 
 pub fn genetic(game: &Game) -> i64 {
     let mut h = 0;
@@ -20,6 +18,7 @@ pub fn genetic(game: &Game) -> i64 {
             h += evaluate_patterns(
                 &game.board,
                 line,
+                &game.coefs.unwrap(),
                 &mut black_capture_threats,
                 &mut white_capture_threats,
             );
@@ -31,24 +30,25 @@ pub fn genetic(game: &Game) -> i64 {
             h += evaluate_patterns(
                 &game.board,
                 line,
+                &game.coefs.unwrap(),
                 &mut black_capture_threats,
                 &mut white_capture_threats,
             );
         }
     }
 
-    h += capture_heuristic(game.black_captures as i64, black_capture_threats);
-    h -= capture_heuristic(game.white_captures as i64, white_capture_threats);
+    h += capture_heuristic(&game.coefs.unwrap(), game.black_captures as i64, black_capture_threats);
+    h -= capture_heuristic(&game.coefs.unwrap(), game.white_captures as i64, white_capture_threats);
 
     h
 }
 
-const fn capture_heuristic(c: i64, t: i64) -> i64 {
+const fn capture_heuristic(coefs: &Coefs, c: i64, t: i64) -> i64 {
     // None of these constants are properly optimized,
     // because capture wins are much rarer than alignments.
-    let h_captures = CAPTURE_COEF[0] * c * c * c + CAPTURE_COEF[1] * c * c + CAPTURE_COEF[2] * c;
-    let h_threats = CAPTURE_COEF[3] * t * t * t + CAPTURE_COEF[4] * t * t + CAPTURE_COEF[5] * t;
-    let cross_terms = c * t * (CAPTURE_COEF[6] + CAPTURE_COEF[7] * c + CAPTURE_COEF[8] * t);
+    let h_captures = coefs[729 + 0] * c * c * c + coefs[729 + 1] * c * c + coefs[729 + 2] * c;
+    let h_threats = coefs[729 + 3] * t * t * t + coefs[729 + 4] * t * t + coefs[729 + 5] * t;
+    let cross_terms = c * t * (coefs[729 + 6] + coefs[729 + 7] * c + coefs[729 + 8] * t);
     h_captures + h_threats + cross_terms
 }
 
@@ -69,6 +69,7 @@ const fn stencil_index(mut stencil: i64) -> usize {
 fn evaluate_patterns(
     board: &Board,
     line: &[Position],
+    coefs: &Coefs,
     black_capture_threats: &mut i64,
     white_capture_threats: &mut i64,
 ) -> i64 {
@@ -92,7 +93,7 @@ fn evaluate_patterns(
         }
 
         if stencil >= MIN_STENCIL {
-            h += PATTERN_COEF[stencil_index(stencil & 0b_11_11_11_11_11_11)];
+            h += coefs[stencil_index(stencil & 0b_11_11_11_11_11_11)];
         }
     }
 

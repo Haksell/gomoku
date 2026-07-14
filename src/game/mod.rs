@@ -10,6 +10,7 @@ use crate::{
         board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
+    heuristics::Coefs,
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
@@ -35,6 +36,7 @@ pub struct Game {
     pub moves: Vec<Position>,
     pub captures: Vec<(usize, Position, Position)>,
     pub forced_moves_history: Vec<(usize, ForcedMoves)>,
+    pub coefs: Option<Coefs>,
 }
 
 impl Game {
@@ -52,6 +54,7 @@ impl Game {
             moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
             captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
             forced_moves_history: Vec::with_capacity(MAX_POSSIBLE_FORCED_POSITIONS),
+            coefs: None,
         }
     }
 
