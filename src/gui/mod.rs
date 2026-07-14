@@ -15,7 +15,7 @@ use clap::Parser as _;
 use coordinates::mouse_to_board;
 use events::{key_released, mouse_released};
 use nannou::{App, event::Update, winit::window::CursorIcon};
-use std::time::{Instant, SystemTime};
+use std::time::Instant;
 use textures::init_textures;
 use view::view;
 
@@ -35,7 +35,7 @@ struct Model {
     game: Game,
     hover: Option<Position>,
     ai_thinking_time: Option<u128>, // TODO: duration?
-    finished_time: Option<SystemTime>,
+    finished_time: Option<Instant>,
 }
 
 impl Model {
@@ -89,7 +89,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
     }
 
     if !model.game.state.is_playing() && model.finished_time.is_none() {
-        model.finished_time = Some(SystemTime::now());
+        model.finished_time = Some(Instant::now());
     }
 
     if model.game.state.is_playing() && model.game.current_player().is_human() {
