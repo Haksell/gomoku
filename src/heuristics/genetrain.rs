@@ -43,6 +43,7 @@ pub fn genetic(game: &Game) -> i64 {
     h
 }
 
+#[expect(clippy::identity_op)]
 const fn capture_heuristic(coefs: &Coefs, c: i64, t: i64) -> i64 {
     // None of these constants are properly optimized,
     // because capture wins are much rarer than alignments.
@@ -55,12 +56,7 @@ const fn capture_heuristic(coefs: &Coefs, c: i64, t: i64) -> i64 {
 const fn stencil_index(mut stencil: i64) -> usize {
     let mut index = 0;
     while stencil > 0 {
-        index += match stencil & 0b11 {
-            0b01 => 0,
-            0b10 => 1,
-            0b11 => 2,
-            _ => panic!("Invalid stencil"),
-        } as usize;
+        index += ((stencil & 0b11) - 1) as usize;
         stencil >>= 2;
     }
     index
@@ -73,11 +69,10 @@ fn evaluate_patterns(
     black_capture_threats: &mut i64,
     white_capture_threats: &mut i64,
 ) -> i64 {
-    const MIN_STENCIL: i64 = 0b_01_01_01_01_01_01;
     let mut stencil = 0;
     let mut h = 0;
 
-    for &(x, y) in line {
+    for (i, &(x, y)) in line.iter().enumerate() {
         let player_color = board[y][x];
         stencil <<= 2;
         stencil |= match player_color {
@@ -92,7 +87,8 @@ fn evaluate_patterns(
             _ => {}
         }
 
-        if stencil >= MIN_STENCIL {
+        // TODO: 5 is STENCIL_LENGTH - 1
+        if i >= 5 {
             h += coefs[stencil_index(stencil & 0b_11_11_11_11_11_11)];
         }
     }

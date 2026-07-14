@@ -1,5 +1,4 @@
 pub mod capturophile;
-pub mod genetic;
 pub mod genetrain;
 pub mod new;
 pub mod old;
@@ -19,7 +18,6 @@ pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
         "new" => Ok(new::new),
         "old" => Ok(old::old),
         "zero" => Ok(zero::zero),
-        "genetic" => Ok(genetic::genetic),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }
