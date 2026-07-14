@@ -1,5 +1,5 @@
 pub mod capturophile;
-pub mod genetrain;
+pub mod coeff_heuristic;
 pub mod new;
 pub mod old;
 pub mod zero;
@@ -10,7 +10,7 @@ use crate::game::Game;
 /// and a negative value otherwise.
 pub type Heuristic = fn(&Game) -> i64;
 
-pub type Coefs = [i64; 729 + 9];
+pub type Coeffs = [i64; 729 + 9];
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {

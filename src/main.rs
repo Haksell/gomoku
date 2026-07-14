@@ -1,5 +1,6 @@
 mod arena;
 mod bots;
+mod dueltrain;
 mod game;
 mod genetrain;
 mod gui;
@@ -19,10 +20,16 @@ struct Args {
     num_threads: Option<usize>,
     #[arg(long)]
     genetrain: bool,
+    #[arg(long)]
+    dueltrain: bool,
 }
 
 fn main() {
     let args = Args::parse();
+    if args.dueltrain {
+        dueltrain::run();
+        return;
+    }
     if args.genetrain {
         genetrain::run();
         return;
