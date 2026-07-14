@@ -5,6 +5,7 @@
 ### misc
 
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
+- bitboard: min of 4 rotations, 2 flips, and white=-black
 - wins by captures or alignment in stats
 - unit test of rules
 - compute during human time (flag)
@@ -21,9 +22,13 @@
 - coup force (4 captures...)
 - clock in human vs (human | bot)
 - no depth in leaf_value, if win found in iterative deepening, stop
+- futility pruning
+- more depth -> smaller radius
+- better multithreading (rayon -> manual pool?)
 
 ### design
 
+- highlight close moves while bot is thinking
 - change hover font
 - show ply
 - prefer double wins (captures + alignment)
