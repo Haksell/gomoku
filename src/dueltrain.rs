@@ -19,7 +19,8 @@ use std::{
 
 const COEFFS_FILE: &str = "./weights/duel.rs";
 
-const N_COEFFS: usize = 729 + 9;
+const N_STENCIL_COEFFS: usize = 3usize.pow(6);
+const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 1;
 const MAX_ADDITIVE_MUTATION: i64 = 16;
@@ -56,56 +57,57 @@ pub fn run(num_threads: Option<usize>) {
         let mut new_coeffs = *coeffs.lock().unwrap();
         let mut mutations = vec![];
         for _ in 0..N_MUTATIONS {
-            let i = rng.gen_range(0..N_COEFFS);
-            let div_value = (new_coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-            let mul_value = (new_coeffs[i] as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-            let min_range = max(
-                MIN_COEFF_VALUE,
-                min(new_coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value)),
-            );
-            let max_range = min(
-                MAX_COEFF_VALUE,
-                max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)),
-            );
-
-            let new_coeff = rng.gen_range(min_range..=max_range);
-            mutations.push((i, new_coeff));
-            if i >= 729 {
+            if rng.gen_ratio(1, 8) {
+                let i = rng.gen_range(N_STENCIL_COEFFS..N_COEFFS);
+                let new_coeff = random_coeff(&mut rng, new_coeffs[i]);
+                mutations.push((i, new_coeff));
                 continue;
             }
-
-            let x0 = i % 3;
-            let x1 = i / 3 % 3;
-            let x2 = i / 9 % 3;
-            let x3 = i / 27 % 3;
-            let x4 = i / 81 % 3;
-            let x5 = i / 243 % 3;
 
             let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
 
-            if x0 == swap_12(x5) && x1 == swap_12(x4) && x2 == swap_12(x3) {
-                mutations.push((i, 0));
-                continue;
-            }
+            let mut x0;
+            let mut x1;
+            let mut x2;
+            let mut x3;
+            let mut x4;
+            let mut x5;
+
+            let i = loop {
+                let i = rng.gen_range(0..N_STENCIL_COEFFS);
+
+                x0 = i % 3;
+                x1 = i / 3 % 3;
+                x2 = i / 9 % 3;
+                x3 = i / 27 % 3;
+                x4 = i / 81 % 3;
+                x5 = i / 243 % 3;
+
+                if x0 != swap_12(x5) || x1 != swap_12(x4) || x2 != swap_12(x3) {
+                    break i;
+                }
+            };
 
             // TODO: precompute all 3 symmetries
-
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
-            mutations.push((sym, new_coeff));
-
             let opp = swap_12(x0)
                 + 3 * swap_12(x1)
                 + 9 * swap_12(x2)
                 + 27 * swap_12(x3)
                 + 81 * swap_12(x4)
                 + 243 * swap_12(x5);
-            mutations.push((opp, -new_coeff));
             let sym_opp = swap_12(x5)
                 + 3 * swap_12(x4)
                 + 9 * swap_12(x3)
                 + 27 * swap_12(x2)
                 + 81 * swap_12(x1)
                 + 243 * swap_12(x0);
+
+            let new_coeff = random_coeff(&mut rng, new_coeffs[i]);
+
+            mutations.push((i, new_coeff));
+            mutations.push((sym, new_coeff));
+            mutations.push((opp, -new_coeff));
             mutations.push((sym_opp, -new_coeff));
         }
 
@@ -167,6 +169,16 @@ pub fn run(num_threads: Option<usize>) {
     });
 }
 
+fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
+    let div_value = (old_coeff as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+    let mul_value = (old_coeff as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+    let min_range =
+        max(MIN_COEFF_VALUE, min(old_coeff - MAX_ADDITIVE_MUTATION, min(div_value, mul_value)));
+    let max_range =
+        min(MAX_COEFF_VALUE, max(old_coeff + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)));
+    rng.gen_range(min_range..=max_range)
+}
+
 fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
     std::iter::repeat_with(|| play_pair(old_player, new_player, rng)).take(pairs).sum()
 }
@@ -190,7 +202,7 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     let mut buf = BufWriter::with_capacity(1 << 15, Vec::new());
     writeln!(buf, "[")?;
 
-    for i in 0..729 {
+    for i in 0..N_STENCIL_COEFFS {
         let c = coeffs[i];
         // TODO: check correct direction (might be symmetric)
         let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
@@ -201,7 +213,7 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     for (i, poly_coeff) in
         ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
     {
-        let c = coeffs[729 + i];
+        let c = coeffs[N_STENCIL_COEFFS + i];
         let num = format!("{c},");
         writeln!(buf, "    {num:7}// {poly_coeff}")?;
     }
