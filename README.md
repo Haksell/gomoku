@@ -4,7 +4,7 @@
 
 ### duels
 
-- parallelize the training
+- fix the parallel updates
 - 3^6 -> 4^6
 
 ### misc
