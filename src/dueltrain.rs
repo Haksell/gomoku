@@ -14,6 +14,7 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
+const N_MUTATIONS: i64 = 27; // sqrt(N_COEFFS)
 const MAX_MUTATION: i64 = 16;
 
 pub fn run() {
@@ -34,9 +35,10 @@ pub fn run() {
         };
 
         let mut new_coeffs = coeffs;
-        for coeff in &mut new_coeffs {
+        for _ in 0..N_MUTATIONS {
+            let i = rng.gen_range(0..N_COEFFS);
             let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
-            *coeff += mutation;
+            new_coeffs[i] += mutation;
         }
         let new_player = Player::Bot {
             bot: idabp_new,
