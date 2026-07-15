@@ -4,10 +4,8 @@
 
 ### duels
 
-- 3^6 -> 4^6
-- symetrize the patterns
-- white patterns = -black patterns
 - parallelize the training
+- 3^6 -> 4^6
 
 ### misc
 
