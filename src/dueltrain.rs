@@ -40,6 +40,37 @@ pub fn run() {
             let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
             new_coeffs[i] += mutation;
         }
+        // TODO: optimize
+        for i in 0..729 {
+            let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
+            let x0 = i % 3;
+            let x1 = i / 3 % 3;
+            let x2 = i / 9 % 3;
+            let x3 = i / 27 % 3;
+            let x4 = i / 81 % 3;
+            let x5 = i / 243 % 3;
+            if x0 == swap_12(x5) && x1 == swap_12(x4) && x2 == swap_12(x3) {
+                new_coeffs[i] = 0;
+                continue;
+            }
+            let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
+            new_coeffs[sym] = coeffs[i];
+            let opp = swap_12(x0)
+                + 3 * swap_12(x1)
+                + 9 * swap_12(x2)
+                + 27 * swap_12(x3)
+                + 81 * swap_12(x4)
+                + 243 * swap_12(x5);
+            new_coeffs[opp] = -coeffs[i];
+            let sym_opp = swap_12(x5)
+                + 3 * swap_12(x4)
+                + 9 * swap_12(x3)
+                + 27 * swap_12(x2)
+                + 81 * swap_12(x1)
+                + 243 * swap_12(x0);
+            new_coeffs[sym_opp] = -coeffs[i];
+        }
+
         let new_player = Player::Bot {
             bot: idabp_new,
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(new_coeffs) },
