@@ -6,16 +6,18 @@ use crate::{
 };
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
 use std::{
+    cmp::{max, min},
     fs::File,
-    io::{self, Write as _},
+    io::{self, BufWriter, Write as _},
 };
 
 const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
-const N_MUTATIONS: i64 = 27; // sqrt(N_COEFFS)
-const MAX_MUTATION: i64 = 16;
+const N_MUTATIONS: i64 = 16;
+const MAX_ADDITIVE_MUTATION: i64 = 8;
+const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
 
 pub fn run() {
     let mut rng = thread_rng();
@@ -34,11 +36,14 @@ pub fn run() {
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
         };
 
-        let mut new_coeffs = coeffs.clone();
+        let mut new_coeffs = coeffs;
         for _ in 0..N_MUTATIONS {
             let i = rng.gen_range(0..N_COEFFS);
-            let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
-            new_coeffs[i] += mutation;
+            let div_value = (coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+            let mul_value = (coeffs[i] as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+            let min_range = min(coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value));
+            let max_range = max(coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value));
+            new_coeffs[i] = rng.gen_range(min_range..=max_range);
         }
 
         // TODO: optimize
@@ -82,7 +87,7 @@ pub fn run() {
         if new_wins == 2 {
             updates += 1;
             println!("Updated! ({updates} updates in {epoch} epochs)");
-            coeffs = new_coeffs.clone();
+            coeffs = new_coeffs;
             match write_coeffs(&new_coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
@@ -94,12 +99,17 @@ pub fn run() {
                 bot: idabp_new,
                 heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
             };
+            let (opponent, opponent_name) = if epoch.is_multiple_of(200) {
+                (initial_player, "initial")
+            } else {
+                (Player::NEW, "manual")
+            };
             let mut total_wins = 0;
             for _ in 0..10 {
-                let wins = play_two_games(initial_player, genetic_player, &mut rng);
+                let wins = play_two_games(opponent, genetic_player, &mut rng);
                 total_wins += wins;
             }
-            println!("Current won {total_wins}/20 games against initial bot");
+            println!("Current won {total_wins}/20 games against {opponent_name} bot");
         }
     }
 }
@@ -120,15 +130,15 @@ fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -
 }
 
 fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
-    let mut file = File::create(COEFFS_FILE)?;
-    writeln!(file, "[")?;
+    let mut buf = BufWriter::with_capacity(1 << 15, Vec::new());
+    writeln!(buf, "[")?;
 
     for i in 0..729 {
         let c = coeffs[i];
         // TODO: check correct direction (might be symmetric)
         let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
         let num = format!("{c},");
-        writeln!(file, "    {num:7}// {pat}")?;
+        writeln!(buf, "    {num:7}// {pat}")?;
     }
 
     for (i, poly_coeff) in
@@ -136,9 +146,11 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     {
         let c = coeffs[729 + i];
         let num = format!("{c},");
-        writeln!(file, "    {num:7}// {poly_coeff}")?;
+        writeln!(buf, "    {num:7}// {poly_coeff}")?;
     }
 
-    writeln!(file, "]")?;
-    Ok(())
+    writeln!(buf, "]")?;
+
+    let mut file = File::create(COEFFS_FILE)?;
+    file.write_all(buf.buffer())
 }
