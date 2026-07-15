@@ -117,20 +117,20 @@ pub fn run(num_threads: Option<usize>) {
         };
 
         let mut total_wins = 0;
-        for _ in 0..6 {
+        for _ in 0..5 {
             total_wins += play_two_games(old_player, new_player, &mut rng);
         }
 
         let mut stats = stats.lock().unwrap();
         stats.1 += 1;
-        if total_wins >= 9 {
+        if total_wins >= 7 {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
         }
         let epoch = stats.1;
         drop(stats);
 
-        if total_wins >= 9 {
+        if total_wins >= 7 {
             let mut coeffs_lock = coeffs.lock().unwrap();
             for &(i, mutation) in &mutations {
                 coeffs_lock[i] = mutation;
