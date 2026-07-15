@@ -54,6 +54,7 @@ pub fn run(num_threads: Option<usize>) {
         };
 
         let mut new_coeffs = *coeffs.lock().unwrap();
+        let mut mutations = vec![];
         for _ in 0..N_MUTATIONS {
             let i = rng.gen_range(0..N_COEFFS);
             let div_value = (new_coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
@@ -67,7 +68,8 @@ pub fn run(num_threads: Option<usize>) {
                 max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)),
             );
 
-            new_coeffs[i] = rng.gen_range(min_range..=max_range);
+            let new_coeff = rng.gen_range(min_range..=max_range);
+            mutations.push((i, new_coeff));
             if i >= 729 {
                 continue;
             }
@@ -82,12 +84,12 @@ pub fn run(num_threads: Option<usize>) {
             let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
 
             if x0 == swap_12(x5) && x1 == swap_12(x4) && x2 == swap_12(x3) {
-                new_coeffs[i] = 0;
+                mutations.push((i, 0));
                 continue;
             }
 
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
-            new_coeffs[sym] = new_coeffs[i];
+            mutations.push((sym, new_coeff));
 
             let opp = swap_12(x0)
                 + 3 * swap_12(x1)
@@ -95,14 +97,18 @@ pub fn run(num_threads: Option<usize>) {
                 + 27 * swap_12(x3)
                 + 81 * swap_12(x4)
                 + 243 * swap_12(x5);
-            new_coeffs[opp] = -new_coeffs[i];
+            mutations.push((opp, -new_coeff));
             let sym_opp = swap_12(x5)
                 + 3 * swap_12(x4)
                 + 9 * swap_12(x3)
                 + 27 * swap_12(x2)
                 + 81 * swap_12(x1)
                 + 243 * swap_12(x0);
-            new_coeffs[sym_opp] = -new_coeffs[i];
+            mutations.push((sym_opp, -new_coeff));
+        }
+
+        for &(i, mutation) in &mutations {
+            new_coeffs[i] = mutation;
         }
 
         let new_player = Player::Bot {
@@ -125,8 +131,13 @@ pub fn run(num_threads: Option<usize>) {
         drop(stats);
 
         if total_wins >= 9 {
-            *coeffs.lock().unwrap() = new_coeffs;
-            match write_coeffs(&new_coeffs) {
+            let mut coeffs_lock = coeffs.lock().unwrap();
+            for &(i, mutation) in &mutations {
+                coeffs_lock[i] = mutation;
+            }
+            let coeffs_to_write = *coeffs_lock;
+            drop(coeffs_lock);
+            match write_coeffs(&coeffs_to_write) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
