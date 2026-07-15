@@ -7,7 +7,7 @@ edition = "2024"
 clap = { version = "4.6", features = ["derive"] }
 fxhash = "0.2"
 itertools = "0.15"
-nannou = { version = "0.19", default-features = false }
+nannou = { version = "0.19", default-features = false, features = ["notosans"] }
 rayon = "1.12"
 indicatif = { version = "0.18", features = ["rayon"] }
 
