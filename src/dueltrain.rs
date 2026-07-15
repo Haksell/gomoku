@@ -118,21 +118,19 @@ pub fn run(num_threads: Option<usize>) {
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(new_coeffs) },
         };
 
-        let mut total_wins = 0;
-        for _ in 0..5 {
-            total_wins += play_pair(&old_player, &new_player, &mut rng);
-        }
+        let total_wins = play_pairs(5, &old_player, &new_player, &mut rng);
+        let should_update = total_wins >= 7;
 
         let mut stats = stats.lock().unwrap();
         stats.1 += 1;
-        if total_wins >= 7 {
+        if should_update {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
         }
         let epoch = stats.1;
         drop(stats);
 
-        if total_wins >= 7 {
+        if should_update {
             let mut coeffs_lock = coeffs.lock().unwrap();
             for &(i, mutation) in &mutations {
                 coeffs_lock[i] = mutation;
@@ -145,7 +143,7 @@ pub fn run(num_threads: Option<usize>) {
         }
 
         if epoch.is_multiple_of(500) {
-            let genetic_player = Player::Bot {
+            let best_player = Player::Bot {
                 bot: idabp_new,
                 heuristic: Heuristic {
                     fun: coeff_heuristic,
@@ -158,9 +156,8 @@ pub fn run(num_threads: Option<usize>) {
             };
             let pairs = 25;
             let total_games = 2 * pairs;
-            let wins_against_initial =
-                play_pairs(pairs, &initial_player, &genetic_player, &mut rng);
-            let wins_against_manual = play_pairs(pairs, &Player::NEW, &genetic_player, &mut rng);
+            let wins_against_initial = play_pairs(pairs, &initial_player, &best_player, &mut rng);
+            let wins_against_manual = play_pairs(pairs, &Player::NEW, &best_player, &mut rng);
             let dividing_line = "=".repeat(80);
             println!("{dividing_line}");
             println!("Current won {wins_against_initial}/{total_games} games against initial bot");
