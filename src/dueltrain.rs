@@ -21,7 +21,7 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
-const N_MUTATIONS: i64 = 8;
+const N_MUTATIONS: i64 = 4;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
 const MAX_COEFF_VALUE: i64 = 999_999;
@@ -66,24 +66,26 @@ pub fn run(num_threads: Option<usize>) {
                 MAX_COEFF_VALUE,
                 max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)),
             );
-            new_coeffs[i] = rng.gen_range(min_range..=max_range);
-        }
 
-        // TODO: optimize
-        for i in 0..729 {
             let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
+
             let x0 = i % 3;
             let x1 = i / 3 % 3;
             let x2 = i / 9 % 3;
             let x3 = i / 27 % 3;
             let x4 = i / 81 % 3;
             let x5 = i / 243 % 3;
+
             if x0 == swap_12(x5) && x1 == swap_12(x4) && x2 == swap_12(x3) {
                 new_coeffs[i] = 0;
                 continue;
             }
+
+            new_coeffs[i] = rng.gen_range(min_range..=max_range);
+
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
             new_coeffs[sym] = new_coeffs[i];
+
             let opp = swap_12(x0)
                 + 3 * swap_12(x1)
                 + 9 * swap_12(x2)
@@ -111,23 +113,21 @@ pub fn run(num_threads: Option<usize>) {
         }
 
         let mut stats = stats.lock().unwrap();
-        if total_wins >= 8 {
+        if total_wins >= 9 {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
-            if total_wins == 8 {
-                let previous_coeffs = *coeffs.lock().unwrap();
-                new_coeffs =
-                    std::array::from_fn(|i| i64::midpoint(previous_coeffs[i], new_coeffs[i]));
-            }
+        }
+        stats.1 += 1;
+        let epoch = stats.1;
+        drop(stats);
+
+        if total_wins >= 9 {
             *coeffs.lock().unwrap() = new_coeffs;
             match write_coeffs(&new_coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
-        stats.1 += 1;
-        let epoch = stats.1;
-        drop(stats);
 
         if epoch.is_multiple_of(100) {
             let genetic_player = Player::Bot {
