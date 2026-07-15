@@ -118,7 +118,7 @@ pub fn run(num_threads: Option<usize>) {
 
         let mut total_wins = 0;
         for _ in 0..5 {
-            total_wins += play_two_games(old_player, new_player, &mut rng);
+            total_wins += play_pair(&old_player, &new_player, &mut rng);
         }
 
         let mut stats = stats.lock().unwrap();
@@ -143,7 +143,7 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(500) {
             let genetic_player = Player::Bot {
                 bot: idabp_new,
                 heuristic: Heuristic {
@@ -151,31 +151,30 @@ pub fn run(num_threads: Option<usize>) {
                     coeffs: Some(*coeffs.lock().unwrap()),
                 },
             };
-            let (opponent, opponent_name) = if epoch.is_multiple_of(200) {
-                (
-                    Player::Bot {
-                        bot: idabp_new,
-                        heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(initial_coeffs) },
-                    },
-                    "initial",
-                )
-            } else {
-                (Player::NEW, "manual")
+            let initial_player = Player::Bot {
+                bot: idabp_new,
+                heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(initial_coeffs) },
             };
-            let mut total_wins = 0;
-            for _ in 0..10 {
-                let wins = play_two_games(opponent, genetic_player, &mut rng);
-                total_wins += wins;
-            }
-            println!("{}", "=".repeat(80));
-            println!("Current won {total_wins}/20 games against {opponent_name} bot");
-            println!("{}", "=".repeat(80));
+            let pairs = 25;
+            let total_games = 2 * pairs;
+            let wins_against_initial =
+                play_pairs(pairs, &initial_player, &genetic_player, &mut rng);
+            let wins_against_manual = play_pairs(pairs, &Player::NEW, &genetic_player, &mut rng);
+            let dividing_line = "=".repeat(80);
+            println!("{dividing_line}");
+            println!("Current won {wins_against_initial}/{total_games} games against initial bot");
+            println!("Current won {wins_against_manual}/{total_games} games against manual bot");
+            println!("{dividing_line}");
         }
     });
 }
 
-fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -> u8 {
-    let mut old_new = Game::new(old_player, new_player);
+fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
+    std::iter::repeat_with(|| play_pair(old_player, new_player, rng)).take(pairs).sum()
+}
+
+fn play_pair(old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
+    let mut old_new = Game::new(*old_player, *new_player);
     let random_moves = rng.gen_range(3..=4);
     old_new.play_random_moves(random_moves, 5);
 
@@ -185,8 +184,8 @@ fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -
     old_new.play_game();
     new_old.play_game();
 
-    matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u8
-        + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u8
+    matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u32
+        + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u32
 }
 
 fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
