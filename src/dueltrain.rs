@@ -61,11 +61,11 @@ pub fn run() {
                 heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
             };
             let mut total_wins = 0;
-            for _ in 0..25 {
-                let wins = play_two_games(initial_player, genetic_player, &mut rng);
+            for _ in 0..10 {
+                let wins = play_two_games(Player::NEW, genetic_player, &mut rng);
                 total_wins += wins;
             }
-            println!("Current won {total_wins}/50 games against initial");
+            println!("Current won {total_wins}/20 games against manual heuristic");
         }
     }
 }
