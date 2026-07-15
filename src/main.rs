@@ -27,7 +27,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
     if args.dueltrain {
-        dueltrain::run();
+        dueltrain::run(args.num_threads);
         return;
     }
     if args.genetrain {

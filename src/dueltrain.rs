@@ -5,10 +5,16 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
+use rayon::{
+    ThreadPoolBuilder,
+    iter::{IntoParallelIterator as _, ParallelIterator as _},
+};
 use std::{
     cmp::{max, min},
     fs::File,
     io::{self, BufWriter, Write as _},
+    sync::{Arc, Mutex},
+    thread::available_parallelism,
 };
 
 const COEFFS_FILE: &str = "./weights/duel.rs";
@@ -19,30 +25,39 @@ const N_MUTATIONS: i64 = 16;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
 
-pub fn run() {
-    let mut rng = thread_rng();
-    let mut coeffs = include!("../weights/duel.rs");
+#[expect(clippy::too_many_lines)]
+pub fn run(num_threads: Option<usize>) {
+    let initial_coeffs = include!("../weights/duel.rs");
 
-    let mut updates = 0;
+    let coeffs = Arc::new(Mutex::new(initial_coeffs));
+    let stats = Arc::new(Mutex::new((0u32, 0u32)));
 
-    let initial_player = Player::Bot {
-        bot: idabp_new,
-        heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
-    };
+    // TODO: if 1 thread, no parallelism
+    // TODO: no global (if we need to do stuff after training)
+    // TODO: understand why 10 threads is faster than 20
+    let num_threads = num_threads.unwrap_or(1); // TODO: if 1, no par_iter
+    let available_cpus = available_parallelism().unwrap().get();
+    assert!(num_threads > 0, "Can't run with 0 threads.");
+    assert!(
+        num_threads <= available_cpus,
+        "You asked for {num_threads} threads but only {available_cpus} threads are available.",
+    );
+    ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
 
-    for epoch in 1..=EPOCHS {
+    (0..EPOCHS).into_par_iter().for_each(|_| {
+        let mut rng = thread_rng();
         let old_player = Player::Bot {
             bot: idabp_new,
-            heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+            heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(*coeffs.lock().unwrap()) },
         };
 
-        let mut new_coeffs = coeffs;
+        let mut new_coeffs = *coeffs.lock().unwrap();
         for _ in 0..N_MUTATIONS {
             let i = rng.gen_range(0..N_COEFFS);
-            let div_value = (coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-            let mul_value = (coeffs[i] as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-            let min_range = min(coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value));
-            let max_range = max(coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value));
+            let div_value = (new_coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+            let mul_value = (new_coeffs[i] as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+            let min_range = min(new_coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value));
+            let max_range = max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value));
             new_coeffs[i] = rng.gen_range(min_range..=max_range);
         }
 
@@ -84,23 +99,36 @@ pub fn run() {
 
         let new_wins = play_two_games(old_player, new_player, &mut rng);
 
+        let mut stats = stats.lock().unwrap();
         if new_wins == 2 {
-            updates += 1;
-            println!("Updated! ({updates} updates in {epoch} epochs)");
-            coeffs = new_coeffs;
+            stats.0 += 1;
+            println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
+            *coeffs.lock().unwrap() = new_coeffs;
             match write_coeffs(&new_coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
+        stats.1 += 1;
+        let epoch = stats.1;
+        drop(stats);
 
         if epoch.is_multiple_of(100) {
             let genetic_player = Player::Bot {
                 bot: idabp_new,
-                heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+                heuristic: Heuristic {
+                    fun: coeff_heuristic,
+                    coeffs: Some(*coeffs.lock().unwrap()),
+                },
             };
             let (opponent, opponent_name) = if epoch.is_multiple_of(200) {
-                (initial_player, "initial")
+                (
+                    Player::Bot {
+                        bot: idabp_new,
+                        heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(initial_coeffs) },
+                    },
+                    "initial",
+                )
             } else {
                 (Player::NEW, "manual")
             };
@@ -109,9 +137,11 @@ pub fn run() {
                 let wins = play_two_games(opponent, genetic_player, &mut rng);
                 total_wins += wins;
             }
+            println!("{}", "=".repeat(80));
             println!("Current won {total_wins}/20 games against {opponent_name} bot");
+            println!("{}", "=".repeat(80));
         }
-    }
+    });
 }
 
 fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -> u8 {
