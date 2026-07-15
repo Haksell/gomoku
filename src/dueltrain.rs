@@ -88,6 +88,8 @@ pub fn run(num_threads: Option<usize>) {
                 continue;
             }
 
+            // TODO: precompute all 3 symmetries
+
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
             mutations.push((sym, new_coeff));
 
