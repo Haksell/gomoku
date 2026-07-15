@@ -62,10 +62,10 @@ pub fn run() {
             };
             let mut total_wins = 0;
             for _ in 0..10 {
-                let wins = play_two_games(Player::NEW, genetic_player, &mut rng);
+                let wins = play_two_games(initial_player, genetic_player, &mut rng);
                 total_wins += wins;
             }
-            println!("Current won {total_wins}/20 games against manual heuristic");
+            println!("Current won {total_wins}/20 games against initial bot");
         }
     }
 }
