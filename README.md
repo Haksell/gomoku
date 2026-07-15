@@ -4,7 +4,7 @@
 
 ### duels
 
-- fix the parallel updates
+- grid search for best parameters (7 mutations -> 2^7 games, then keep only mutations that won > ~70 games)
 - 3^6 -> 4^6
 
 ### misc
