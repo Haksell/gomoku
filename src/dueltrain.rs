@@ -4,7 +4,7 @@ use crate::{
     heuristics::{Heuristic, coeff_heuristic::coeff_heuristic},
     player::{Player, PlayerColor},
 };
-use nannou::rand::{Rng as _, thread_rng};
+use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
 use std::{
     fs::File,
     io::{self, Write as _},
@@ -24,7 +24,7 @@ pub fn run() {
     let mut goods = 0;
     let mut bads = 0;
 
-    for epoch in 0..EPOCHS {
+    for epoch in 1..=EPOCHS {
         let old_player = Player::Bot {
             bot: idabp_new,
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
@@ -41,18 +41,7 @@ pub fn run() {
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(new_coeffs) },
         };
 
-        let mut old_new = Game::new(old_player, new_player);
-        let random_moves = rng.gen_range(3..=4);
-        old_new.play_random_moves(random_moves, 5);
-
-        let mut new_old = old_new.clone();
-        (new_old.black_player, new_old.white_player) = (new_old.white_player, new_old.black_player);
-
-        old_new.play_game();
-        new_old.play_game();
-
-        let new_wins = matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u8
-            + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u8;
+        let new_wins = play_two_games(old_player, new_player, &mut rng);
 
         println!("{epoch}: {new_wins}");
 
@@ -82,7 +71,34 @@ pub fn run() {
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
+        if epoch.is_multiple_of(100) {
+            let genetic_player = Player::Bot {
+                bot: idabp_new,
+                heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+            };
+            let mut total_wins = 0;
+            for _ in 0..25 {
+                let wins = play_two_games(genetic_player, Player::NEW, &mut rng);
+                total_wins += wins;
+            }
+            println!("Genetic won {total_wins}/50 games against manual heuristic");
+        }
     }
+}
+
+fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -> u8 {
+    let mut old_new = Game::new(old_player, new_player);
+    let random_moves = rng.gen_range(3..=4);
+    old_new.play_random_moves(random_moves, 5);
+
+    let mut new_old = old_new.clone();
+    (new_old.black_player, new_old.white_player) = (new_old.white_player, new_old.black_player);
+
+    old_new.play_game();
+    new_old.play_game();
+
+    matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u8
+        + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u8
 }
 
 fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
