@@ -4,7 +4,7 @@
 
 ### duels
 
-- 6^3 -> 6^4
+- 3^6 -> 4^6
 - symetrize the patterns
 - white patterns = -black patterns
 - parallelize the training
@@ -72,7 +72,7 @@
 - [ ] Null Move Pruning
 - [ ] NegaScout
 - [ ] MTD(f)
-- [ ] SSS*
+- [ ] SSS\*
 - [ ] MCTS
 - [ ] MCTS solver for endgame (different concept than MCTS)
 - [ ] ƎUИИ
