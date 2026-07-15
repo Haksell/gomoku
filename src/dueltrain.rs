@@ -34,12 +34,13 @@ pub fn run() {
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
         };
 
-        let mut new_coeffs = coeffs;
+        let mut new_coeffs = coeffs.clone();
         for _ in 0..N_MUTATIONS {
             let i = rng.gen_range(0..N_COEFFS);
             let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
             new_coeffs[i] += mutation;
         }
+
         // TODO: optimize
         for i in 0..729 {
             let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
@@ -54,21 +55,21 @@ pub fn run() {
                 continue;
             }
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
-            new_coeffs[sym] = coeffs[i];
+            new_coeffs[sym] = new_coeffs[i];
             let opp = swap_12(x0)
                 + 3 * swap_12(x1)
                 + 9 * swap_12(x2)
                 + 27 * swap_12(x3)
                 + 81 * swap_12(x4)
                 + 243 * swap_12(x5);
-            new_coeffs[opp] = -coeffs[i];
+            new_coeffs[opp] = -new_coeffs[i];
             let sym_opp = swap_12(x5)
                 + 3 * swap_12(x4)
                 + 9 * swap_12(x3)
                 + 27 * swap_12(x2)
                 + 81 * swap_12(x1)
                 + 243 * swap_12(x0);
-            new_coeffs[sym_opp] = -coeffs[i];
+            new_coeffs[sym_opp] = -new_coeffs[i];
         }
 
         let new_player = Player::Bot {
@@ -81,8 +82,8 @@ pub fn run() {
         if new_wins == 2 {
             updates += 1;
             println!("Updated! ({updates} updates in {epoch} epochs)");
-            coeffs = new_coeffs;
-            match write_coeffs(&coeffs) {
+            coeffs = new_coeffs.clone();
+            match write_coeffs(&new_coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
