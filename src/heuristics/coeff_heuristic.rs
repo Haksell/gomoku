@@ -54,9 +54,10 @@ const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
     h_captures + h_threats + cross_terms
 }
 
-const fn stencil_index(mut stencil: i64) -> usize {
+fn stencil_index(mut stencil: i64) -> usize {
     let mut index = 0;
-    while stencil > 0 {
+    for _ in 0..6 {
+        index *= 3;
         index += ((stencil & 0b11) - 1) as usize;
         stencil >>= 2;
     }
@@ -90,7 +91,7 @@ fn evaluate_patterns(
 
         // TODO: 5 is STENCIL_LENGTH - 1
         if i >= 5 {
-            h += coeffs[stencil_index(stencil & 0b_11_11_11_11_11_11)];
+            h += coeffs[stencil_index(stencil)];
         }
     }
 

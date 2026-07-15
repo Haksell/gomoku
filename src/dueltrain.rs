@@ -14,15 +14,18 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
-const COUNT_MUTATIONS: usize = 64;
-const MAX_MUTATION: i64 = 64;
+const MAX_MUTATION: i64 = 16;
 
 pub fn run() {
     let mut rng = thread_rng();
     let mut coeffs = include!("../weights/duel.rs");
 
-    let mut goods = 0;
-    let mut bads = 0;
+    let mut updates = 0;
+
+    let initial_player = Player::Bot {
+        bot: idabp_new,
+        heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+    };
 
     for epoch in 1..=EPOCHS {
         let old_player = Player::Bot {
@@ -31,10 +34,10 @@ pub fn run() {
         };
 
         let mut new_coeffs = coeffs;
-        for _ in 0..COUNT_MUTATIONS {
-            let i = rng.gen_range(0..N_COEFFS);
+        for coeff in &mut new_coeffs {
+            // let i = rng.gen_range(0..N_COEFFS);
             let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
-            new_coeffs[i] += mutation;
+            *coeff += mutation;
         }
         let new_player = Player::Bot {
             bot: idabp_new,
@@ -43,34 +46,16 @@ pub fn run() {
 
         let new_wins = play_two_games(old_player, new_player, &mut rng);
 
-        println!("{epoch}: {new_wins}");
-
-        match new_wins {
-            0 => {
-                bads += 1;
-                println!("Bad! ({goods} goods, {bads} bads)");
-                let good_ratio = if goods >= bads { 1. } else { goods as f64 / bads as f64 };
-                coeffs = std::array::from_fn(|i| {
-                    let c = coeffs[i] as f64;
-                    let nc = new_coeffs[i] as f64;
-                    ((1. + good_ratio) * c - good_ratio * nc).round() as i64
-                });
-            }
-            1 => {}
-            2 => {
-                goods += 1;
-                println!("Good! ({goods} goods, {bads} bads)");
-                coeffs = new_coeffs;
-            }
-            _ => unreachable!(),
-        }
-
-        if new_wins != 1 {
+        if new_wins == 2 {
+            updates += 1;
+            println!("Updated! ({updates} updates in {epoch} epochs)");
+            coeffs = new_coeffs;
             match write_coeffs(&coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
+
         if epoch.is_multiple_of(100) {
             let genetic_player = Player::Bot {
                 bot: idabp_new,
@@ -78,10 +63,10 @@ pub fn run() {
             };
             let mut total_wins = 0;
             for _ in 0..25 {
-                let wins = play_two_games(genetic_player, Player::NEW, &mut rng);
+                let wins = play_two_games(initial_player, genetic_player, &mut rng);
                 total_wins += wins;
             }
-            println!("Genetic won {total_wins}/50 games against manual heuristic");
+            println!("Current won {total_wins}/50 games against initial");
         }
     }
 }
