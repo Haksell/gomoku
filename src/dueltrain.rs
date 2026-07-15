@@ -139,9 +139,8 @@ pub fn run(num_threads: Option<usize>) {
             }
             let coeffs_to_write = *coeffs_lock;
             drop(coeffs_lock);
-            match write_coeffs(&coeffs_to_write) {
-                Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
-                Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
+            if let Err(err) = write_coeffs(&coeffs_to_write) {
+                eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`");
             }
         }
 
