@@ -14,7 +14,7 @@ const ELITE_COUNT: usize = POP_SIZE / 10;
 const TEST_GAMES: usize = 8;
 const EPOCHS: usize = 25;
 const GENES_SIZE: usize = 729 + 9;
-const MUTATION_PROBABILITY: f64 = 0.05;
+const MUTATION_PROBABILITY: f64 = 0.03;
 const CROSSOVER_PROBABILITY: f64 = 0.3;
 
 #[derive(Clone)]
@@ -25,7 +25,7 @@ struct Genome {
 
 impl Genome {
     fn random(rng: &mut ThreadRng) -> Self {
-        Self { fitness: None, genes: array::from_fn(|_| rng.r#gen()) }
+        Self { fitness: None, genes: array::from_fn(|_| rng.gen_range(-2048..=2048)) }
     }
 
     fn as_player(&self) -> Player {
@@ -85,20 +85,32 @@ pub fn run() {
 
     for epoch in 0..EPOCHS {
         pop.par_iter_mut().progress().for_each(Genome::evaluate);
-        pop.sort_unstable_by_key(|player| player.fitness);
+        pop.sort_unstable_by_key(|player| player.fitness.unwrap());
 
         // update best
         let last = pop.last().expect("Expected player");
         if last.fitness > best_score {
             best_score = last.fitness;
+            if let Some(score) = best_score
+                && score > 3
+            {
+                println!("{:?}", last.genes.clone());
+            }
             best = Some(last.clone());
         }
-        println!("epoch {} best_score {}/{}", epoch, best_score.unwrap_or(0), TEST_GAMES);
+        println!(
+            "epoch {} best_score {}/{} total score {}/{}",
+            epoch,
+            best_score.unwrap_or(0),
+            TEST_GAMES,
+            pop.iter().map(|player| player.fitness.unwrap()).sum::<i64>(),
+            8 * POP_SIZE
+        );
 
         // crossover
         for i in 0..POP_SIZE - ELITE_COUNT {
-            let a = rng.gen_range(POP_SIZE - ELITE_COUNT..POP_SIZE);
-            let b = rng.gen_range(POP_SIZE - ELITE_COUNT..POP_SIZE);
+            let a = rng.gen_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
+            let b = rng.gen_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
 
             pop[i].fitness = None;
             for mi in 0..GENES_SIZE {
@@ -109,11 +121,12 @@ pub fn run() {
         }
 
         // mutate
-        for player in &mut pop {
+        for i in 0..POP_SIZE - ELITE_COUNT {
+            let player = &mut pop[i];
             let mut has_mutated = false;
-            for i in 0..GENES_SIZE {
+            for mi in 0..GENES_SIZE {
                 if rng.gen_bool(MUTATION_PROBABILITY) {
-                    player.genes[i] = rng.r#gen();
+                    player.genes[mi] += rng.gen_range(-64..=64);
                     has_mutated = true;
                 }
             }
