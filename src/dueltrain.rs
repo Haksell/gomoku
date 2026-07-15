@@ -23,7 +23,7 @@ const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
 const N_MUTATIONS: i64 = 8;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
-const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
+const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
@@ -106,14 +106,19 @@ pub fn run(num_threads: Option<usize>) {
         };
 
         let mut total_wins = 0;
-        for _ in 0..5 {
+        for _ in 0..6 {
             total_wins += play_two_games(old_player, new_player, &mut rng);
         }
 
         let mut stats = stats.lock().unwrap();
-        if total_wins >= 7 {
+        if total_wins >= 8 {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
+            if total_wins == 8 {
+                let previous_coeffs = *coeffs.lock().unwrap();
+                new_coeffs =
+                    std::array::from_fn(|i| i64::midpoint(previous_coeffs[i], new_coeffs[i]));
+            }
             *coeffs.lock().unwrap() = new_coeffs;
             match write_coeffs(&new_coeffs) {
                 Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
