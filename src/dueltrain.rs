@@ -76,5 +76,5 @@ pub fn run() {
 fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     use std::io::Write as _;
     let mut file = std::fs::File::create(COEFFS_FILE)?;
-    write!(file, "{coeffs:?}")
+    write!(file, "{coeffs:#?}")
 }
