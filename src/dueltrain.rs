@@ -23,7 +23,9 @@ const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
 const N_MUTATIONS: i64 = 8;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
-const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
+const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
+const MAX_COEFF_VALUE: i64 = 999_999;
+const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
 #[expect(clippy::too_many_lines)]
 pub fn run(num_threads: Option<usize>) {
@@ -56,8 +58,14 @@ pub fn run(num_threads: Option<usize>) {
             let i = rng.gen_range(0..N_COEFFS);
             let div_value = (new_coeffs[i] as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
             let mul_value = (new_coeffs[i] as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-            let min_range = min(new_coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value));
-            let max_range = max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value));
+            let min_range = max(
+                MIN_COEFF_VALUE,
+                min(new_coeffs[i] - MAX_ADDITIVE_MUTATION, min(div_value, mul_value)),
+            );
+            let max_range = min(
+                MAX_COEFF_VALUE,
+                max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)),
+            );
             new_coeffs[i] = rng.gen_range(min_range..=max_range);
         }
 
@@ -97,10 +105,13 @@ pub fn run(num_threads: Option<usize>) {
             heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(new_coeffs) },
         };
 
-        let new_wins = play_two_games(old_player, new_player, &mut rng);
+        let mut total_wins = 0;
+        for _ in 0..5 {
+            total_wins += play_two_games(old_player, new_player, &mut rng);
+        }
 
         let mut stats = stats.lock().unwrap();
-        if new_wins == 2 {
+        if total_wins >= 7 {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
             *coeffs.lock().unwrap() = new_coeffs;
