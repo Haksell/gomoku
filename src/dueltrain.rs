@@ -11,7 +11,7 @@ use nannou::rand::{Rng as _, thread_rng};
 const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
-const EPOCHS: usize = 1 << 16;
+const EPOCHS: usize = 1 << 20;
 const COUNT_MUTATIONS: usize = 64;
 const MAX_MUTATION: i64 = 64;
 
