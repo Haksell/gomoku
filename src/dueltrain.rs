@@ -1,5 +1,3 @@
-use std::io;
-
 use crate::{
     bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
@@ -7,6 +5,10 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, thread_rng};
+use std::{
+    fs::File,
+    io::{self, Write as _},
+};
 
 const COEFFS_FILE: &str = "./weights/duel.rs";
 
@@ -18,6 +20,9 @@ const MAX_MUTATION: i64 = 64;
 pub fn run() {
     let mut rng = thread_rng();
     let mut coeffs = include!("../weights/duel.rs");
+
+    let mut goods = 0;
+    let mut bads = 0;
 
     for epoch in 0..EPOCHS {
         let old_player = Player::Bot {
@@ -53,12 +58,19 @@ pub fn run() {
 
         match new_wins {
             0 => {
-                println!("Bad!");
-                coeffs = std::array::from_fn(|i| (3 * coeffs[i] - new_coeffs[i]) / 2);
+                bads += 1;
+                println!("Bad! ({goods} goods, {bads} bads)");
+                let good_ratio = if goods >= bads { 1. } else { goods as f64 / bads as f64 };
+                coeffs = std::array::from_fn(|i| {
+                    let c = coeffs[i] as f64;
+                    let nc = new_coeffs[i] as f64;
+                    ((1. + good_ratio) * c - good_ratio * nc).round() as i64
+                });
             }
             1 => {}
             2 => {
-                println!("Good!");
+                goods += 1;
+                println!("Good! ({goods} goods, {bads} bads)");
                 coeffs = new_coeffs;
             }
             _ => unreachable!(),
@@ -74,7 +86,25 @@ pub fn run() {
 }
 
 fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
-    use std::io::Write as _;
-    let mut file = std::fs::File::create(COEFFS_FILE)?;
-    write!(file, "{coeffs:#?}")
+    let mut file = File::create(COEFFS_FILE)?;
+    writeln!(file, "[")?;
+
+    for i in 0..729 {
+        let c = coeffs[i];
+        // TODO: check correct direction (might be symmetric)
+        let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
+        let num = format!("{c},");
+        writeln!(file, "    {num:7}// {pat}")?;
+    }
+
+    for (i, poly_coeff) in
+        ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
+    {
+        let c = coeffs[729 + i];
+        let num = format!("{c},");
+        writeln!(file, "    {num:7}// {poly_coeff}")?;
+    }
+
+    writeln!(file, "]")?;
+    Ok(())
 }
