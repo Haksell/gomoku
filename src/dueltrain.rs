@@ -4,125 +4,107 @@ use crate::{
     heuristics::{Heuristic, coeff_heuristic::coeff_heuristic},
     player::{Player, PlayerColor},
 };
-use indicatif::ParallelProgressIterator as _;
-use nannou::rand::{Rng as _, rngs::ThreadRng};
-use rayon::iter::{IntoParallelRefMutIterator as _, ParallelIterator as _};
-use std::array;
+use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
+use std::{
+    fs::File,
+    io::{self, Write as _},
+};
 
-const POP_SIZE: usize = 100;
-const ELITE_COUNT: usize = POP_SIZE / 10;
-const TEST_GAMES: usize = 8;
-const EPOCHS: usize = 1;
-const GENES_SIZE: usize = 729 + 9;
-const MUTATION_PROBABILITY: f64 = 0.05;
+const COEFFS_FILE: &str = "./weights/duel.rs";
 
-#[derive(Clone)]
-struct Genome {
-    fitness: Option<i64>,
-    genes: [i16; GENES_SIZE],
-}
-
-impl Genome {
-    fn random(rng: &mut ThreadRng) -> Self {
-        Self { fitness: None, genes: array::from_fn(|_| rng.r#gen()) }
-    }
-
-    fn as_player(&self) -> Player {
-        Player::Bot {
-            bot: idabp_new,
-            heuristic: Heuristic {
-                fun: coeff_heuristic,
-                coeffs: Some(self.genes.map(|x| x as i64)),
-            },
-        }
-    }
-
-    fn evaluate(&mut self) {
-        if self.fitness.is_some() {
-            return;
-        }
-
-        let mut score = 0;
-
-        for _ in 0..TEST_GAMES / 2 {
-            let mut game = Game::new(self.as_player(), Player::RANDOM);
-
-            let mut switched_game = game.clone();
-            (switched_game.black_player, switched_game.white_player) =
-                (switched_game.white_player, switched_game.black_player);
-
-            game.play_game();
-            switched_game.play_game();
-
-            let black_win = match game.state {
-                GameState::Playing(_) => unreachable!(),
-                GameState::Won(PlayerColor::Black, _) => true,
-                GameState::Draw | GameState::Won(PlayerColor::White, _) => false,
-            };
-            let white_win = match switched_game.state {
-                GameState::Playing(_) => unreachable!(),
-                GameState::Won(PlayerColor::White, _) => true,
-                GameState::Draw | GameState::Won(PlayerColor::Black, _) => false,
-            };
-
-            score += black_win as i64 + white_win as i64; // TODO guez
-        }
-
-        self.fitness = Some(score);
-    }
-}
+const N_COEFFS: usize = 729 + 9;
+const EPOCHS: usize = 1 << 20;
+const MAX_MUTATION: i64 = 16;
 
 pub fn run() {
-    let mut best = Option::<Genome>::None;
-    let mut best_score = Option::<i64>::None;
-    let mut rng = nannou::rand::thread_rng();
-    let mut pop: [Genome; POP_SIZE] = array::from_fn(|_| Genome::random(&mut rng));
+    let mut rng = thread_rng();
+    let mut coeffs = include!("../weights/duel.rs");
 
-    for epoch in 0..EPOCHS {
-        pop.par_iter_mut().progress_count(POP_SIZE as u64).for_each(Genome::evaluate);
-        pop.sort_unstable_by_key(|player| player.fitness);
+    let mut updates = 0;
 
-        // update best
-        let last = pop.last().expect("Expected player");
-        if last.fitness > best_score {
-            best_score = last.fitness;
-            best = Some(last.clone());
+    let initial_player = Player::Bot {
+        bot: idabp_new,
+        heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+    };
+
+    for epoch in 1..=EPOCHS {
+        let old_player = Player::Bot {
+            bot: idabp_new,
+            heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+        };
+
+        let mut new_coeffs = coeffs;
+        for coeff in &mut new_coeffs {
+            let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
+            *coeff += mutation;
         }
-        println!("epoch {} best_score {}/{}", epoch, best_score.unwrap_or(0), TEST_GAMES);
+        let new_player = Player::Bot {
+            bot: idabp_new,
+            heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(new_coeffs) },
+        };
 
-        // crossover
-        for i in ELITE_COUNT..POP_SIZE {
-            let a = rng.gen_range(0..ELITE_COUNT);
-            let b = rng.gen_range(0..ELITE_COUNT);
+        let new_wins = play_two_games(old_player, new_player, &mut rng);
 
-            let crossover_point = rng.gen_range(0..GENES_SIZE);
-            pop[i].fitness = None;
-            for mi in 0..GENES_SIZE {
-                if mi <= crossover_point {
-                    pop[i].genes[mi] = pop[a].genes[mi];
-                } else {
-                    pop[i].genes[mi] = pop[b].genes[mi];
-                }
+        if new_wins == 2 {
+            updates += 1;
+            println!("Updated! ({updates} updates in {epoch} epochs)");
+            coeffs = new_coeffs;
+            match write_coeffs(&coeffs) {
+                Ok(()) => println!("coeffs written to file {COEFFS_FILE}"),
+                Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
 
-        // mutate
-        for player in &mut pop {
-            let mut has_mutated = false;
-            for i in 0..GENES_SIZE {
-                if rng.gen_bool(MUTATION_PROBABILITY) {
-                    player.genes[i] = rng.r#gen();
-                    has_mutated = true;
-                }
+        if epoch.is_multiple_of(100) {
+            let genetic_player = Player::Bot {
+                bot: idabp_new,
+                heuristic: Heuristic { fun: coeff_heuristic, coeffs: Some(coeffs) },
+            };
+            let mut total_wins = 0;
+            for _ in 0..10 {
+                let wins = play_two_games(Player::NEW, genetic_player, &mut rng);
+                total_wins += wins;
             }
-            if has_mutated {
-                player.fitness = None;
-            }
+            println!("Current won {total_wins}/20 games against manual heuristic");
         }
     }
+}
 
-    match &best {
-        Some(best) => println!("Best individual parameters: {:?}", best.genes),
-        None => eprintln!("No best individual :c"),
+fn play_two_games(old_player: Player, new_player: Player, rng: &mut ThreadRng) -> u8 {
+    let mut old_new = Game::new(old_player, new_player);
+    let random_moves = rng.gen_range(3..=4);
+    old_new.play_random_moves(random_moves, 5);
+
+    let mut new_old = old_new.clone();
+    (new_old.black_player, new_old.white_player) = (new_old.white_player, new_old.black_player);
+
+    old_new.play_game();
+    new_old.play_game();
+
+    matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u8
+        + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u8
+}
+
+fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
+    let mut file = File::create(COEFFS_FILE)?;
+    writeln!(file, "[")?;
+
+    for i in 0..729 {
+        let c = coeffs[i];
+        // TODO: check correct direction (might be symmetric)
+        let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
+        let num = format!("{c},");
+        writeln!(file, "    {num:7}// {pat}")?;
     }
+
+    for (i, poly_coeff) in
+        ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
+    {
+        let c = coeffs[729 + i];
+        let num = format!("{c},");
+        writeln!(file, "    {num:7}// {poly_coeff}")?;
+    }
+
+    writeln!(file, "]")?;
+    Ok(())
 }

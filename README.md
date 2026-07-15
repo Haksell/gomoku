@@ -2,6 +2,13 @@
 
 ## todo
 
+### duels
+
+- 6^3 -> 6^4
+- symetrize the patterns
+- white patterns = -black patterns
+- parallelize the training
+
 ### misc
 
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)

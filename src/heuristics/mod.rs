@@ -18,6 +18,10 @@ pub type Coeffs = [i64; 729 + 9];
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
+        "duelistic" => Ok(Heuristic {
+            fun: coeff_heuristic::coeff_heuristic,
+            coeffs: Some(include!("../../weights/duel.rs")),
+        }),
         "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
         "new" => Ok(Heuristic { fun: new::new, coeffs: None }),
         "old" => Ok(Heuristic { fun: old::old, coeffs: None }),
