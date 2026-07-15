@@ -21,7 +21,7 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
 const EPOCHS: usize = 1 << 20;
-const N_MUTATIONS: i64 = 16;
+const N_MUTATIONS: i64 = 8;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
 
