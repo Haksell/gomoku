@@ -20,7 +20,7 @@ use std::{
 const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_COEFFS: usize = 729 + 9;
-const EPOCHS: usize = 1 << 20;
+const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 4;
 const MAX_ADDITIVE_MUTATION: i64 = 8;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.1;
@@ -67,7 +67,10 @@ pub fn run(num_threads: Option<usize>) {
                 max(new_coeffs[i] + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)),
             );
 
-            let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
+            new_coeffs[i] = rng.gen_range(min_range..=max_range);
+            if i >= 729 {
+                continue;
+            }
 
             let x0 = i % 3;
             let x1 = i / 3 % 3;
@@ -76,12 +79,12 @@ pub fn run(num_threads: Option<usize>) {
             let x4 = i / 81 % 3;
             let x5 = i / 243 % 3;
 
+            let swap_12 = |x| if x == 0 { 0 } else { 3 - x };
+
             if x0 == swap_12(x5) && x1 == swap_12(x4) && x2 == swap_12(x3) {
                 new_coeffs[i] = 0;
                 continue;
             }
-
-            new_coeffs[i] = rng.gen_range(min_range..=max_range);
 
             let sym = x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0;
             new_coeffs[sym] = new_coeffs[i];
@@ -113,11 +116,11 @@ pub fn run(num_threads: Option<usize>) {
         }
 
         let mut stats = stats.lock().unwrap();
+        stats.1 += 1;
         if total_wins >= 9 {
             stats.0 += 1;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
         }
-        stats.1 += 1;
         let epoch = stats.1;
         drop(stats);
 
