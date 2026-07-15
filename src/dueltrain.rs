@@ -35,7 +35,6 @@ pub fn run() {
 
         let mut new_coeffs = coeffs;
         for coeff in &mut new_coeffs {
-            // let i = rng.gen_range(0..N_COEFFS);
             let mutation = rng.gen_range(-MAX_MUTATION..=MAX_MUTATION);
             *coeff += mutation;
         }
