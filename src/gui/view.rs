@@ -22,7 +22,7 @@ use nannou::{
     noise::{NoiseFn as _, OpenSimplex, Seedable as _},
     rand::random,
 };
-use std::{f32::consts::TAU, sync::LazyLock, time::SystemTime};
+use std::{f32::consts::TAU, sync::LazyLock, time::Instant};
 
 const NO_SCREEN_SHAKE: ScreenPosition = (0., 0.);
 
@@ -71,7 +71,7 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 }
 
 fn compute_screen_shake(
-    finished_time: Option<SystemTime>,
+    finished_time: Option<Instant>,
     (board_x, board_y): Position,
 ) -> ScreenPosition {
     /// Shamelessly stolen from <https://easings.net/#easeOutBounce>.
@@ -101,7 +101,7 @@ fn compute_screen_shake(
         return NO_SCREEN_SHAKE;
     };
 
-    let elapsed = finished_time.elapsed().unwrap().as_secs_f32().min(SCREEN_SHAKE_DURATION);
+    let elapsed = finished_time.elapsed().as_secs_f32().min(SCREEN_SHAKE_DURATION);
     let noise = NOISE.get([board_x as f64, board_y as f64, elapsed as f64]) as f32;
 
     let factor = (1. - (elapsed / SCREEN_SHAKE_DURATION)).powf(EASING_EXPONENT);
@@ -279,7 +279,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 fn draw_game_over_overlay(
     draw: &Draw,
     winner: Option<PlayerColor>,
-    finished_time: Option<SystemTime>,
+    finished_time: Option<Instant>,
 ) {
     let msg = match winner {
         None => "Draw",
