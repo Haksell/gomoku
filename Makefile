@@ -43,4 +43,4 @@ setup_git_hooks:
 # TODO: with rayon
 flamegraph:
 	@CARGO_PROFILE_RELEASE_DEBUG=true RUSTFLAGS="-Clink-arg=-Wl,--no-rosegment" \
-		cargo flamegraph -- coeffistic coeffistic -g 12
+		cargo flamegraph -- coeffistic coeffistic -g 20
