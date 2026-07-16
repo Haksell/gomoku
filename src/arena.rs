@@ -60,7 +60,7 @@ pub fn run(args: &Args) {
     // TODO: rehandle draws
     ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
     (1..=args.num_games / 2).into_par_iter().for_each(|i| {
-        let mut game = Game::new(args.black_player, args.white_player);
+        let mut game = Game::new(&args.black_player, &args.white_player);
         let random_moves = 3 + (i & 1) as u32;
         // TODO: clap args to configure random board (number and distance to center)
         game.play_random_moves(random_moves, 5);

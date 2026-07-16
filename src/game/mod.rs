@@ -38,7 +38,7 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(black_player: Player, white_player: Player) -> Self {
+    pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
@@ -46,8 +46,8 @@ impl Game {
             current_color: PlayerColor::Black,
             black_captures: 0,
             white_captures: 0,
-            black_player,
-            white_player,
+            black_player: black_player.clone(),
+            white_player: white_player.clone(),
             ply: 0,
             moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
             captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
@@ -235,7 +235,7 @@ mod tests {
     #[test]
     fn test_undo_last_move() {
         for _ in 0..10 {
-            let mut game = Game::new(Player::RANDOM, Player::RANDOM);
+            let mut game = Game::new(&Player::RANDOM, &Player::RANDOM);
             let mut game_states = Vec::new();
 
             while game.state.is_playing() {

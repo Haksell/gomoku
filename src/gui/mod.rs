@@ -39,7 +39,7 @@ struct Model {
 }
 
 impl Model {
-    fn new(black_player: Player, white_player: Player) -> Self {
+    fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             game: Game::new(black_player, white_player),
             hover: None,
@@ -62,7 +62,7 @@ fn app(app: &App) -> Model {
         .build()
         .unwrap();
     init_textures(app);
-    Model::new(args.black_player, args.white_player)
+    Model::new(&args.black_player, &args.white_player)
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {

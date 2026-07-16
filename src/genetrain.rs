@@ -47,7 +47,7 @@ impl Genome {
         let player = self.as_player();
 
         for i in 0..TEST_GAMES / 2 {
-            let mut game = Game::new(player, Player::NEW);
+            let mut game = Game::new(&player, &Player::NEW);
 
             let random_moves = 3 + (i & 1) as u32;
             game.play_random_moves(random_moves, 5);
@@ -121,6 +121,7 @@ pub fn run() {
         }
 
         // mutate
+        #[expect(clippy::needless_range_loop)]
         for i in 0..POP_SIZE - ELITE_COUNT {
             let player = &mut pop[i];
             let mut has_mutated = false;

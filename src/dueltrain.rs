@@ -184,7 +184,7 @@ fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut 
 }
 
 fn play_pair(old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
-    let mut old_new = Game::new(*old_player, *new_player);
+    let mut old_new = Game::new(old_player, new_player);
     let random_moves = rng.gen_range(3..=4);
     old_new.play_random_moves(random_moves, 5);
 

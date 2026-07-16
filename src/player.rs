@@ -7,7 +7,8 @@ use crate::{
 use itertools::Itertools as _;
 use std::{ops::Not, ptr::fn_addr_eq};
 
-#[derive(Debug, Clone, Copy)]
+#[expect(clippy::large_enum_variant)] // FIXME
+#[derive(Debug, Clone)]
 pub enum Player {
     Human,
     Bot { bot: Bot, heuristic: Heuristic },
