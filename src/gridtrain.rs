@@ -4,6 +4,7 @@ use crate::{
     heuristics::{Heuristic, duelistic::duelistic},
     player::{Player, PlayerColor},
 };
+use itertools::Itertools as _;
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
 use rayon::{
     ThreadPoolBuilder,
@@ -71,14 +72,19 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 
 const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
-const EPOCHS: usize = 100_000;
-const N_MUTATIONS: i64 = 1; // TODO: 5
-// const REQUIRED_WINS: u32 = 20; // must stay > 2**(N_MUTATIONS-1)
-const MAX_ADDITIVE_MUTATION: i64 = 16;
+
+const N_MUTATIONS: usize = 4;
+const REQUIRED_WINS: u32 = 11; // must stay > 2**(N_MUTATIONS-1)
+
+const MAX_ADDITIVE_MUTATION: i64 = 32;
+// bias towards values closer to 0
+const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.75;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
+
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
+#[expect(clippy::too_many_lines)]
 pub fn run(num_threads: Option<usize>) {
     let initial_coeffs = include!("../weights/duel.rs");
 
@@ -97,61 +103,95 @@ pub fn run(num_threads: Option<usize>) {
     );
     ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
 
-    (0..EPOCHS).into_par_iter().for_each(|_| {
-        let mut rng = thread_rng();
-        let old_player = Player::Bot {
+    // TODO: find a cleaner infinite loop
+    (0..usize::MAX).into_par_iter().for_each(|_| {
+        let prev_coeffs = *coeffs.lock().unwrap();
+        let prev_player = Player::Bot {
             bot: idabp,
             heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
         };
 
-        let mut new_coeffs = *coeffs.lock().unwrap();
-        let mut mutations = vec![];
-        for _ in 0..N_MUTATIONS {
+        let mut rng = thread_rng();
+
+        let mut mutations = [(usize::MAX, 0); N_MUTATIONS];
+        let mut n_mutations = 0;
+        while n_mutations < N_MUTATIONS {
             if rng.gen_ratio(1, 8) {
-                let i = rng.gen_range(N_STENCIL_COEFFS..N_COEFFS);
-                let new_coeff = random_coeff(&mut rng, new_coeffs[i]).max(0);
-                mutations.push((i, new_coeff));
+                let coeff_idx = rng.gen_range(N_STENCIL_COEFFS..N_COEFFS);
+                if mutations.iter().any(|(j, _)| coeff_idx == *j) {
+                    continue;
+                }
+                let new_coeff = random_coeff(&mut rng, prev_coeffs[coeff_idx]).max(0);
+                mutations[n_mutations] = (coeff_idx, new_coeff);
+                n_mutations += 1;
                 continue;
             }
 
             let i = rng.gen_range(0..STENCIL_INDICES.len());
-            let stencil_idx = STENCIL_INDICES[i];
-            let stencil_idx_sym = STENCIL_INDICES_SYM[i];
-            let stencil_idx_opp = STENCIL_INDICES_OPP[i];
-            let stencil_idx_sym_opp = STENCIL_INDICES_SYM_OPP[i];
-            let new_coeff = random_coeff(&mut rng, new_coeffs[stencil_idx]);
+            if mutations.iter().any(|(j, _)| i == *j) {
+                continue;
+            }
 
-            mutations.push((stencil_idx, new_coeff));
-            mutations.push((stencil_idx_sym, new_coeff));
-            mutations.push((stencil_idx_opp, -new_coeff));
-            mutations.push((stencil_idx_sym_opp, -new_coeff));
+            let new_coeff = random_coeff(&mut rng, prev_coeffs[STENCIL_INDICES[i]]);
+            mutations[n_mutations] = (i, new_coeff);
+            n_mutations += 1;
         }
 
-        for &(i, mutation) in &mutations {
-            new_coeffs[i] = mutation;
+        let mut total_wins = [0; N_MUTATIONS];
+        for mutated_indices in (0..N_MUTATIONS).powerset() {
+            if mutated_indices.is_empty() {
+                continue;
+            }
+
+            let mut new_coeffs = prev_coeffs;
+            for i in &mutated_indices {
+                let (coeff_idx, new_value) = mutations[*i];
+                if coeff_idx >= N_STENCIL_COEFFS {
+                    new_coeffs[coeff_idx] = new_value;
+                } else {
+                    new_coeffs[STENCIL_INDICES[coeff_idx]] = new_value;
+                    new_coeffs[STENCIL_INDICES_SYM[coeff_idx]] = new_value;
+                    new_coeffs[STENCIL_INDICES_OPP[coeff_idx]] = -new_value;
+                    new_coeffs[STENCIL_INDICES_SYM_OPP[coeff_idx]] = -new_value;
+                }
+            }
+
+            let new_player = Player::Bot {
+                bot: idabp,
+                heuristic: Heuristic { fun: duelistic, coeffs: Some(new_coeffs) },
+            };
+            let wins = play_pair(&prev_player, &new_player, &mut rng);
+            for i in &mutated_indices {
+                total_wins[*i] += wins;
+            }
         }
 
-        let new_player = Player::Bot {
-            bot: idabp,
-            heuristic: Heuristic { fun: duelistic, coeffs: Some(new_coeffs) },
-        };
-
-        let total_wins = play_pairs(6, &old_player, &new_player, &mut rng);
-        let should_update = total_wins >= 9;
+        let new_updates = total_wins.iter().filter(|w| **w >= REQUIRED_WINS).count() as u32;
 
         let mut stats = stats.lock().unwrap();
         stats.1 += 1;
-        if should_update {
-            stats.0 += 1;
+        if new_updates > 0 {
+            stats.0 += new_updates;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
         }
         let epoch = stats.1;
         drop(stats);
 
-        if should_update {
+        if new_updates > 0 {
             let mut coeffs_lock = coeffs.lock().unwrap();
-            for &(i, mutation) in &mutations {
-                coeffs_lock[i] = mutation;
+            for i in 0..N_MUTATIONS {
+                if total_wins[i] < REQUIRED_WINS {
+                    continue;
+                }
+                let (coeff_idx, new_value) = mutations[i];
+                if coeff_idx >= N_STENCIL_COEFFS {
+                    coeffs_lock[coeff_idx] = new_value;
+                } else {
+                    coeffs_lock[STENCIL_INDICES[coeff_idx]] = new_value;
+                    coeffs_lock[STENCIL_INDICES_SYM[coeff_idx]] = new_value;
+                    coeffs_lock[STENCIL_INDICES_OPP[coeff_idx]] = -new_value;
+                    coeffs_lock[STENCIL_INDICES_SYM_OPP[coeff_idx]] = -new_value;
+                }
             }
             let coeffs_to_write = *coeffs_lock;
             drop(coeffs_lock);
@@ -160,7 +200,7 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        if epoch.is_multiple_of(500) {
+        if epoch.is_multiple_of(100) {
             let best_player = Player::Bot {
                 bot: idabp,
                 heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
@@ -169,7 +209,7 @@ pub fn run(num_threads: Option<usize>) {
                 bot: idabp,
                 heuristic: Heuristic { fun: duelistic, coeffs: Some(initial_coeffs) },
             };
-            let pairs = 25;
+            let pairs = 50;
             let total_games = 2 * pairs;
             let wins_against_initial = play_pairs(pairs, &initial_player, &best_player, &mut rng);
             let wins_against_manual = play_pairs(pairs, &Player::MANUAL, &best_player, &mut rng);
@@ -183,12 +223,12 @@ pub fn run(num_threads: Option<usize>) {
 }
 
 fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
-    let div_value = (old_coeff as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
-    let mul_value = (old_coeff as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
+    let min_mul = (old_coeff as f64 * MIN_MULTIPLICATIVE_MUTATION).round() as i64;
+    let max_mul = (old_coeff as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
     let min_range =
-        max(MIN_COEFF_VALUE, min(old_coeff - MAX_ADDITIVE_MUTATION, min(div_value, mul_value)));
+        max(MIN_COEFF_VALUE, min(old_coeff - MAX_ADDITIVE_MUTATION, min(min_mul, max_mul)));
     let max_range =
-        min(MAX_COEFF_VALUE, max(old_coeff + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)));
+        min(MAX_COEFF_VALUE, max(old_coeff + MAX_ADDITIVE_MUTATION, max(min_mul, max_mul)));
 
     // trick to avoid returning old_coeff
     let new_coeff = rng.gen_range(min_range..max_range);
