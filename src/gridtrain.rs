@@ -206,7 +206,7 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        if epoch.is_multiple_of(200) {
+        if epoch.is_multiple_of(100) {
             let best_player = Player::Bot {
                 bot: idabp,
                 heuristic: Heuristic {
