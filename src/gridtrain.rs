@@ -285,3 +285,19 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     let mut file = File::create(COEFFS_FILE)?;
     file.write_all(buf.buffer())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn multiplicative_bias_towards_zero() {
+        assert!(MIN_MULTIPLICATIVE_MUTATION > 0.);
+        assert!(MIN_MULTIPLICATIVE_MUTATION < 1.);
+        assert!(MAX_MULTIPLICATIVE_MUTATION > 1.);
+        assert!(MAX_MULTIPLICATIVE_MUTATION < 2.);
+        let mean = f64::midpoint(MIN_MULTIPLICATIVE_MUTATION, MAX_MULTIPLICATIVE_MUTATION);
+        assert!(mean > 0.95);
+        assert!(mean < 1.00);
+    }
+}
