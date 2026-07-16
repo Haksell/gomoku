@@ -110,7 +110,7 @@ pub fn run(num_threads: Option<usize>) {
     ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
 
     // TODO: find a cleaner infinite loop
-    (0..100).into_par_iter().for_each(|_| {
+    (0..usize::MAX).into_par_iter().for_each(|_| {
         let prev_coeffs = best_coeffs.lock().unwrap().clone();
         let prev_player = Player::Bot {
             bot: idabp,
@@ -206,7 +206,7 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(200) {
             let best_player = Player::Bot {
                 bot: idabp,
                 heuristic: Heuristic {
