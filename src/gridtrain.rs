@@ -74,7 +74,7 @@ const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 
 const N_MUTATIONS: usize = 4;
-const REQUIRED_WINS: u32 = 11; // must stay > 2**(N_MUTATIONS-1)
+const REQUIRED_WINS: u32 = 11;
 
 const MAX_ADDITIVE_MUTATION: i64 = 32;
 // bias towards values closer to 0
@@ -289,6 +289,12 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn required_wins() {
+        assert!(REQUIRED_WINS > 2u32.pow(N_MUTATIONS as u32 - 1));
+        assert!(REQUIRED_WINS <= 2u32.pow(N_MUTATIONS as u32));
+    }
 
     #[test]
     fn multiplicative_bias_towards_zero() {
