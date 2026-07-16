@@ -1,48 +1,32 @@
+STENCIL_SIZE = 7
+
+
+def sym(n):
+    return sum(n // 3**i % 3 * 3 ** (STENCIL_SIZE - i - 1) for i in range(STENCIL_SIZE))
+
+
 def swap_12(n):
     return 0 if n == 0 else 3 - n
 
 
-def trits(n):
-    return (
-        n % 3,
-        n // 3 % 3,
-        n // 9 % 3,
-        n // 27 % 3,
-        n // 81 % 3,
-        n // 243 % 3,
-    )
-
-
-def sym(n):
-    x0, x1, x2, x3, x4, x5 = trits(n)
-    return x5 + 3 * x4 + 9 * x3 + 27 * x2 + 81 * x1 + 243 * x0
-
-
 def opp(n):
-    x0, x1, x2, x3, x4, x5 = trits(n)
-    return (
-        swap_12(x0)
-        + 3 * swap_12(x1)
-        + 9 * swap_12(x2)
-        + 27 * swap_12(x3)
-        + 81 * swap_12(x4)
-        + 243 * swap_12(x5)
-    )
+    return sum(swap_12(n // 3**i % 3) * 3**i for i in range(STENCIL_SIZE))
 
 
 def sym_opp(n):
     return sym(opp(n))
 
 
-indices = set()
+indices = sorted(
+    {
+        min(n, sym(n), opp(n), sym_opp(n))
+        for n in range(3**STENCIL_SIZE)
+        if n != sym_opp(n)
+    }
+)
 
-for n in range(729):
-    if n != sym_opp(n):
-        indices.add(min(n, sym(n), opp(n), sym_opp(n)))
-
-indices = sorted(indices)
-print(len(indices))
-print(indices)
-print(list(map(sym, indices)))
-print(list(map(opp, indices)))
-print(list(map(sym_opp, indices)))
+n = len(indices)
+print(f"const STENCIL_INDICES: [usize; {n}] = {indices};")
+print(f"const STENCIL_INDICES_SYM: [usize; {n}] = {list(map(sym, indices))};")
+print(f"const STENCIL_INDICES_OPP: [usize; {n}] = {list(map(opp, indices))};")
+print(f"const STENCIL_INDICES_SYM_OPP: [usize; {n}] = {list(map(sym_opp, indices))};")

@@ -3,7 +3,9 @@ use crate::{
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
-        coeffistic::{N_COEFFS, N_STENCIL_COEFFS, STENCIL_SIZE, coeffistic},
+        coeffistic::{
+            COEFFS_FILE, INITIAL_COEFFS, N_COEFFS, N_STENCIL_COEFFS, coeffistic, write_coeffs,
+        },
     },
     player::{Player, PlayerColor},
 };
@@ -14,8 +16,6 @@ use rayon::{
 };
 use std::{
     cmp::{max, min},
-    fs::File,
-    io::{self, BufWriter, Write as _},
     sync::{Arc, Mutex},
     thread::available_parallelism,
 };
@@ -70,8 +70,6 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
     449, 611, 572, 464, 626, 437, 599, 482, 644, 617, 608,
 ];
 
-const COEFFS_FILE: &str = "./coeffs/current.rs";
-
 const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 1;
 const MAX_ADDITIVE_MUTATION: i64 = 16;
@@ -80,9 +78,7 @@ const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
 pub fn run(num_threads: Option<usize>) {
-    let initial_coeffs = include!("../coeffs/current.rs");
-
-    let coeffs = Arc::new(Mutex::new(initial_coeffs));
+    let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));
 
     // TODO: if 1 thread, no parallelism
@@ -101,10 +97,13 @@ pub fn run(num_threads: Option<usize>) {
         let mut rng = thread_rng();
         let old_player = Player::Bot {
             bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(*coeffs.lock().unwrap()) },
+            heuristic: Heuristic {
+                fun: coeffistic,
+                coeffs: Some(best_coeffs.lock().unwrap().clone()),
+            },
         };
 
-        let mut new_coeffs = *coeffs.lock().unwrap();
+        let mut new_coeffs = best_coeffs.lock().unwrap().clone();
         let mut mutations = vec![];
         for _ in 0..N_MUTATIONS {
             if rng.gen_ratio(1, 8) {
@@ -149,11 +148,11 @@ pub fn run(num_threads: Option<usize>) {
         drop(stats);
 
         if should_update {
-            let mut coeffs_lock = coeffs.lock().unwrap();
+            let mut coeffs_lock = best_coeffs.lock().unwrap();
             for &(i, mutation) in &mutations {
                 coeffs_lock[i] = mutation;
             }
-            let coeffs_to_write = *coeffs_lock;
+            let coeffs_to_write = coeffs_lock.clone();
             drop(coeffs_lock);
             if let Err(err) = write_coeffs(&coeffs_to_write) {
                 eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`");
@@ -163,11 +162,14 @@ pub fn run(num_threads: Option<usize>) {
         if epoch.is_multiple_of(500) {
             let best_player = Player::Bot {
                 bot: idabp,
-                heuristic: Heuristic { fun: coeffistic, coeffs: Some(*coeffs.lock().unwrap()) },
+                heuristic: Heuristic {
+                    fun: coeffistic,
+                    coeffs: Some(best_coeffs.lock().unwrap().clone()),
+                },
             };
             let initial_player = Player::Bot {
                 bot: idabp,
-                heuristic: Heuristic { fun: coeffistic, coeffs: Some(initial_coeffs) },
+                heuristic: Heuristic { fun: coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) },
             };
             let pairs = 25;
             let total_games = 2 * pairs;
@@ -212,31 +214,4 @@ fn play_pair(old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u
 
     matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u32
         + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u32
-}
-
-fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
-    let mut buf = BufWriter::with_capacity(1 << 15, Vec::new());
-    writeln!(buf, "[")?;
-
-    for i in 0..N_STENCIL_COEFFS {
-        let c = coeffs[i];
-        // TODO: check correct direction (might be symmetric)
-        let pat: String =
-            (0..STENCIL_SIZE).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j as u32) % 3]).collect();
-        let num = format!("{c},");
-        writeln!(buf, "    {num:7}// {pat}")?;
-    }
-
-    for (i, poly_coeff) in
-        ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
-    {
-        let c = coeffs[N_STENCIL_COEFFS + i];
-        let num = format!("{c},");
-        writeln!(buf, "    {num:7}// {poly_coeff}")?;
-    }
-
-    writeln!(buf, "]")?;
-
-    let mut file = File::create(COEFFS_FILE)?;
-    file.write_all(buf.buffer())
 }

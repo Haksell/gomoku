@@ -4,6 +4,7 @@
 
 ### misc
 
+- boxed slices for big arrays (coeffs)
 - grid search for best parameters (5 mutations -> 2^5 games, then keep only mutations that won >= 20 games)
 - 3^6 -> 4^6
 - `mod bots` -> `mod search`

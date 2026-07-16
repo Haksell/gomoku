@@ -7,21 +7,28 @@ use crate::{game::Game, heuristics::coeffistic::Coeffs};
 
 /// A [`Heuristic`] returns a positive value if black has a good position,
 /// and a negative value otherwise.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Heuristic {
     pub fun: fn(&Game, Option<&Coeffs>) -> i64,
     pub coeffs: Option<Coeffs>,
 }
 
+impl Heuristic {
+    pub const ZERO: Self = Self { fun: zero::zero, coeffs: None };
+    pub const CAPTUROPHILE: Self = Self { fun: capturophile::capturophile, coeffs: None };
+    pub const MANUAL: Self = Self { fun: manual::manual, coeffs: None };
+
+    pub fn coeffistic() -> Self {
+        Self { fun: coeffistic::coeffistic, coeffs: Some(include!("../../coeffs/current.rs")) }
+    }
+}
+
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
-        "zero" => Ok(Heuristic { fun: zero::zero, coeffs: None }),
-        "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
-        "manual" => Ok(Heuristic { fun: manual::manual, coeffs: None }),
-        "coeffistic" => Ok(Heuristic {
-            fun: coeffistic::coeffistic,
-            coeffs: Some(include!("../../coeffs/current.rs")),
-        }),
+        "zero" => Ok(Heuristic::ZERO),
+        "capturophile" => Ok(Heuristic::CAPTUROPHILE),
+        "manual" => Ok(Heuristic::MANUAL),
+        "coeffistic" => Ok(Heuristic::coeffistic()),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }

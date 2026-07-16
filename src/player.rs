@@ -1,11 +1,10 @@
 use crate::{
     bots::{Bot, idabp::idabp, parse_bot, random_mover::random_mover},
-    heuristics::{Heuristic, coeffistic::coeffistic, manual::manual, parse_heuristic, zero::zero},
+    heuristics::{Heuristic, parse_heuristic},
 };
 use itertools::Itertools as _;
 use std::{ops::Not, ptr::fn_addr_eq};
 
-#[expect(clippy::large_enum_variant)] // FIXME
 #[derive(Debug, Clone)]
 pub enum Player {
     Human,
@@ -13,14 +12,12 @@ pub enum Player {
 }
 
 impl Player {
-    pub const RANDOM: Self =
-        Self::Bot { bot: random_mover, heuristic: Heuristic { fun: zero, coeffs: None } };
-    pub const MANUAL: Self =
-        Self::Bot { bot: idabp, heuristic: Heuristic { fun: manual, coeffs: None } };
-    pub const DUELISTIC: Self = Self::Bot {
-        bot: idabp,
-        heuristic: Heuristic { fun: coeffistic, coeffs: Some(include!("../coeffs/current.rs")) },
-    };
+    pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: Heuristic::ZERO };
+    pub const MANUAL: Self = Self::Bot { bot: idabp, heuristic: Heuristic::MANUAL };
+
+    fn coeffistic() -> Self {
+        Self::Bot { bot: idabp, heuristic: Heuristic::coeffistic() }
+    }
 
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
@@ -60,7 +57,7 @@ impl From<&str> for Player {
             "human" => Self::Human,
             "random" => Self::RANDOM,
             "manual" => Self::MANUAL,
-            "coeffistic" => Self::DUELISTIC,
+            "coeffistic" => Self::coeffistic(),
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

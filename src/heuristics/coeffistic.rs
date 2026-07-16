@@ -1,3 +1,9 @@
+use std::{
+    fs::File,
+    io::{self, Write as _},
+    sync::LazyLock,
+};
+
 use crate::{
     game::{
         Game,
@@ -8,10 +14,11 @@ use crate::{
 };
 
 pub const COEFFS_FILE: &str = "./coeffs/current.rs";
-pub const STENCIL_SIZE: usize = 6;
+pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| include!("../../coeffs/current.rs"));
+pub const STENCIL_SIZE: usize = 7;
 pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
-pub type Coeffs = [i64; N_COEFFS];
+pub type Coeffs = Box<[i64]>;
 
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut h = 0;
@@ -98,4 +105,32 @@ fn evaluate_patterns(
     }
 
     h
+}
+
+pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
+    // TODO: compute correct size from STENCIL_SIZE
+    let mut buf = io::BufWriter::with_capacity(1 << 17, Vec::new());
+    writeln!(buf, "vec![")?;
+
+    for i in 0..N_STENCIL_COEFFS {
+        let c = coeffs[i];
+        // TODO: check correct direction (might be symmetric)
+        let pat: String =
+            (0..STENCIL_SIZE).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j as u32) % 3]).collect();
+        let num = format!("{c},");
+        writeln!(buf, "    {num:7}// {pat}")?;
+    }
+
+    for (i, poly_coeff) in
+        ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
+    {
+        let c = coeffs[N_STENCIL_COEFFS + i];
+        let num = format!("{c},");
+        writeln!(buf, "    {num:7}// {poly_coeff}")?;
+    }
+
+    writeln!(buf, "].into_boxed_slice()")?;
+
+    let mut file = File::create(COEFFS_FILE)?;
+    file.write_all(buf.buffer())
 }
