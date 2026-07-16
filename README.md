@@ -4,9 +4,7 @@
 
 ### misc
 
-- boxed slices for big arrays (coeffs)
-- grid search for best parameters (5 mutations -> 2^5 games, then keep only mutations that won >= 20 games)
-- 3^6 -> 4^6
+- time limit in iterative deepening
 - `mod bots` -> `mod search`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats

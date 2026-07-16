@@ -30,6 +30,30 @@ pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 pub type Coeffs = Box<[i64]>;
 
+static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
+    let mut res = [usize::MAX; 1 << (2 * STENCIL_SIZE)];
+    let mut base4 = 0;
+    while base4 < res.len() {
+        let mut n = base4;
+        let mut base3 = 0;
+        let mut is_valid = true;
+        while n > 0 {
+            let bits = n & 0b11;
+            if bits == 0 {
+                is_valid = false;
+                break;
+            }
+            base3 = 3 * base3 + bits - 1;
+            n >>= 2;
+        }
+        if is_valid {
+            res[base4] = base3;
+        }
+        base4 += 1;
+    }
+    res
+};
+
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut h = 0;
     let mut black_capture_threats = 0;
@@ -74,16 +98,6 @@ const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
     h_captures + h_threats + cross_terms
 }
 
-fn stencil_index(mut stencil: i64) -> usize {
-    let mut index = 0;
-    for _ in 0..STENCIL_SIZE {
-        index *= 3;
-        index += ((stencil & 0b11) - 1) as usize;
-        stencil >>= 2;
-    }
-    index
-}
-
 fn evaluate_patterns(
     board: &Board,
     line: &[Position],
@@ -91,17 +105,19 @@ fn evaluate_patterns(
     black_capture_threats: &mut i64,
     white_capture_threats: &mut i64,
 ) -> i64 {
+    const MASK: usize = (1 << (STENCIL_SIZE * 2 - 2)) - 1;
+
     let mut stencil = 0;
     let mut h = 0;
 
     for (i, &(x, y)) in line.iter().enumerate() {
         let player_color = board[y][x];
-        stencil <<= 2;
-        stencil |= match player_color {
+        let new_bits = match player_color {
             None => 0b01,
             Some(PlayerColor::Black) => 0b10,
             Some(PlayerColor::White) => 0b11,
         };
+        stencil = ((stencil & MASK) << 2) | new_bits;
 
         match stencil & 255 {
             0b_11_10_10_01 | 0b_01_10_10_11 => *white_capture_threats += 1,
@@ -110,7 +126,7 @@ fn evaluate_patterns(
         }
 
         if i >= STENCIL_SIZE - 1 {
-            h += coeffs[stencil_index(stencil)];
+            h += coeffs[STENCIL_INDEX_MAPPING[stencil]];
         }
     }
 
