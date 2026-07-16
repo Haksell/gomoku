@@ -72,7 +72,8 @@ const COEFFS_FILE: &str = "./weights/duel.rs";
 const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 const EPOCHS: usize = 100_000;
-const N_MUTATIONS: i64 = 1;
+const N_MUTATIONS: i64 = 1; // TODO: 5
+// const REQUIRED_WINS: u32 = 20; // must stay > 2**(N_MUTATIONS-1)
 const MAX_ADDITIVE_MUTATION: i64 = 16;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
@@ -119,7 +120,6 @@ pub fn run(num_threads: Option<usize>) {
             let stencil_idx_opp = STENCIL_INDICES_OPP[i];
             let stencil_idx_sym_opp = STENCIL_INDICES_SYM_OPP[i];
             let new_coeff = random_coeff(&mut rng, new_coeffs[stencil_idx]);
-            println!("{stencil_idx} {stencil_idx_sym} {stencil_idx_opp} {stencil_idx_sym_opp}");
 
             mutations.push((stencil_idx, new_coeff));
             mutations.push((stencil_idx_sym, new_coeff));
@@ -190,12 +190,9 @@ fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
     let max_range =
         min(MAX_COEFF_VALUE, max(old_coeff + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)));
 
-    loop {
-        let new_coeff = rng.gen_range(min_range..=max_range);
-        if new_coeff != old_coeff {
-            return new_coeff;
-        }
-    }
+    // trick to avoid returning old_coeff
+    let new_coeff = rng.gen_range(min_range..max_range);
+    if new_coeff >= old_coeff { new_coeff + 1 } else { new_coeff }
 }
 
 fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {

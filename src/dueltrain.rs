@@ -119,7 +119,6 @@ pub fn run(num_threads: Option<usize>) {
             let stencil_idx_opp = STENCIL_INDICES_OPP[i];
             let stencil_idx_sym_opp = STENCIL_INDICES_SYM_OPP[i];
             let new_coeff = random_coeff(&mut rng, new_coeffs[stencil_idx]);
-            println!("{stencil_idx} {stencil_idx_sym} {stencil_idx_opp} {stencil_idx_sym_opp}");
 
             mutations.push((stencil_idx, new_coeff));
             mutations.push((stencil_idx_sym, new_coeff));
@@ -190,12 +189,9 @@ fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
     let max_range =
         min(MAX_COEFF_VALUE, max(old_coeff + MAX_ADDITIVE_MUTATION, max(div_value, mul_value)));
 
-    loop {
-        let new_coeff = rng.gen_range(min_range..=max_range);
-        if new_coeff != old_coeff {
-            return new_coeff;
-        }
-    }
+    // trick to avoid returning old_coeff
+    let new_coeff = rng.gen_range(min_range..max_range);
+    if new_coeff >= old_coeff { new_coeff + 1 } else { new_coeff }
 }
 
 fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
