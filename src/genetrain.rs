@@ -31,10 +31,7 @@ impl Genome {
     fn as_player(&self) -> Player {
         Player::Bot {
             bot: idabp,
-            heuristic: Heuristic {
-                fun: duelistic,
-                coeffs: Some(self.genes.map(|x| x as i64)),
-            },
+            heuristic: Heuristic { fun: duelistic, coeffs: Some(self.genes.map(|x| x as i64)) },
         }
     }
 

@@ -23,7 +23,7 @@ const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 1;
-const MAX_ADDITIVE_MUTATION: i64 = 16;
+const MAX_ADDITIVE_MUTATION: i64 = 32;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
@@ -57,7 +57,7 @@ pub fn run(num_threads: Option<usize>) {
         let mut new_coeffs = *coeffs.lock().unwrap();
         let mut mutations = vec![];
         for _ in 0..N_MUTATIONS {
-            if false && rng.gen_ratio(1, 8) {
+            if rng.gen_ratio(1, 8) {
                 let i = rng.gen_range(N_STENCIL_COEFFS..N_COEFFS);
                 let new_coeff = random_coeff(&mut rng, new_coeffs[i]).max(0);
                 mutations.push((i, new_coeff));
@@ -75,10 +75,6 @@ pub fn run(num_threads: Option<usize>) {
 
             let i = loop {
                 let i = rng.gen_range(0..N_STENCIL_COEFFS);
-
-                if new_coeffs[i] == 0 {
-                    continue;
-                }
 
                 x0 = i % 3;
                 x1 = i / 3 % 3;
@@ -171,7 +167,6 @@ pub fn run(num_threads: Option<usize>) {
 }
 
 fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
-    return 0;
     let div_value = (old_coeff as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
     let mul_value = (old_coeff as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
     let min_range =
