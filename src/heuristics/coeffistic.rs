@@ -1,9 +1,3 @@
-use std::{
-    fs::File,
-    io::{self, Write as _},
-    sync::LazyLock,
-};
-
 use crate::{
     game::{
         Game,
@@ -11,6 +5,11 @@ use crate::{
         lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
     },
     player::PlayerColor,
+};
+use std::{
+    fs::File,
+    io::{self, Write as _},
+    sync::LazyLock,
 };
 
 pub const STENCIL_SIZE: usize = 6;
@@ -119,8 +118,13 @@ fn evaluate_patterns(
 }
 
 pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
-    // TODO: compute correct size from STENCIL_SIZE
-    let mut buf = io::BufWriter::with_capacity(1 << 17, Vec::new());
+    const CAPACITY: usize = match STENCIL_SIZE {
+        6 => 1 << 15,
+        7 => 1 << 17,
+        _ => unreachable!(),
+    };
+
+    let mut buf = io::BufWriter::with_capacity(CAPACITY, Vec::new());
     writeln!(buf, "vec![")?;
 
     for i in 0..N_STENCIL_COEFFS {
