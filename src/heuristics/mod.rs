@@ -1,5 +1,5 @@
 pub mod capturophile;
-pub mod duelistic;
+pub mod coeffistic;
 pub mod manual;
 pub mod zero;
 
@@ -20,9 +20,9 @@ pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
         "zero" => Ok(Heuristic { fun: zero::zero, coeffs: None }),
         "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
         "manual" => Ok(Heuristic { fun: manual::manual, coeffs: None }),
-        "duelistic" => Ok(Heuristic {
-            fun: duelistic::duelistic,
-            coeffs: Some(include!("../../weights/current.rs")),
+        "coeffistic" => Ok(Heuristic {
+            fun: coeffistic::coeffistic,
+            coeffs: Some(include!("../../coeffs/current.rs")),
         }),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }

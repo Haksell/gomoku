@@ -1,6 +1,6 @@
 use crate::{
     bots::{Bot, idabp::idabp, parse_bot, random_mover::random_mover},
-    heuristics::{Heuristic, duelistic::duelistic, manual::manual, parse_heuristic, zero::zero},
+    heuristics::{Heuristic, coeffistic::coeffistic, manual::manual, parse_heuristic, zero::zero},
 };
 use itertools::Itertools as _;
 use std::{ops::Not, ptr::fn_addr_eq};
@@ -19,7 +19,7 @@ impl Player {
         Self::Bot { bot: idabp, heuristic: Heuristic { fun: manual, coeffs: None } };
     pub const DUELISTIC: Self = Self::Bot {
         bot: idabp,
-        heuristic: Heuristic { fun: duelistic, coeffs: Some(include!("../weights/current.rs")) },
+        heuristic: Heuristic { fun: coeffistic, coeffs: Some(include!("../coeffs/current.rs")) },
     };
 
     pub const fn is_human(&self) -> bool {
@@ -60,7 +60,7 @@ impl From<&str> for Player {
             "human" => Self::Human,
             "random" => Self::RANDOM,
             "manual" => Self::MANUAL,
-            "duelistic" => Self::DUELISTIC,
+            "coeffistic" => Self::DUELISTIC,
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

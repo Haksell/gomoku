@@ -8,7 +8,7 @@ use crate::{
     player::PlayerColor,
 };
 
-pub fn duelistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
+pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut h = 0;
     let mut black_capture_threats = 0;
     let mut white_capture_threats = 0;

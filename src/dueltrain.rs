@@ -1,7 +1,7 @@
 use crate::{
     bots::idabp::idabp,
     game::{Game, state::GameState},
-    heuristics::{Heuristic, duelistic::duelistic},
+    heuristics::{Heuristic, coeffistic::coeffistic},
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
@@ -67,7 +67,7 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
     449, 611, 572, 464, 626, 437, 599, 482, 644, 617, 608,
 ];
 
-const COEFFS_FILE: &str = "./weights/current.rs";
+const COEFFS_FILE: &str = "./coeffs/current.rs";
 
 const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
@@ -79,7 +79,7 @@ const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
 pub fn run(num_threads: Option<usize>) {
-    let initial_coeffs = include!("../weights/current.rs");
+    let initial_coeffs = include!("../coeffs/current.rs");
 
     let coeffs = Arc::new(Mutex::new(initial_coeffs));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));
@@ -100,7 +100,7 @@ pub fn run(num_threads: Option<usize>) {
         let mut rng = thread_rng();
         let old_player = Player::Bot {
             bot: idabp,
-            heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
+            heuristic: Heuristic { fun: coeffistic, coeffs: Some(*coeffs.lock().unwrap()) },
         };
 
         let mut new_coeffs = *coeffs.lock().unwrap();
@@ -132,7 +132,7 @@ pub fn run(num_threads: Option<usize>) {
 
         let new_player = Player::Bot {
             bot: idabp,
-            heuristic: Heuristic { fun: duelistic, coeffs: Some(new_coeffs) },
+            heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
         };
 
         let total_wins = play_pairs(6, &old_player, &new_player, &mut rng);
@@ -162,11 +162,11 @@ pub fn run(num_threads: Option<usize>) {
         if epoch.is_multiple_of(500) {
             let best_player = Player::Bot {
                 bot: idabp,
-                heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
+                heuristic: Heuristic { fun: coeffistic, coeffs: Some(*coeffs.lock().unwrap()) },
             };
             let initial_player = Player::Bot {
                 bot: idabp,
-                heuristic: Heuristic { fun: duelistic, coeffs: Some(initial_coeffs) },
+                heuristic: Heuristic { fun: coeffistic, coeffs: Some(initial_coeffs) },
             };
             let pairs = 25;
             let total_games = 2 * pairs;
