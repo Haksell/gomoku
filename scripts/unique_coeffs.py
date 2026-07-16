@@ -1,4 +1,8 @@
-STENCIL_SIZE = 7
+import sys
+
+
+assert len(sys.argv) == 2, f"Usage: {sys.argv[0]} <STENCIL_SIZE>"
+STENCIL_SIZE = int(sys.argv[1])
 
 
 def sym(n):
@@ -26,7 +30,13 @@ indices = sorted(
 )
 
 n = len(indices)
-print(f"const STENCIL_INDICES: [usize; {n}] = {indices};")
-print(f"const STENCIL_INDICES_SYM: [usize; {n}] = {list(map(sym, indices))};")
-print(f"const STENCIL_INDICES_OPP: [usize; {n}] = {list(map(opp, indices))};")
-print(f"const STENCIL_INDICES_SYM_OPP: [usize; {n}] = {list(map(sym_opp, indices))};")
+print(f"static STENCIL_INDICES: [usize; UNIQUE_STENCIL_INDICES] = {indices};")
+print(
+    f"static STENCIL_INDICES_SYM: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym, indices))};"
+)
+print(
+    f"static STENCIL_INDICES_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(opp, indices))};"
+)
+print(
+    f"static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym_opp, indices))};"
+)

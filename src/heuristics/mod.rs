@@ -3,7 +3,10 @@ pub mod coeffistic;
 pub mod manual;
 pub mod zero;
 
-use crate::{game::Game, heuristics::coeffistic::Coeffs};
+use crate::{
+    game::Game,
+    heuristics::coeffistic::{Coeffs, INITIAL_COEFFS},
+};
 
 /// A [`Heuristic`] returns a positive value if black has a good position,
 /// and a negative value otherwise.
@@ -19,7 +22,7 @@ impl Heuristic {
     pub const MANUAL: Self = Self { fun: manual::manual, coeffs: None };
 
     pub fn coeffistic() -> Self {
-        Self { fun: coeffistic::coeffistic, coeffs: Some(include!("../../coeffs/current.rs")) }
+        Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) }
     }
 }
 

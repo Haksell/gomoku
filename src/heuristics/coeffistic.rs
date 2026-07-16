@@ -13,9 +13,20 @@ use crate::{
     player::PlayerColor,
 };
 
-pub const COEFFS_FILE: &str = "./coeffs/current.rs";
-pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| include!("../../coeffs/current.rs"));
-pub const STENCIL_SIZE: usize = 7;
+pub const STENCIL_SIZE: usize = 6;
+
+pub const COEFFS_FILE: &str = match STENCIL_SIZE {
+    6 => "./coeffs/grid_search_6.rs",
+    7 => "./coeffs/grid_search_7.rs",
+    _ => unreachable!(),
+};
+pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match STENCIL_SIZE {
+    // include! needs a literal, so we can't give it COEFFS_FILE
+    6 => include!("../../coeffs/grid_search_6.rs"),
+    7 => include!("../../coeffs/grid_search_7.rs"),
+    _ => unreachable!(),
+});
+
 pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 pub type Coeffs = Box<[i64]>;
