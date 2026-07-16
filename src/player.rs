@@ -19,7 +19,7 @@ impl Player {
         Self::Bot { bot: idabp, heuristic: Heuristic { fun: manual, coeffs: None } };
     pub const DUELISTIC: Self = Self::Bot {
         bot: idabp,
-        heuristic: Heuristic { fun: duelistic, coeffs: Some(include!("../weights/duel.rs")) },
+        heuristic: Heuristic { fun: duelistic, coeffs: Some(include!("../weights/current.rs")) },
     };
 
     pub const fn is_human(&self) -> bool {

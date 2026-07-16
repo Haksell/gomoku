@@ -68,7 +68,7 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
     449, 611, 572, 464, 626, 437, 599, 482, 644, 617, 608,
 ];
 
-const COEFFS_FILE: &str = "./weights/duel.rs";
+const COEFFS_FILE: &str = "./weights/current.rs";
 
 const N_STENCIL_COEFFS: usize = 3usize.pow(6);
 const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
@@ -86,7 +86,7 @@ const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
 #[expect(clippy::too_many_lines)]
 pub fn run(num_threads: Option<usize>) {
-    let initial_coeffs = include!("../weights/duel.rs");
+    let initial_coeffs = include!("../weights/current.rs");
 
     let coeffs = Arc::new(Mutex::new(initial_coeffs));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));

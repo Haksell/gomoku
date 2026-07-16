@@ -22,7 +22,7 @@ pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
         "manual" => Ok(Heuristic { fun: manual::manual, coeffs: None }),
         "duelistic" => Ok(Heuristic {
             fun: duelistic::duelistic,
-            coeffs: Some(include!("../../weights/duel.rs")),
+            coeffs: Some(include!("../../weights/current.rs")),
         }),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
