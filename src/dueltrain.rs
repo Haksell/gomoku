@@ -1,7 +1,10 @@
 use crate::{
     bots::idabp::idabp,
     game::{Game, state::GameState},
-    heuristics::{Heuristic, coeffistic::coeffistic},
+    heuristics::{
+        Heuristic,
+        coeffistic::{N_COEFFS, N_STENCIL_COEFFS, STENCIL_SIZE, coeffistic},
+    },
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
@@ -69,8 +72,6 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
 
 const COEFFS_FILE: &str = "./coeffs/current.rs";
 
-const N_STENCIL_COEFFS: usize = 3usize.pow(6);
-const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 1;
 const MAX_ADDITIVE_MUTATION: i64 = 16;
@@ -220,7 +221,8 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     for i in 0..N_STENCIL_COEFFS {
         let c = coeffs[i];
         // TODO: check correct direction (might be symmetric)
-        let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
+        let pat: String =
+            (0..STENCIL_SIZE).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j as u32) % 3]).collect();
         let num = format!("{c},");
         writeln!(buf, "    {num:7}// {pat}")?;
     }

@@ -3,7 +3,7 @@ use crate::{
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
-        coeffistic::{COEFFS_FILE, N_COEFFS, N_STENCIL_COEFFS, coeffistic},
+        coeffistic::{COEFFS_FILE, N_COEFFS, N_STENCIL_COEFFS, STENCIL_SIZE, coeffistic},
     },
     player::{Player, PlayerColor},
 };
@@ -73,7 +73,7 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
 ];
 
 const N_MUTATIONS: usize = 4;
-const REQUIRED_WINS: u32 = 10;
+const REQUIRED_WINS: u32 = 11;
 
 const MAX_ADDITIVE_MUTATION: i64 = 32;
 // bias towards values closer to 0
@@ -266,7 +266,8 @@ fn write_coeffs(coeffs: &[i64; N_COEFFS]) -> io::Result<()> {
     for i in 0..N_STENCIL_COEFFS {
         let c = coeffs[i];
         // TODO: check correct direction (might be symmetric)
-        let pat: String = (0..6).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j) % 3]).collect();
+        let pat: String =
+            (0..STENCIL_SIZE).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j as u32) % 3]).collect();
         let num = format!("{c},");
         writeln!(buf, "    {num:7}// {pat}")?;
     }

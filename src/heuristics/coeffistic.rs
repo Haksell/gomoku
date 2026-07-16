@@ -8,7 +8,8 @@ use crate::{
 };
 
 pub const COEFFS_FILE: &str = "./coeffs/current.rs";
-pub const N_STENCIL_COEFFS: usize = 3usize.pow(6);
+pub const STENCIL_SIZE: usize = 6;
+pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 pub type Coeffs = [i64; N_COEFFS];
 
@@ -49,8 +50,6 @@ pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
 }
 
 const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
-    // None of these constants are properly optimized,
-    // because capture wins are much rarer than alignments.
     let i = N_STENCIL_COEFFS;
     let h_captures = coeffs[i] * c * c * c + coeffs[i + 1] * c * c + coeffs[i + 2] * c;
     let h_threats = coeffs[i + 3] * t * t * t + coeffs[i + 4] * t * t + coeffs[i + 5] * t;
@@ -60,7 +59,7 @@ const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
 
 fn stencil_index(mut stencil: i64) -> usize {
     let mut index = 0;
-    for _ in 0..6 {
+    for _ in 0..STENCIL_SIZE {
         index *= 3;
         index += ((stencil & 0b11) - 1) as usize;
         stencil >>= 2;
@@ -93,8 +92,7 @@ fn evaluate_patterns(
             _ => {}
         }
 
-        // TODO: 5 is STENCIL_LENGTH - 1
-        if i >= 5 {
+        if i >= STENCIL_SIZE - 1 {
             h += coeffs[stencil_index(stencil)];
         }
     }
