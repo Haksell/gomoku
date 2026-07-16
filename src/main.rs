@@ -29,7 +29,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    if args.dueltrain {
+    if args.gridtrain {
         gridtrain::run(args.num_threads);
         return;
     }

@@ -57,7 +57,7 @@ pub fn run(num_threads: Option<usize>) {
         let mut new_coeffs = *coeffs.lock().unwrap();
         let mut mutations = vec![];
         for _ in 0..N_MUTATIONS {
-            if rng.gen_ratio(1, 8) {
+            if false && rng.gen_ratio(1, 8) {
                 let i = rng.gen_range(N_STENCIL_COEFFS..N_COEFFS);
                 let new_coeff = random_coeff(&mut rng, new_coeffs[i]).max(0);
                 mutations.push((i, new_coeff));
@@ -75,6 +75,10 @@ pub fn run(num_threads: Option<usize>) {
 
             let i = loop {
                 let i = rng.gen_range(0..N_STENCIL_COEFFS);
+
+                if new_coeffs[i] == 0 {
+                    continue;
+                }
 
                 x0 = i % 3;
                 x1 = i / 3 % 3;
@@ -167,6 +171,7 @@ pub fn run(num_threads: Option<usize>) {
 }
 
 fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
+    return 0;
     let div_value = (old_coeff as f64 / MAX_MULTIPLICATIVE_MUTATION).round() as i64;
     let mul_value = (old_coeff as f64 * MAX_MULTIPLICATIVE_MUTATION).round() as i64;
     let min_range =
