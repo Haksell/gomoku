@@ -78,8 +78,8 @@ const REQUIRED_WINS: u32 = 11; // must stay > 2**(N_MUTATIONS-1)
 
 const MAX_ADDITIVE_MUTATION: i64 = 32;
 // bias towards values closer to 0
-const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.75;
-const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
+const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.7;
+const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.25;
 
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
@@ -232,7 +232,13 @@ fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
 
     // trick to avoid returning old_coeff
     let new_coeff = rng.gen_range(min_range..max_range);
-    if new_coeff >= old_coeff { new_coeff + 1 } else { new_coeff }
+    if new_coeff * old_coeff < 0 {
+        0 // prefer setting to 0 than opposite sign to keep a parcimonious model
+    } else if new_coeff >= old_coeff {
+        new_coeff + 1
+    } else {
+        new_coeff
+    }
 }
 
 fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
