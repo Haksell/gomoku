@@ -1,7 +1,7 @@
 use crate::{
-    bots::idabp_new::idabp_new,
+    bots::idabp::idabp,
     game::{Game, state::GameState},
-    heuristics::{Heuristic, coeff_heuristic::coeff_heuristic},
+    heuristics::{Heuristic, duelistic::duelistic},
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
@@ -30,9 +30,9 @@ impl Genome {
 
     fn as_player(&self) -> Player {
         Player::Bot {
-            bot: idabp_new,
+            bot: idabp,
             heuristic: Heuristic {
-                fun: coeff_heuristic,
+                fun: duelistic,
                 coeffs: Some(self.genes.map(|x| x as i64)),
             },
         }
@@ -47,7 +47,7 @@ impl Genome {
         let player = self.as_player();
 
         for i in 0..TEST_GAMES / 2 {
-            let mut game = Game::new(&player, &Player::NEW);
+            let mut game = Game::new(&player, &Player::MANUAL);
 
             let random_moves = 3 + (i & 1) as u32;
             game.play_random_moves(random_moves, 5);

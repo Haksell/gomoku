@@ -1,7 +1,6 @@
 pub mod capturophile;
-pub mod coeff_heuristic;
-pub mod new;
-pub mod old;
+pub mod duelistic;
+pub mod manual;
 pub mod zero;
 
 use crate::game::Game;
@@ -18,14 +17,13 @@ pub type Coeffs = [i64; 729 + 9];
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
+        "zero" => Ok(Heuristic { fun: zero::zero, coeffs: None }),
+        "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
+        "manual" => Ok(Heuristic { fun: manual::manual, coeffs: None }),
         "duelistic" => Ok(Heuristic {
-            fun: coeff_heuristic::coeff_heuristic,
+            fun: duelistic::duelistic,
             coeffs: Some(include!("../../weights/duel.rs")),
         }),
-        "capturophile" => Ok(Heuristic { fun: capturophile::capturophile, coeffs: None }),
-        "new" => Ok(Heuristic { fun: new::new, coeffs: None }),
-        "old" => Ok(Heuristic { fun: old::old, coeffs: None }),
-        "zero" => Ok(Heuristic { fun: zero::zero, coeffs: None }),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }

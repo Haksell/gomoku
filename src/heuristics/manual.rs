@@ -10,7 +10,7 @@ use crate::{
     player::PlayerColor,
 };
 
-pub fn old(game: &Game, _: Option<&Coeffs>) -> i64 {
+pub fn manual(game: &Game, _: Option<&Coeffs>) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
     let mut black_open_xx_x = 0;

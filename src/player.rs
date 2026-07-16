@@ -1,8 +1,6 @@
 use crate::{
-    bots::{
-        Bot, idabp_new::idabp_new, idabp_old::idabp_old, parse_bot, random_mover::random_mover,
-    },
-    heuristics::{Heuristic, new::new, old::old, parse_heuristic, zero::zero},
+    bots::{Bot, idabp::idabp, parse_bot, random_mover::random_mover},
+    heuristics::{Heuristic, duelistic::duelistic, manual::manual, parse_heuristic, zero::zero},
 };
 use itertools::Itertools as _;
 use std::{ops::Not, ptr::fn_addr_eq};
@@ -17,10 +15,12 @@ pub enum Player {
 impl Player {
     pub const RANDOM: Self =
         Self::Bot { bot: random_mover, heuristic: Heuristic { fun: zero, coeffs: None } };
-    pub const OLD: Self =
-        Self::Bot { bot: idabp_old, heuristic: Heuristic { fun: old, coeffs: None } };
-    pub const NEW: Self =
-        Self::Bot { bot: idabp_new, heuristic: Heuristic { fun: new, coeffs: None } };
+    pub const MANUAL: Self =
+        Self::Bot { bot: idabp, heuristic: Heuristic { fun: manual, coeffs: None } };
+    pub const DUELISTIC: Self = Self::Bot {
+        bot: idabp,
+        heuristic: Heuristic { fun: duelistic, coeffs: Some(include!("../weights/duel.rs")) },
+    };
 
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
@@ -58,9 +58,9 @@ impl From<&str> for Player {
     fn from(v: &str) -> Self {
         match v {
             "human" => Self::Human,
-            "old" => Self::OLD,
-            "new" => Self::NEW,
             "random" => Self::RANDOM,
+            "manual" => Self::MANUAL,
+            "duelistic" => Self::DUELISTIC,
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

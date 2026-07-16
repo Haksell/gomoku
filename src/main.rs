@@ -3,6 +3,7 @@ mod bots;
 mod dueltrain;
 mod game;
 mod genetrain;
+mod gridtrain;
 mod gui;
 mod heuristics;
 mod player;
@@ -22,10 +23,16 @@ struct Args {
     genetrain: bool,
     #[arg(long)]
     dueltrain: bool,
+    #[arg(long)]
+    gridtrain: bool,
 }
 
 fn main() {
     let args = Args::parse();
+    if args.dueltrain {
+        gridtrain::run(args.num_threads);
+        return;
+    }
     if args.dueltrain {
         dueltrain::run(args.num_threads);
         return;

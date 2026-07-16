@@ -14,7 +14,7 @@ const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).lead
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
 type Cache = fxhash::FxHashMap<u64, i64>;
 
-pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
+pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }

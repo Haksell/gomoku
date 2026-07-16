@@ -3,7 +3,7 @@
 set -e
 
 make setup_git_hooks
-make new_to_old
+# make new_to_old
 
 MSG=${@:-.}
 

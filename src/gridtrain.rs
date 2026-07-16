@@ -147,10 +147,7 @@ pub fn run(num_threads: Option<usize>) {
         if epoch.is_multiple_of(500) {
             let best_player = Player::Bot {
                 bot: idabp,
-                heuristic: Heuristic {
-                    fun: duelistic,
-                    coeffs: Some(*coeffs.lock().unwrap()),
-                },
+                heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
             };
             let initial_player = Player::Bot {
                 bot: idabp,
