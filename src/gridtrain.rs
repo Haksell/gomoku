@@ -78,8 +78,8 @@ const REQUIRED_WINS: u32 = 11; // must stay > 2**(N_MUTATIONS-1)
 
 const MAX_ADDITIVE_MUTATION: i64 = 32;
 // bias towards values closer to 0
-const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.69;
-const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.3;
+const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.74;
+const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.25;
 
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
@@ -200,7 +200,7 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(200) {
             let best_player = Player::Bot {
                 bot: idabp,
                 heuristic: Heuristic { fun: duelistic, coeffs: Some(*coeffs.lock().unwrap()) },
