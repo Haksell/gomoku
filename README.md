@@ -2,13 +2,11 @@
 
 ## todo
 
-### duels
-
-- grid search for best parameters (7 mutations -> 2^7 games, then keep only mutations that won > ~70 games)
-- 3^6 -> 4^6
-
 ### misc
 
+- grid search for best parameters (5 mutations -> 2^5 games, then keep only mutations that won >= 20 games)
+- 3^6 -> 4^6
+- `mod bots` -> `mod search`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
