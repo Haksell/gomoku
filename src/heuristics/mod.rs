@@ -3,7 +3,7 @@ pub mod coeffistic;
 pub mod manual;
 pub mod zero;
 
-use crate::game::Game;
+use crate::{game::Game, heuristics::coeffistic::Coeffs};
 
 /// A [`Heuristic`] returns a positive value if black has a good position,
 /// and a negative value otherwise.
@@ -12,8 +12,6 @@ pub struct Heuristic {
     pub fun: fn(&Game, Option<&Coeffs>) -> i64,
     pub coeffs: Option<Coeffs>,
 }
-
-pub type Coeffs = [i64; 729 + 9];
 
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {

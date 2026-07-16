@@ -1,7 +1,10 @@
 use crate::{
     bots::idabp::idabp,
     game::{Game, state::GameState},
-    heuristics::{Heuristic, coeffistic::coeffistic},
+    heuristics::{
+        Heuristic,
+        coeffistic::{N_COEFFS, coeffistic},
+    },
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
@@ -13,14 +16,13 @@ const POP_SIZE: usize = 50;
 const ELITE_COUNT: usize = POP_SIZE / 10;
 const TEST_GAMES: usize = 8;
 const EPOCHS: usize = 25;
-const GENES_SIZE: usize = 729 + 9;
 const MUTATION_PROBABILITY: f64 = 0.03;
 const CROSSOVER_PROBABILITY: f64 = 0.3;
 
 #[derive(Clone)]
 struct Genome {
     fitness: Option<i64>,
-    genes: [i16; GENES_SIZE],
+    genes: [i16; N_COEFFS],
 }
 
 impl Genome {
@@ -110,7 +112,7 @@ pub fn run() {
             let b = rng.gen_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
 
             pop[i].fitness = None;
-            for mi in 0..GENES_SIZE {
+            for mi in 0..N_COEFFS {
                 if rng.gen_bool(CROSSOVER_PROBABILITY) {
                     pop[i].genes[mi] = i16::midpoint(pop[a].genes[mi], pop[b].genes[mi]);
                 }
@@ -122,7 +124,7 @@ pub fn run() {
         for i in 0..POP_SIZE - ELITE_COUNT {
             let player = &mut pop[i];
             let mut has_mutated = false;
-            for mi in 0..GENES_SIZE {
+            for mi in 0..N_COEFFS {
                 if rng.gen_bool(MUTATION_PROBABILITY) {
                     player.genes[mi] += rng.gen_range(-64..=64);
                     has_mutated = true;

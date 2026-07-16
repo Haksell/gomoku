@@ -1,7 +1,10 @@
 use crate::{
     bots::idabp::idabp,
     game::{Game, state::GameState},
-    heuristics::{Heuristic, coeffistic::coeffistic},
+    heuristics::{
+        Heuristic,
+        coeffistic::{COEFFS_FILE, N_COEFFS, N_STENCIL_COEFFS, coeffistic},
+    },
     player::{Player, PlayerColor},
 };
 use itertools::Itertools as _;
@@ -67,11 +70,6 @@ const STENCIL_INDICES_SYM_OPP: [usize; 182] = [
     386, 683, 440, 602, 359, 431, 593, 728, 485, 647, 404, 701, 458, 620, 422, 584, 476, 638, 692,
     449, 611, 572, 464, 626, 437, 599, 482, 644, 617, 608,
 ];
-
-const COEFFS_FILE: &str = "./coeffs/current.rs";
-
-const N_STENCIL_COEFFS: usize = 3usize.pow(6);
-const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
 
 const N_MUTATIONS: usize = 4;
 const REQUIRED_WINS: u32 = 11;

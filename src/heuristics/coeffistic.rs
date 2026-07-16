@@ -4,9 +4,13 @@ use crate::{
         board::{Board, Position},
         lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
     },
-    heuristics::Coeffs,
     player::PlayerColor,
 };
+
+pub const COEFFS_FILE: &str = "./coeffs/current.rs";
+pub const N_STENCIL_COEFFS: usize = 3usize.pow(6);
+pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
+pub type Coeffs = [i64; N_COEFFS];
 
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut h = 0;
@@ -44,13 +48,13 @@ pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     h
 }
 
-#[expect(clippy::identity_op)]
 const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
     // None of these constants are properly optimized,
     // because capture wins are much rarer than alignments.
-    let h_captures = coeffs[729 + 0] * c * c * c + coeffs[729 + 1] * c * c + coeffs[729 + 2] * c;
-    let h_threats = coeffs[729 + 3] * t * t * t + coeffs[729 + 4] * t * t + coeffs[729 + 5] * t;
-    let cross_terms = c * t * (coeffs[729 + 6] + coeffs[729 + 7] * c + coeffs[729 + 8] * t);
+    let i = N_STENCIL_COEFFS;
+    let h_captures = coeffs[i] * c * c * c + coeffs[i + 1] * c * c + coeffs[i + 2] * c;
+    let h_threats = coeffs[i + 3] * t * t * t + coeffs[i + 4] * t * t + coeffs[i + 5] * t;
+    let cross_terms = c * t * (coeffs[i + 6] + coeffs[i + 7] * c + coeffs[i + 8] * t);
     h_captures + h_threats + cross_terms
 }
 
