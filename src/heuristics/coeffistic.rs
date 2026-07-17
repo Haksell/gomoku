@@ -12,7 +12,7 @@ use std::{
     sync::LazyLock,
 };
 
-pub const STENCIL_SIZE: usize = 7;
+pub const STENCIL_SIZE: usize = 6;
 
 pub const COEFFS_FILE: &str = match STENCIL_SIZE {
     6 => "./coeffs/grid_search_6.rs",
