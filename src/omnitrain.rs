@@ -20,9 +20,9 @@ use std::{
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
-const GAMES_BY_EPOCH: usize = 400;
+const GAMES_BY_EPOCH: usize = 1000;
 const PAIRS_BY_EPOCH: usize = GAMES_BY_EPOCH / 2;
-const REQUIRED_WIN_DIFFERENTIAL: i32 = 30;
+const REQUIRED_WIN_DIFFERENTIAL: i32 = 40;
 
 const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
