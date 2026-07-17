@@ -91,6 +91,7 @@ pub fn run() {
 
         let mut updates = 0;
         for (i, &win_differential) in win_differentials.iter().enumerate() {
+            // TODO: lerp between 0 and REQUIRED_WIN_DIFFERENTIAL (if so, increase the constant)
             if win_differential >= REQUIRED_WIN_DIFFERENTIAL {
                 updates += 1;
                 update_coeffs(&mut best_coeffs, i, mutations[i]);

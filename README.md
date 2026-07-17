@@ -4,12 +4,6 @@
 
 ### misc
 
-- omnisearch
-- setup parallelism in main
-- better grid search:
-  - update more values and sample ~100 of 2^mutation pairs of games
-  - recheck statistical significance before mutating
-  - shuffle the coeff indices instead of full random
 - update double threes in `do_move` and `undo_move`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
