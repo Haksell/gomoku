@@ -1,10 +1,9 @@
 use crate::{
-    Args,
     game::{Game, state::GameState},
-    player::PlayerColor,
+    player::{Player, PlayerColor},
 };
-use rayon::{ThreadPoolBuilder, prelude::*};
-use std::{sync::Mutex, thread::available_parallelism};
+use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
+use std::sync::Mutex;
 
 #[derive(Debug, Default, Clone, Copy)]
 struct Stats {
@@ -35,32 +34,16 @@ impl Stats {
     }
 }
 
-// TODO: random initial position
-pub fn run(args: &Args) {
+pub fn run(black_player: &Player, white_player: &Player, num_games: usize) {
     assert!(
-        args.black_player.is_bot() || args.white_player.is_bot(),
+        black_player.is_bot() || white_player.is_bot(),
         "`num_games` is reserved for bot vs bot matches."
-    );
-
-    let num_threads = args.num_threads.unwrap_or(1); // TODO: if 1, no par_iter
-    let available_cpus = available_parallelism().unwrap().get();
-
-    assert!(num_threads > 0, "Can't run with 0 threads.");
-    assert!(
-        num_threads <= available_cpus,
-        "You asked for {num_threads} threads but only {available_cpus} threads are available.",
     );
 
     let stats = Mutex::new(Stats::default());
 
-    // TODO: if 1 thread, no parallelism
-    // TODO: no global (if we need to do stuff after arena)
-    // TODO: understand why 10 threads is faster than 20
-    // TODO: flags to configure random board (n_moves and dist_to_center)
-    // TODO: rehandle draws
-    ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
-    (1..=args.num_games / 2).into_par_iter().for_each(|i| {
-        let mut game = Game::new(&args.black_player, &args.white_player);
+    (1..=num_games / 2).into_par_iter().for_each(|i| {
+        let mut game = Game::new(black_player, white_player);
         let random_moves = 3 + (i & 1) as u32;
         // TODO: clap args to configure random board (number and distance to center)
         game.play_random_moves(random_moves, 5);
@@ -96,11 +79,6 @@ pub fn run(args: &Args) {
             }
         }
 
-        // println!(
-        //     "capture={} | alignment={} | both={}",
-        //     stats.wins_by_capture, stats.wins_by_alignment, stats.wins_by_both
-        // );
-
         match (black_win, white_win) {
             (true, true) => stats.win_win += 1,
             (true, false) => stats.win_loss += 1,
@@ -114,7 +92,6 @@ pub fn run(args: &Args) {
 
         let player1_percentage = 100. * player1_wins as f64 / finished_games as f64;
         println!("Player 1 won {player1_wins}/{finished_games} games ({player1_percentage:.1}%)");
-        // println!();
     });
 
     let stats = *stats.lock().unwrap();

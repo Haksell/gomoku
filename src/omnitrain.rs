@@ -12,14 +12,10 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, thread_rng};
-use rayon::{
-    ThreadPoolBuilder,
-    iter::{IntoParallelIterator as _, ParallelIterator as _},
-};
+use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
 use std::{
     array,
     cmp::{max, min},
-    thread::available_parallelism,
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
@@ -36,19 +32,7 @@ const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
-pub fn run(num_threads: Option<usize>) {
-    // TODO: if 1 thread, no parallelism
-    // TODO: no global (if we need to do stuff after training)
-    // TODO: understand why 10 threads is faster than 20
-    let num_threads = num_threads.unwrap_or(1); // TODO: if 1, no par_iter
-    let available_cpus = available_parallelism().unwrap().get();
-    assert!(num_threads > 0, "Can't run with 0 threads.");
-    assert!(
-        num_threads <= available_cpus,
-        "You asked for {num_threads} threads but only {available_cpus} threads are available.",
-    );
-    ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
-
+pub fn run() {
     let mut best_coeffs = INITIAL_COEFFS.clone();
 
     for epoch in 1u64.. {

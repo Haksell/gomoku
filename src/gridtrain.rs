@@ -13,14 +13,10 @@ use crate::{
 };
 use itertools::Itertools as _;
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
-use rayon::{
-    ThreadPoolBuilder,
-    iter::{IntoParallelIterator as _, ParallelIterator as _},
-};
+use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
 use std::{
     cmp::{max, min},
     sync::{Arc, Mutex},
-    thread::available_parallelism,
 };
 
 const N_MUTATIONS: usize = 6;
@@ -35,21 +31,9 @@ const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
 #[expect(clippy::too_many_lines)]
-pub fn run(num_threads: Option<usize>) {
+pub fn run() {
     let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));
-
-    // TODO: if 1 thread, no parallelism
-    // TODO: no global (if we need to do stuff after training)
-    // TODO: understand why 10 threads is faster than 20
-    let num_threads = num_threads.unwrap_or(1); // TODO: if 1, no par_iter
-    let available_cpus = available_parallelism().unwrap().get();
-    assert!(num_threads > 0, "Can't run with 0 threads.");
-    assert!(
-        num_threads <= available_cpus,
-        "You asked for {num_threads} threads but only {available_cpus} threads are available.",
-    );
-    ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
 
     // TODO: find a cleaner infinite loop
     (0..usize::MAX).into_par_iter().for_each(|_| {

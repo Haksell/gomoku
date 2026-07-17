@@ -9,8 +9,11 @@ mod heuristics;
 mod omnitrain;
 mod player;
 
+use std::thread::available_parallelism;
+
 use crate::player::Player;
 use clap::Parser;
+use rayon::ThreadPoolBuilder;
 
 #[expect(clippy::struct_excessive_bools)] // TODO: fix with Training enum
 #[derive(Debug, Parser)]
@@ -33,16 +36,17 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+    init_thread_pool(args.num_threads);
     if args.omnitrain {
-        omnitrain::run(args.num_threads);
+        omnitrain::run();
         return;
     }
     if args.gridtrain {
-        gridtrain::run(args.num_threads);
+        gridtrain::run();
         return;
     }
     if args.dueltrain {
-        dueltrain::run(args.num_threads);
+        dueltrain::run();
         return;
     }
     if args.genetrain {
@@ -52,7 +56,20 @@ fn main() {
     match args.num_games {
         0 => panic!("Can't play 0 games."),
         1 => gui::run(),
-        n if n.is_multiple_of(4) => arena::run(&args),
+        n if n.is_multiple_of(4) => {
+            arena::run(&args.black_player, &args.white_player, args.num_games);
+        }
         _ => panic!("TODO: good error message pls"), // TODO: warn instead, but run arena anyway
     }
+}
+
+fn init_thread_pool(num_threads: Option<usize>) {
+    let num_threads = num_threads.unwrap_or(1);
+    let available_cpus = available_parallelism().unwrap().get();
+    assert!(num_threads > 0, "Can't run with 0 threads.");
+    assert!(
+        num_threads <= available_cpus,
+        "You asked for {num_threads} threads but only {available_cpus} threads are available.",
+    );
+    ThreadPoolBuilder::new().num_threads(num_threads).build_global().unwrap();
 }
