@@ -4,7 +4,9 @@
 
 ### misc
 
-- better grid search (update more values and sample ~100 of 2^mutation pairs of games)
+- better grid search:
+  - update more values and sample ~100 of 2^mutation pairs of games
+  - recheck statistical significance before mutating
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
