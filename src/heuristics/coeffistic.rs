@@ -2,7 +2,7 @@ use crate::{
     game::{
         Game,
         board::{Board, Position},
-        lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
+        lines::LINES,
     },
     player::PlayerColor,
 };
@@ -60,28 +60,14 @@ pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let mut white_capture_threats = 0;
     let coeffs = coeffs.unwrap();
 
-    for lines in [ROWS, COLUMNS] {
-        for line in &lines {
-            h += evaluate_patterns(
-                &game.board,
-                line,
-                coeffs,
-                &mut black_capture_threats,
-                &mut white_capture_threats,
-            );
-        }
-    }
-
-    for lines in [UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
-        for line in lines {
-            h += evaluate_patterns(
-                &game.board,
-                line,
-                coeffs,
-                &mut black_capture_threats,
-                &mut white_capture_threats,
-            );
-        }
+    for line in LINES {
+        h += evaluate_patterns(
+            &game.board,
+            line,
+            coeffs,
+            &mut black_capture_threats,
+            &mut white_capture_threats,
+        );
     }
 
     h += capture_heuristic(coeffs, game.black_captures as i64, black_capture_threats);
