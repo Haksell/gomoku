@@ -265,23 +265,20 @@ pub fn run(num_threads: Option<usize>) {
             }
         }
 
-        let new_updates = total_wins.iter().filter(|w| **w >= REQUIRED_WINS).count() as u32;
+        let updates = (0..N_MUTATIONS).filter(|i| total_wins[*i] >= REQUIRED_WINS).collect_vec();
 
         let mut stats = stats.lock().unwrap();
         stats.1 += 1;
-        if new_updates > 0 {
-            stats.0 += new_updates;
+        if !updates.is_empty() {
+            stats.0 += updates.len() as u32;
             println!("Updated! ({} updates in {} epochs)", stats.0, stats.1);
         }
         let epoch = stats.1;
         drop(stats);
 
-        if new_updates > 0 {
+        if !updates.is_empty() {
             let mut coeffs_lock = best_coeffs.lock().unwrap();
-            for i in 0..N_MUTATIONS {
-                if total_wins[i] < REQUIRED_WINS {
-                    continue;
-                }
+            for i in updates {
                 let (coeff_idx, new_value) = mutations[i];
                 if coeff_idx >= N_STENCIL_COEFFS {
                     coeffs_lock[coeff_idx] = new_value;
