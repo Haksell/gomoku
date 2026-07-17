@@ -295,7 +295,7 @@ vec![
     -138,  // wbwb.b.
     48,    // .wwb.b.
     -206,  // bwwb.b.
-    -986,  // wwwb.b.
+    -736,  // wwwb.b.
     0,     // ...w.b.
     -195,  // b..w.b.
     3,     // w..w.b.
@@ -552,7 +552,7 @@ vec![
     -109,  // b.bw.w.
     -31,   // w.bw.w.
     -48,   // .bbw.w.
-    986,   // bbbw.w.
+    736,   // bbbw.w.
     206,   // wbbw.w.
     5,     // .wbw.w.
     138,   // bwbw.w.
@@ -1112,7 +1112,7 @@ vec![
     0,     // .b.wbbb
     0,     // bb.wbbb
     56,    // wb.wbbb
-    986,   // .w.wbbb
+    736,   // .w.wbbb
     -94,   // bw.wbbb
     52,    // ww.wbbb
     -166,  // ..bwbbb
@@ -2135,7 +2135,7 @@ vec![
     96,    // ...bwww
     52,    // b..bwww
     -36,   // w..bwww
-    -986,  // .b.bwww
+    -736,  // .b.bwww
     -52,   // bb.bwww
     94,    // wb.bwww
     0,     // .w.bwww
