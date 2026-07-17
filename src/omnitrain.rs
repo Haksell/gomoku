@@ -32,6 +32,7 @@ const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
+#[expect(clippy::needless_range_loop, clippy::large_stack_arrays, clippy::large_stack_frames)]
 pub fn run() {
     let mut best_coeffs = INITIAL_COEFFS.clone();
 
@@ -44,7 +45,6 @@ pub fn run() {
             }
         });
 
-        #[expect(clippy::needless_range_loop, clippy::large_stack_arrays)]
         let should_mutate_2: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
             let mut should_mutate_2 = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
             for i in 0..N_MUTATIONS {
@@ -107,7 +107,7 @@ pub fn run() {
             eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`");
         }
 
-        if epoch.is_multiple_of(10) {
+        if epoch.is_multiple_of(5) {
             let new_player = Player::Bot {
                 bot: idabp,
                 heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs.clone()) },
