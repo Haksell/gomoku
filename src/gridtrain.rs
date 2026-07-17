@@ -177,7 +177,7 @@ static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = [
 const N_MUTATIONS: usize = 5;
 const REQUIRED_WINS: u32 = 22;
 
-const MAX_ADDITIVE_MUTATION: i64 = 32;
+const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
 const MIN_MULTIPLICATIVE_MUTATION: f64 = 0.68;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.3;
