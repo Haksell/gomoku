@@ -32,7 +32,7 @@ const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
-#[expect(clippy::needless_range_loop, clippy::large_stack_arrays, clippy::large_stack_frames)]
+#[expect(clippy::needless_range_loop, clippy::large_stack_arrays)]
 pub fn run() {
     let mut best_coeffs = INITIAL_COEFFS.clone();
 
