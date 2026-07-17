@@ -22,7 +22,7 @@ const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const GAMES_BY_EPOCH: usize = 200;
 const PAIRS_BY_EPOCH: usize = GAMES_BY_EPOCH / 2;
-const REQUIRED_WIN_DIFFERENTIAL: i32 = 15;
+const REQUIRED_WIN_DIFFERENTIAL: i32 = 18;
 
 const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
@@ -36,11 +36,6 @@ pub fn run() {
     let mut best_coeffs = INITIAL_COEFFS.clone();
 
     for epoch in 1u64.. {
-        let prev_player = Player::Bot {
-            bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs.clone()) },
-        };
-
         let mutations: [i64; N_MUTATIONS] = array::from_fn(|i| {
             if i < UNIQUE_STENCIL_INDICES {
                 random_coeff(best_coeffs[STENCIL_INDICES[i]])
@@ -50,42 +45,49 @@ pub fn run() {
         });
 
         #[expect(clippy::needless_range_loop, clippy::large_stack_arrays)]
-        let should_mutate: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
-            let mut should_mutate = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
+        let should_mutate_2: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
+            let mut should_mutate_2 = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
             for i in 0..N_MUTATIONS {
                 let mut remaining_mutations = PAIRS_BY_EPOCH / 2;
                 for j in 0..PAIRS_BY_EPOCH {
-                    let mutate = thread_rng()
+                    let mutate_2 = thread_rng()
                         .gen_ratio(remaining_mutations as u32, (PAIRS_BY_EPOCH - j) as u32);
-                    should_mutate[j][i] = mutate;
-                    remaining_mutations -= mutate as usize;
+                    should_mutate_2[j][i] = mutate_2;
+                    remaining_mutations -= mutate_2 as usize;
                 }
             }
-            should_mutate
+            should_mutate_2
         };
 
         let all_wins: Vec<u32> = (0..PAIRS_BY_EPOCH)
             .into_par_iter()
             .map(|pair_idx| {
-                let mut new_coeffs = best_coeffs.clone();
-                for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
-                    if mutate {
-                        update_coeffs(&mut new_coeffs, i, mutations[i]);
-                    }
+                let mut coeffs1 = best_coeffs.clone();
+                let mut coeffs2 = best_coeffs.clone();
+                for (i, &mutate_2) in should_mutate_2[pair_idx].iter().enumerate() {
+                    update_coeffs(
+                        if mutate_2 { &mut coeffs2 } else { &mut coeffs1 },
+                        i,
+                        mutations[i],
+                    );
                 }
-                let new_player = Player::Bot {
+                let player1 = Player::Bot {
                     bot: idabp,
-                    heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
+                    heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs1) },
                 };
-                play_pair(&prev_player, &new_player)
+                let player2 = Player::Bot {
+                    bot: idabp,
+                    heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs2) },
+                };
+                play_pair(&player1, &player2)
             })
             .collect();
 
         let mut win_differentials = [0i32; N_MUTATIONS];
         for (pair_idx, wins) in all_wins.iter().enumerate() {
             let wins = *wins as i32;
-            for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
-                win_differentials[i] += if mutate { wins } else { -wins };
+            for (i, &mutate_2) in should_mutate_2[pair_idx].iter().enumerate() {
+                win_differentials[i] += if mutate_2 { wins } else { -wins };
             }
         }
 
