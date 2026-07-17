@@ -4,7 +4,6 @@
 
 ### misc
 
-- time limit in iterative deepening
 - `mod bots` -> `mod search`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats

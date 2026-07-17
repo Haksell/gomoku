@@ -1,12 +1,12 @@
 use crate::{
-    bots::{MAX_DEPTH, leaf_value},
+    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value},
     game::{
         Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
     },
     heuristics::Heuristic,
 };
-use std::cmp::max;
+use std::{cmp::max, time::Instant};
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
@@ -19,10 +19,13 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
-    let mut best_move = (usize::MAX, usize::MAX);
+    let t0 = Instant::now();
     let mut cache = Cache::default();
     let mut game = game.clone();
+
+    let mut best_move = (usize::MAX, usize::MAX);
     for max_depth in 0..=MAX_DEPTH {
+        let mut best_move_at_depth = (usize::MAX, usize::MAX);
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
@@ -30,10 +33,15 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
             max_depth,
             -i64::MAX,
             i64::MAX,
-            &mut best_move,
+            &mut best_move_at_depth,
             &mut cache,
             0,
+            t0,
         );
+        if t0.elapsed() > TIME_LIMIT {
+            break;
+        }
+        best_move = best_move_at_depth;
     }
     best_move
 }
@@ -49,7 +57,12 @@ fn alpha_beta_pruning_helper(
     best_move: &mut Position,
     cache: &mut Cache,
     cache_key: u64,
+    t0: Instant,
 ) -> i64 {
+    if t0.elapsed() > TIME_LIMIT {
+        return min_h;
+    }
+
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
         let previous = cache.insert(cache_key, leaf_value);
         debug_assert!(previous.is_none());
@@ -80,6 +93,7 @@ fn alpha_beta_pruning_helper(
             best_move,
             cache,
             update_cache_key(cache_key, pos), // TODO: NO ALREADY DONE in sort
+            t0,
         );
         game.undo_last_move();
 
@@ -99,33 +113,3 @@ fn alpha_beta_pruning_helper(
 const fn update_cache_key(cache_key: u64, (x, y): Position) -> u64 {
     (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as u64
 }
-
-// Cache key with transpositions
-// 13.940 new
-// 13.538 old
-// 3:01 new
-// 3:42
-
-// TODO: handle captures
-// TODO: test
-// const fn update_cache_key(mut cache_key: u64, (x, y): Position) -> u64 {
-//     const MASK: u64 = (1 << BITS_PER_MOVE) - 1;
-//     // [B].B.B
-//     let new_value = (y * BOARD_SIZE + x + 1) as u64;
-//     cache_key = (cache_key << BITS_PER_MOVE) | new_value;
-//     let mut shift = 0;
-//     loop {
-//         let old_value = (cache_key >> (shift + 2 * BITS_PER_MOVE)) & MASK;
-//         if new_value >= old_value {
-//             break;
-//         }
-
-//         let mask_except_swapped = !(MASK << shift) & !(MASK << (shift + 2 * BITS_PER_MOVE));
-//         cache_key = (cache_key & mask_except_swapped)
-//             | (old_value << shift)
-//             | (new_value << (shift + 2 * BITS_PER_MOVE));
-
-//         shift += 2 * BITS_PER_MOVE;
-//     }
-//     cache_key
-// }
