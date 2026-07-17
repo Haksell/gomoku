@@ -20,9 +20,9 @@ use std::{
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
-const GAMES_BY_EPOCH: usize = 100;
+const GAMES_BY_EPOCH: usize = 200;
 const PAIRS_BY_EPOCH: usize = GAMES_BY_EPOCH / 2;
-const REQUIRED_WIN_DIFFERENTIAL: i32 = 10;
+const REQUIRED_WIN_DIFFERENTIAL: i32 = 15;
 
 const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
@@ -42,15 +42,14 @@ pub fn run() {
         };
 
         let mutations: [i64; N_MUTATIONS] = array::from_fn(|i| {
-            let coeff_idx = if i < UNIQUE_STENCIL_INDICES {
-                STENCIL_INDICES[i]
+            if i < UNIQUE_STENCIL_INDICES {
+                random_coeff(best_coeffs[STENCIL_INDICES[i]])
             } else {
-                i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS
-            };
-            random_coeff(best_coeffs[coeff_idx])
+                random_coeff(best_coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS]).max(0)
+            }
         });
 
-        #[expect(clippy::needless_range_loop)]
+        #[expect(clippy::needless_range_loop, clippy::large_stack_arrays)]
         let should_mutate: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
             let mut should_mutate = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
             for i in 0..N_MUTATIONS {
