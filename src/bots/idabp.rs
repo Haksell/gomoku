@@ -39,6 +39,7 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
             0,
             t0,
         );
+        // TODO: break if close to time limit (predict time for next depth)
         if t0.elapsed() > TIME_LIMIT {
             // TODO: try using best_move_at_depth if possible
             break;
