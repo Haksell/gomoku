@@ -174,8 +174,8 @@ static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = [
     1796, 1445, 1850, 1823,
 ];
 
-const N_MUTATIONS: usize = 4;
-const REQUIRED_WINS: u32 = 12;
+const N_MUTATIONS: usize = 5;
+const REQUIRED_WINS: u32 = 22;
 
 const MAX_ADDITIVE_MUTATION: i64 = 32;
 // bias towards values closer to 0

@@ -1,721 +1,721 @@
 vec![
     0,     // .......
-    5,     // b......
-    -5,    // w......
-    57,    // .b.....
-    59,    // bb.....
-    -3,    // wb.....
-    -57,   // .w.....
-    3,     // bw.....
-    -59,   // ww.....
-    34,    // ..b....
-    -23,   // b.b....
-    26,    // w.b....
-    -24,   // .bb....
-    -7,    // bbb....
-    -26,   // wbb....
-    -24,   // .wb....
-    31,    // bwb....
+    52,    // b......
+    -52,   // w......
+    -27,   // .b.....
+    62,    // bb.....
+    -12,   // wb.....
+    27,    // .w.....
+    12,    // bw.....
+    -62,   // ww.....
+    0,     // ..b....
+    -48,   // b.b....
+    33,    // w.b....
+    -46,   // .bb....
+    38,    // bbb....
+    -105,  // wbb....
+    -42,   // .wb....
+    66,    // bwb....
     24,    // wwb....
-    -34,   // ..w....
-    -26,   // b.w....
-    23,    // w.w....
-    24,    // .bw....
+    0,     // ..w....
+    -33,   // b.w....
+    48,    // w.w....
+    42,    // .bw....
     -24,   // bbw....
-    -31,   // wbw....
-    24,    // .ww....
-    26,    // bww....
-    7,     // www....
-    1,     // ...b...
+    -66,   // wbw....
+    46,    // .ww....
+    105,   // bww....
+    -38,   // www....
+    -6,    // ...b...
     0,     // b..b...
     0,     // w..b...
-    87,    // .b.b...
-    11,    // bb.b...
+    101,   // .b.b...
+    38,    // bb.b...
     -19,   // wb.b...
-    5,     // .w.b...
-    -90,   // bw.b...
-    28,    // ww.b...
-    15,    // ..bb...
+    56,    // .w.b...
+    -36,   // bw.b...
+    26,    // ww.b...
+    -40,   // ..bb...
     7,     // b.bb...
     8,     // w.bb...
-    0,     // .bbb...
-    250,   // bbbb...
+    -12,   // .bbb...
+    286,   // bbbb...
     -27,   // wbbb...
-    -35,   // .wbb...
+    -16,   // .wbb...
     55,    // bwbb...
-    -10,   // wwbb...
+    0,     // wwbb...
     -21,   // ..wb...
-    43,    // b.wb...
-    19,    // w.wb...
-    -4,    // .bwb...
+    53,    // b.wb...
+    51,    // w.wb...
+    -78,   // .bwb...
     0,     // bbwb...
-    0,     // wbwb...
-    51,    // .wwb...
+    9,     // wbwb...
+    12,    // .wwb...
     0,     // bwwb...
-    21,    // wwwb...
-    -1,    // ...w...
+    -26,   // wwwb...
+    6,     // ...w...
     0,     // b..w...
     0,     // w..w...
-    -5,    // .b.w...
-    -28,   // bb.w...
-    90,    // wb.w...
-    -87,   // .w.w...
+    -56,   // .b.w...
+    -26,   // bb.w...
+    36,    // wb.w...
+    -101,  // .w.w...
     19,    // bw.w...
-    -11,   // ww.w...
+    -38,   // ww.w...
     21,    // ..bw...
-    -19,   // b.bw...
-    -43,   // w.bw...
-    -51,   // .bbw...
-    -21,   // bbbw...
+    -51,   // b.bw...
+    -53,   // w.bw...
+    -12,   // .bbw...
+    26,    // bbbw...
     0,     // wbbw...
-    4,     // .wbw...
-    0,     // bwbw...
+    78,    // .wbw...
+    -9,    // bwbw...
     0,     // wwbw...
-    -15,   // ..ww...
+    40,    // ..ww...
     -8,    // b.ww...
     -7,    // w.ww...
-    35,    // .bww...
-    10,    // bbww...
+    16,    // .bww...
+    0,     // bbww...
     -55,   // wbww...
-    0,     // .www...
+    12,    // .www...
     27,    // bwww...
-    250,   // wwww...
-    34,    // ....b..
-    -52,   // b...b..
-    0,     // w...b..
-    5,     // .b..b..
-    0,     // bb..b..
-    0,     // wb..b..
+    -286,  // wwww...
+    0,     // ....b..
+    -9,    // b...b..
+    10,    // w...b..
+    18,    // .b..b..
+    -5,    // bb..b..
+    -52,   // wb..b..
     30,    // .w..b..
-    0,     // bw..b..
+    31,    // bw..b..
     2,     // ww..b..
-    27,    // ..b.b..
-    -20,   // b.b.b..
-    -10,   // w.b.b..
+    65,    // ..b.b..
+    -41,   // b.b.b..
+    -20,   // w.b.b..
     7,     // .bb.b..
-    7,     // bbb.b..
-    40,    // wbb.b..
-    -5,    // .wb.b..
+    15,    // bbb.b..
+    16,    // wbb.b..
+    -54,   // .wb.b..
     46,    // bwb.b..
-    0,     // wwb.b..
+    5,     // wwb.b..
     0,     // ..w.b..
-    0,     // b.w.b..
-    69,    // w.w.b..
-    -20,   // .bw.b..
+    11,    // b.w.b..
+    98,    // w.w.b..
+    -45,   // .bw.b..
     -4,    // bbw.b..
     0,     // wbw.b..
     0,     // .ww.b..
-    -84,   // bww.b..
-    0,     // www.b..
-    15,    // ...bb..
-    0,     // b..bb..
-    7,     // w..bb..
-    8,     // .b.bb..
-    31,    // bb.bb..
-    38,    // wb.bb..
-    -8,    // .w.bb..
+    -100,  // bww.b..
+    45,    // www.b..
+    -40,   // ...bb..
+    -31,   // b..bb..
+    15,    // w..bb..
+    41,    // .b.bb..
+    18,    // bb.bb..
+    51,    // wb.bb..
+    -1,    // .w.bb..
     -76,   // bw.bb..
     0,     // ww.bb..
-    -53,   // ..bbb..
-    11,    // b.bbb..
-    -25,   // w.bbb..
+    -83,   // ..bbb..
+    4,     // b.bbb..
+    -19,   // w.bbb..
     308,   // .bbbb..
     999,   // bbbbb..
     -26,   // wbbbb..
-    -29,   // .wbbb..
-    0,     // bwbbb..
-    87,    // wwbbb..
+    -6,    // .wbbb..
+    -17,   // bwbbb..
+    79,    // wwbbb..
     11,    // ..wbb..
-    24,    // b.wbb..
-    -25,   // w.wbb..
+    54,    // b.wbb..
+    -27,   // w.wbb..
     -56,   // .bwbb..
     35,    // bbwbb..
     74,    // wbwbb..
     -22,   // .wwbb..
-    25,    // bwwbb..
+    49,    // bwwbb..
     0,     // wwwbb..
     21,    // ...wb..
     -38,   // b..wb..
     0,     // w..wb..
-    63,    // .b.wb..
+    51,    // .b.wb..
     -26,   // bb.wb..
-    23,    // wb.wb..
+    24,    // wb.wb..
     -13,   // .w.wb..
-    26,    // bw.wb..
-    0,     // ww.wb..
-    0,     // ..bwb..
+    -24,   // bw.wb..
+    4,     // ww.wb..
+    -16,   // ..bwb..
     -60,   // b.bwb..
-    -30,   // w.bwb..
-    25,    // .bbwb..
-    -3,    // bbbwb..
-    54,    // wbbwb..
-    62,    // .wbwb..
-    -13,   // bwbwb..
-    0,     // wwbwb..
+    -39,   // w.bwb..
+    28,    // .bbwb..
+    -35,   // bbbwb..
+    26,    // wbbwb..
+    59,    // .wbwb..
+    24,    // bwbwb..
+    14,    // wwbwb..
     -11,   // ..wwb..
-    12,    // b.wwb..
-    -35,   // w.wwb..
-    0,     // .bwwb..
+    5,     // b.wwb..
+    -7,    // w.wwb..
+    24,    // .bwwb..
     41,    // bbwwb..
     -31,   // wbwwb..
-    -31,   // .wwwb..
-    0,     // bwwwb..
-    21,    // wwwwb..
-    -34,   // ....w..
-    0,     // b...w..
-    52,    // w...w..
+    -37,   // .wwwb..
+    32,    // bwwwb..
+    25,    // wwwwb..
+    0,     // ....w..
+    -10,   // b...w..
+    9,     // w...w..
     -30,   // .b..w..
     -2,    // bb..w..
-    0,     // wb..w..
-    -5,    // .w..w..
-    0,     // bw..w..
-    0,     // ww..w..
+    -31,   // wb..w..
+    -18,   // .w..w..
+    52,    // bw..w..
+    5,     // ww..w..
     0,     // ..b.w..
-    -69,   // b.b.w..
-    0,     // w.b.w..
+    -98,   // b.b.w..
+    -11,   // w.b.w..
     0,     // .bb.w..
-    0,     // bbb.w..
-    84,    // wbb.w..
-    20,    // .wb.w..
+    -45,   // bbb.w..
+    100,   // wbb.w..
+    45,    // .wb.w..
     0,     // bwb.w..
     4,     // wwb.w..
-    -27,   // ..w.w..
-    10,    // b.w.w..
-    20,    // w.w.w..
-    5,     // .bw.w..
-    0,     // bbw.w..
+    -65,   // ..w.w..
+    20,    // b.w.w..
+    41,    // w.w.w..
+    54,    // .bw.w..
+    -5,    // bbw.w..
     -46,   // wbw.w..
     -7,    // .ww.w..
-    -40,   // bww.w..
-    -7,    // www.w..
+    -16,   // bww.w..
+    -15,   // www.w..
     -21,   // ...bw..
     0,     // b..bw..
     38,    // w..bw..
     13,    // .b.bw..
-    0,     // bb.bw..
-    -26,   // wb.bw..
-    -63,   // .w.bw..
-    -23,   // bw.bw..
+    -4,    // bb.bw..
+    24,    // wb.bw..
+    -51,   // .w.bw..
+    -24,   // bw.bw..
     26,    // ww.bw..
     11,    // ..bbw..
-    35,    // b.bbw..
-    -12,   // w.bbw..
-    31,    // .bbbw..
-    -21,   // bbbbw..
-    0,     // wbbbw..
-    0,     // .wbbw..
+    7,     // b.bbw..
+    -5,    // w.bbw..
+    37,    // .bbbw..
+    -25,   // bbbbw..
+    -32,   // wbbbw..
+    -24,   // .wbbw..
     31,    // bwbbw..
     -41,   // wwbbw..
-    0,     // ..wbw..
-    30,    // b.wbw..
+    16,    // ..wbw..
+    39,    // b.wbw..
     60,    // w.wbw..
-    -62,   // .bwbw..
-    0,     // bbwbw..
-    13,    // wbwbw..
-    -25,   // .wwbw..
-    -54,   // bwwbw..
-    3,     // wwwbw..
-    -15,   // ...ww..
-    -7,    // b..ww..
-    0,     // w..ww..
-    8,     // .b.ww..
+    -59,   // .bwbw..
+    -14,   // bbwbw..
+    -24,   // wbwbw..
+    -28,   // .wwbw..
+    -26,   // bwwbw..
+    35,    // wwwbw..
+    40,    // ...ww..
+    -15,   // b..ww..
+    31,    // w..ww..
+    1,     // .b.ww..
     0,     // bb.ww..
     76,    // wb.ww..
-    -8,    // .w.ww..
-    -38,   // bw.ww..
-    -31,   // ww.ww..
+    -41,   // .w.ww..
+    -51,   // bw.ww..
+    -18,   // ww.ww..
     -11,   // ..bww..
-    25,    // b.bww..
-    -24,   // w.bww..
+    27,    // b.bww..
+    -54,   // w.bww..
     22,    // .bbww..
     0,     // bbbww..
-    -25,   // wbbww..
+    -49,   // wbbww..
     56,    // .wbww..
     -74,   // bwbww..
     -35,   // wwbww..
-    53,    // ..www..
-    25,    // b.www..
-    -11,   // w.www..
-    29,    // .bwww..
-    -87,   // bbwww..
-    0,     // wbwww..
+    83,    // ..www..
+    19,    // b.www..
+    -4,    // w.www..
+    6,     // .bwww..
+    -79,   // bbwww..
+    17,    // wbwww..
     -308,  // .wwww..
     26,    // bwwww..
     -999,  // wwwww..
-    57,    // .....b.
-    0,     // b....b.
-    88,    // w....b.
+    -27,   // .....b.
+    69,    // b....b.
+    115,   // w....b.
     -52,   // .b...b.
     0,     // bb...b.
     0,     // wb...b.
     0,     // .w...b.
-    0,     // bw...b.
-    6,     // ww...b.
-    5,     // ..b..b.
+    17,    // bw...b.
+    34,    // ww...b.
+    18,    // ..b..b.
     -50,   // b.b..b.
-    60,    // w.b..b.
+    43,    // w.b..b.
     0,     // .bb..b.
-    72,    // bbb..b.
+    95,    // bbb..b.
     11,    // wbb..b.
-    -39,   // .wb..b.
+    -14,   // .wb..b.
     -29,   // bwb..b.
     -7,    // wwb..b.
     -30,   // ..w..b.
     0,     // b.w..b.
-    -52,   // w.w..b.
+    -93,   // w.w..b.
     -48,   // .bw..b.
-    -58,   // bbw..b.
-    -25,   // wbw..b.
+    -51,   // bbw..b.
+    -70,   // wbw..b.
     -15,   // .ww..b.
-    6,     // bww..b.
+    21,    // bww..b.
     38,    // www..b.
-    87,    // ...b.b.
+    101,   // ...b.b.
     31,    // b..b.b.
     28,    // w..b.b.
     0,     // .b.b.b.
     -35,   // bb.b.b.
-    -31,   // wb.b.b.
-    -52,   // .w.b.b.
-    4,     // bw.b.b.
-    7,     // ww.b.b.
-    8,     // ..bb.b.
-    26,    // b.bb.b.
+    -27,   // wb.b.b.
+    -67,   // .w.b.b.
+    -28,   // bw.b.b.
+    31,    // ww.b.b.
+    41,    // ..bb.b.
+    39,    // b.bb.b.
     70,    // w.bb.b.
     47,    // .bbb.b.
-    0,     // bbbb.b.
+    25,    // bbbb.b.
     0,     // wbbb.b.
-    0,     // .wbb.b.
-    20,    // bwbb.b.
-    59,    // wwbb.b.
+    4,     // .wbb.b.
+    17,    // bwbb.b.
+    80,    // wwbb.b.
     13,    // ..wb.b.
     31,    // b.wb.b.
-    -5,    // w.wb.b.
-    -35,   // .bwb.b.
+    -31,   // w.wb.b.
+    -5,    // .bwb.b.
     12,    // bbwb.b.
-    -12,   // wbwb.b.
-    22,    // .wwb.b.
-    0,     // bwwb.b.
-    -2,    // wwwb.b.
-    -5,    // ...w.b.
+    -4,    // wbwb.b.
+    48,    // .wwb.b.
+    -21,   // bwwb.b.
+    -34,   // wwwb.b.
+    -56,   // ...w.b.
     0,     // b..w.b.
-    57,    // w..w.b.
+    28,    // w..w.b.
     14,    // .b.w.b.
     -3,    // bb.w.b.
-    -53,   // wb.w.b.
-    52,    // .w.w.b.
-    -8,    // bw.w.b.
-    53,    // ww.w.b.
-    63,    // ..bw.b.
+    -33,   // wb.w.b.
+    67,    // .w.w.b.
+    -27,   // bw.w.b.
+    39,    // ww.w.b.
+    51,    // ..bw.b.
     1,     // b.bw.b.
-    -49,   // w.bw.b.
-    -36,   // .bbw.b.
+    -20,   // w.bw.b.
+    -58,   // .bbw.b.
     66,    // bbbw.b.
-    2,     // wbbw.b.
+    -23,   // wbbw.b.
     39,    // .wbw.b.
     -18,   // bwbw.b.
     -28,   // wwbw.b.
-    8,     // ..ww.b.
-    25,    // b.ww.b.
-    8,     // w.ww.b.
-    -3,    // .bww.b.
+    1,     // ..ww.b.
+    0,     // b.ww.b.
+    45,    // w.ww.b.
+    -17,   // .bww.b.
     32,    // bbww.b.
-    0,     // wbww.b.
+    12,    // wbww.b.
     -22,   // .www.b.
-    -6,    // bwww.b.
+    0,     // bwww.b.
     5,     // wwww.b.
-    -24,   // ....bb.
-    0,     // b...bb.
+    -46,   // ....bb.
+    10,    // b...bb.
     0,     // w...bb.
     0,     // .b..bb.
-    -28,   // bb..bb.
+    0,     // bb..bb.
     0,     // wb..bb.
     15,    // .w..bb.
     18,    // bw..bb.
-    17,    // ww..bb.
+    10,    // ww..bb.
     7,     // ..b.bb.
-    28,    // b.b.bb.
-    -34,   // w.b.bb.
-    0,     // .bb.bb.
-    -24,   // bbb.bb.
-    -22,   // wbb.bb.
-    58,    // .wb.bb.
+    0,     // b.b.bb.
+    -61,   // w.b.bb.
+    31,    // .bb.bb.
+    0,     // bbb.bb.
+    -26,   // wbb.bb.
+    74,    // .wb.bb.
     0,     // bwb.bb.
     0,     // wwb.bb.
     0,     // ..w.bb.
-    0,     // b.w.bb.
-    -2,    // w.w.bb.
+    -25,   // b.w.bb.
+    0,     // w.w.bb.
     -8,    // .bw.bb.
     -13,   // bbw.bb.
-    18,    // wbw.bb.
+    0,     // wbw.bb.
     0,     // .ww.bb.
     14,    // bww.bb.
-    -3,    // www.bb.
-    0,     // ...bbb.
-    3,     // b..bbb.
-    53,    // w..bbb.
+    -31,   // www.bb.
+    -12,   // ...bbb.
+    52,    // b..bbb.
+    47,    // w..bbb.
     47,    // .b.bbb.
-    -30,   // bb.bbb.
+    -20,   // bb.bbb.
     0,     // wb.bbb.
     22,    // .w.bbb.
-    51,    // bw.bbb.
-    8,     // ww.bbb.
+    69,    // bw.bbb.
+    40,    // ww.bbb.
     308,   // ..bbbb.
     -8,    // b.bbbb.
     28,    // w.bbbb.
-    764,   // .bbbbb.
+    664,   // .bbbbb.
     1151,  // bbbbbb.
-    999,   // wbbbbb.
+    1227,  // wbbbbb.
     -15,   // .wbbbb.
-    21,    // bwbbbb.
+    28,    // bwbbbb.
     16,    // wwbbbb.
-    31,    // ..wbbb.
+    37,    // ..wbbb.
     -29,   // b.wbbb.
-    37,    // w.wbbb.
+    18,    // w.wbbb.
     0,     // .bwbbb.
     -20,   // bbwbbb.
     0,     // wbwbbb.
-    0,     // .wwbbb.
-    -28,   // bwwbbb.
-    46,    // wwwbbb.
-    -51,   // ...wbb.
-    -76,   // b..wbb.
+    -28,   // .wwbbb.
+    -48,   // bwwbbb.
+    53,    // wwwbbb.
+    -12,   // ...wbb.
+    -50,   // b..wbb.
     -38,   // w..wbb.
-    -36,   // .b.wbb.
+    -58,   // .b.wbb.
     13,    // bb.wbb.
-    -21,   // wb.wbb.
-    -22,   // .w.wbb.
+    -41,   // wb.wbb.
+    -48,   // .w.wbb.
     -8,    // bw.wbb.
-    -7,    // ww.wbb.
-    25,    // ..bwbb.
-    65,    // b.bwbb.
+    -34,   // ww.wbb.
+    28,    // ..bwbb.
+    82,    // b.bwbb.
     59,    // w.bwbb.
-    20,    // .bbwbb.
-    -44,   // bbbwbb.
-    35,    // wbbwbb.
-    48,    // .wbwbb.
-    20,    // bwbwbb.
-    26,    // wwbwbb.
+    10,    // .bbwbb.
+    -32,   // bbbwbb.
+    60,    // wbbwbb.
+    26,    // .wbwbb.
+    35,    // bwbwbb.
+    0,     // wwbwbb.
     22,    // ..wwbb.
     0,     // b.wwbb.
     5,     // w.wwbb.
-    1,     // .bwwbb.
+    21,    // .bwwbb.
     55,    // bbwwbb.
-    0,     // wbwwbb.
-    0,     // .wwwbb.
-    21,    // bwwwbb.
+    16,    // wbwwbb.
+    28,    // .wwwbb.
+    41,    // bwwwbb.
     0,     // wwwwbb.
-    24,    // ....wb.
-    -29,   // b...wb.
-    0,     // w...wb.
+    42,    // ....wb.
+    -8,    // b...wb.
+    -84,   // w...wb.
     -48,   // .b..wb.
     14,    // bb..wb.
-    0,     // wb..wb.
-    39,    // .w..wb.
+    7,     // wb..wb.
+    14,    // .w..wb.
     64,    // bw..wb.
-    0,     // ww..wb.
-    -20,   // ..b.wb.
+    -15,   // ww..wb.
+    -45,   // ..b.wb.
     34,    // b.b.wb.
     -15,   // w.b.wb.
     -8,    // .bb.wb.
-    21,    // bbb.wb.
-    -61,   // wbb.wb.
+    2,     // bbb.wb.
+    -83,   // wbb.wb.
     0,     // .wb.wb.
     -22,   // bwb.wb.
-    11,    // wwb.wb.
-    5,     // ..w.wb.
+    25,    // wwb.wb.
+    54,    // ..w.wb.
     -40,   // b.w.wb.
-    -17,   // w.w.wb.
-    -46,   // .bw.wb.
+    -33,   // w.w.wb.
+    -3,    // .bw.wb.
     7,     // bbw.wb.
-    -12,   // wbw.wb.
-    -58,   // .ww.wb.
-    -41,   // bww.wb.
-    -15,   // www.wb.
-    -4,    // ...bwb.
+    -13,   // wbw.wb.
+    -74,   // .ww.wb.
+    -84,   // bww.wb.
+    0,     // www.wb.
+    -78,   // ...bwb.
     0,     // b..bwb.
-    43,    // w..bwb.
-    -35,   // .b.bwb.
-    -36,   // bb.bwb.
+    71,    // w..bwb.
+    -5,    // .b.bwb.
+    -41,   // bb.bwb.
     -8,    // wb.bwb.
     -39,   // .w.bwb.
-    9,     // bw.bwb.
-    -15,   // ww.bwb.
+    41,    // bw.bwb.
+    -28,   // ww.bwb.
     -56,   // ..bbwb.
     -36,   // b.bbwb.
     -27,   // w.bbwb.
     0,     // .bbbwb.
-    6,     // bbbbwb.
-    20,    // wbbbwb.
-    0,     // .wbbwb.
-    -9,    // bwbbwb.
-    -20,   // wwbbwb.
-    -62,   // ..wbwb.
-    -21,   // b.wbwb.
-    17,    // w.wbwb.
-    43,    // .bwbwb.
-    -56,   // bbwbwb.
-    30,    // wbwbwb.
-    -48,   // .wwbwb.
-    -30,   // bwwbwb.
+    32,    // bbbbwb.
+    38,    // wbbbwb.
+    13,    // .wbbwb.
+    -6,    // bwbbwb.
+    -10,   // wwbbwb.
+    -59,   // ..wbwb.
+    -30,   // b.wbwb.
+    32,    // w.wbwb.
+    34,    // .bwbwb.
+    -60,   // bbwbwb.
+    51,    // wbwbwb.
+    -26,   // .wwbwb.
+    -18,   // bwwbwb.
     -1,    // wwwbwb.
-    35,    // ...wwb.
+    16,    // ...wwb.
     23,    // b..wwb.
-    16,    // w..wwb.
-    -3,    // .b.wwb.
-    30,    // bb.wwb.
-    0,     // wb.wwb.
-    0,     // .w.wwb.
-    74,    // bw.wwb.
+    59,    // w..wwb.
+    -17,   // .b.wwb.
+    22,    // bb.wwb.
+    -36,   // wb.wwb.
+    -4,    // .w.wwb.
+    80,    // bw.wwb.
     -6,    // ww.wwb.
-    0,     // ..bwwb.
-    -45,   // b.bwwb.
-    52,    // w.bwwb.
-    1,     // .bbwwb.
-    10,    // bbbwwb.
-    -55,   // wbbwwb.
-    0,     // .wbwwb.
+    24,    // ..bwwb.
+    -40,   // b.bwwb.
+    39,    // w.bwwb.
+    21,    // .bbwwb.
+    20,    // bbbwwb.
+    -80,   // wbbwwb.
+    -13,   // .wbwwb.
     48,    // bwbwwb.
     0,     // wwbwwb.
-    29,    // ..wwwb.
-    20,    // b.wwwb.
+    6,     // ..wwwb.
+    0,     // b.wwwb.
     -34,   // w.wwwb.
-    25,    // .bwwwb.
+    31,    // .bwwwb.
     -54,   // bbwwwb.
-    35,    // wbwwwb.
+    18,    // wbwwwb.
     15,    // .wwwwb.
-    24,    // bwwwwb.
+    41,    // bwwwwb.
     -1082, // wwwwwb.
-    -57,   // .....w.
-    -88,   // b....w.
-    0,     // w....w.
+    27,    // .....w.
+    -115,  // b....w.
+    -69,   // w....w.
     0,     // .b...w.
-    -6,    // bb...w.
-    0,     // wb...w.
+    -34,   // bb...w.
+    -17,   // wb...w.
     52,    // .w...w.
     0,     // bw...w.
     0,     // ww...w.
     30,    // ..b..w.
-    52,    // b.b..w.
+    93,    // b.b..w.
     0,     // w.b..w.
     15,    // .bb..w.
     -38,   // bbb..w.
-    -6,    // wbb..w.
+    -21,   // wbb..w.
     48,    // .wb..w.
-    25,    // bwb..w.
-    58,    // wwb..w.
-    -5,    // ..w..w.
-    -60,   // b.w..w.
+    70,    // bwb..w.
+    51,    // wwb..w.
+    -18,   // ..w..w.
+    -43,   // b.w..w.
     50,    // w.w..w.
-    39,    // .bw..w.
+    14,    // .bw..w.
     7,     // bbw..w.
     29,    // wbw..w.
     0,     // .ww..w.
     -11,   // bww..w.
-    -72,   // www..w.
-    5,     // ...b.w.
-    -57,   // b..b.w.
+    -95,   // www..w.
+    56,    // ...b.w.
+    -28,   // b..b.w.
     0,     // w..b.w.
-    -52,   // .b.b.w.
-    -53,   // bb.b.w.
-    8,     // wb.b.w.
+    -67,   // .b.b.w.
+    -39,   // bb.b.w.
+    27,    // wb.b.w.
     -14,   // .w.b.w.
-    53,    // bw.b.w.
+    33,    // bw.b.w.
     3,     // ww.b.w.
-    -8,    // ..bb.w.
-    -8,    // b.bb.w.
-    -25,   // w.bb.w.
+    -1,    // ..bb.w.
+    -45,   // b.bb.w.
+    0,     // w.bb.w.
     22,    // .bbb.w.
     -5,    // bbbb.w.
-    6,     // wbbb.w.
-    3,     // .wbb.w.
-    0,     // bwbb.w.
+    0,     // wbbb.w.
+    17,    // .wbb.w.
+    -12,   // bwbb.w.
     -32,   // wwbb.w.
-    -63,   // ..wb.w.
-    49,    // b.wb.w.
+    -51,   // ..wb.w.
+    20,    // b.wb.w.
     -1,    // w.wb.w.
     -39,   // .bwb.w.
     28,    // bbwb.w.
     18,    // wbwb.w.
-    36,    // .wwb.w.
-    -2,    // bwwb.w.
+    58,    // .wwb.w.
+    23,    // bwwb.w.
     -66,   // wwwb.w.
-    -87,   // ...w.w.
+    -101,  // ...w.w.
     -28,   // b..w.w.
     -31,   // w..w.w.
-    52,    // .b.w.w.
-    -7,    // bb.w.w.
-    -4,    // wb.w.w.
+    67,    // .b.w.w.
+    -31,   // bb.w.w.
+    28,    // wb.w.w.
     0,     // .w.w.w.
-    31,    // bw.w.w.
+    27,    // bw.w.w.
     35,    // ww.w.w.
     -13,   // ..bw.w.
-    5,     // b.bw.w.
+    31,    // b.bw.w.
     -31,   // w.bw.w.
-    -22,   // .bbw.w.
-    2,     // bbbw.w.
-    0,     // wbbw.w.
-    35,    // .wbw.w.
-    12,    // bwbw.w.
+    -48,   // .bbw.w.
+    34,    // bbbw.w.
+    21,    // wbbw.w.
+    5,     // .wbw.w.
+    4,     // bwbw.w.
     -12,   // wwbw.w.
-    -8,    // ..ww.w.
+    -41,   // ..ww.w.
     -70,   // b.ww.w.
-    -26,   // w.ww.w.
-    0,     // .bww.w.
-    -59,   // bbww.w.
-    -20,   // wbww.w.
+    -39,   // w.ww.w.
+    -4,    // .bww.w.
+    -80,   // bbww.w.
+    -17,   // wbww.w.
     -47,   // .www.w.
     0,     // bwww.w.
-    0,     // wwww.w.
-    -24,   // ....bw.
-    0,     // b...bw.
-    29,    // w...bw.
-    -39,   // .b..bw.
-    0,     // bb..bw.
+    -25,   // wwww.w.
+    -42,   // ....bw.
+    84,    // b...bw.
+    8,     // w...bw.
+    -14,   // .b..bw.
+    15,    // bb..bw.
     -64,   // wb..bw.
     48,    // .w..bw.
-    0,     // bw..bw.
+    -7,    // bw..bw.
     -14,   // ww..bw.
-    -5,    // ..b.bw.
-    17,    // b.b.bw.
+    -54,   // ..b.bw.
+    33,    // b.b.bw.
     40,    // w.b.bw.
-    58,    // .bb.bw.
-    15,    // bbb.bw.
-    41,    // wbb.bw.
-    46,    // .wb.bw.
-    12,    // bwb.bw.
+    74,    // .bb.bw.
+    0,     // bbb.bw.
+    84,    // wbb.bw.
+    3,     // .wb.bw.
+    13,    // bwb.bw.
     -7,    // wwb.bw.
-    20,    // ..w.bw.
+    45,    // ..w.bw.
     15,    // b.w.bw.
     -34,   // w.w.bw.
     0,     // .bw.bw.
-    -11,   // bbw.bw.
+    -25,   // bbw.bw.
     22,    // wbw.bw.
     8,     // .ww.bw.
-    61,    // bww.bw.
-    -21,   // www.bw.
-    -35,   // ...bbw.
-    -16,   // b..bbw.
+    83,    // bww.bw.
+    -2,    // www.bw.
+    -16,   // ...bbw.
+    -59,   // b..bbw.
     -23,   // w..bbw.
-    0,     // .b.bbw.
+    4,     // .b.bbw.
     6,     // bb.bbw.
-    -74,   // wb.bbw.
-    3,     // .w.bbw.
-    0,     // bw.bbw.
-    -30,   // ww.bbw.
-    -29,   // ..bbbw.
+    -80,   // wb.bbw.
+    17,    // .w.bbw.
+    36,    // bw.bbw.
+    -22,   // ww.bbw.
+    -6,    // ..bbbw.
     34,    // b.bbbw.
-    -20,   // w.bbbw.
+    0,     // w.bbbw.
     -15,   // .bbbbw.
     1082,  // bbbbbw.
-    -24,   // wbbbbw.
-    -25,   // .wbbbw.
-    -35,   // bwbbbw.
+    -41,   // wbbbbw.
+    -31,   // .wbbbw.
+    -18,   // bwbbbw.
     54,    // wwbbbw.
-    0,     // ..wbbw.
-    -52,   // b.wbbw.
-    45,    // w.wbbw.
-    0,     // .bwbbw.
+    -24,   // ..wbbw.
+    -39,   // b.wbbw.
+    40,    // w.wbbw.
+    13,    // .bwbbw.
     0,     // bbwbbw.
     -48,   // wbwbbw.
-    -1,    // .wwbbw.
-    55,    // bwwbbw.
-    -10,   // wwwbbw.
-    4,     // ...wbw.
-    -43,   // b..wbw.
+    -21,   // .wwbbw.
+    80,    // bwwbbw.
+    -20,   // wwwbbw.
+    78,    // ...wbw.
+    -71,   // b..wbw.
     0,     // w..wbw.
     39,    // .b.wbw.
-    15,    // bb.wbw.
-    -9,    // wb.wbw.
-    35,    // .w.wbw.
+    28,    // bb.wbw.
+    -41,   // wb.wbw.
+    5,     // .w.wbw.
     8,     // bw.wbw.
-    36,    // ww.wbw.
-    62,    // ..bwbw.
-    -17,   // b.bwbw.
-    21,    // w.bwbw.
-    48,    // .bbwbw.
+    41,    // ww.wbw.
+    59,    // ..bwbw.
+    -32,   // b.bwbw.
+    30,    // w.bwbw.
+    26,    // .bbwbw.
     1,     // bbbwbw.
-    30,    // wbbwbw.
-    -43,   // .wbwbw.
-    -30,   // bwbwbw.
-    56,    // wwbwbw.
+    18,    // wbbwbw.
+    -34,   // .wbwbw.
+    -51,   // bwbwbw.
+    60,    // wwbwbw.
     56,    // ..wwbw.
     27,    // b.wwbw.
     36,    // w.wwbw.
-    0,     // .bwwbw.
-    20,    // bbwwbw.
-    9,     // wbwwbw.
+    -13,   // .bwwbw.
+    10,    // bbwwbw.
+    6,     // wbwwbw.
     0,     // .wwwbw.
-    -20,   // bwwwbw.
-    -6,    // wwwwbw.
-    24,    // ....ww.
+    -38,   // bwwwbw.
+    -32,   // wwwwbw.
+    46,    // ....ww.
     0,     // b...ww.
-    0,     // w...ww.
+    -10,   // w...ww.
     -15,   // .b..ww.
-    -17,   // bb..ww.
+    -10,   // bb..ww.
     -18,   // wb..ww.
     0,     // .w..ww.
     0,     // bw..ww.
-    28,    // ww..ww.
+    0,     // ww..ww.
     0,     // ..b.ww.
-    2,     // b.b.ww.
-    0,     // w.b.ww.
+    0,     // b.b.ww.
+    25,    // w.b.ww.
     0,     // .bb.ww.
-    3,     // bbb.ww.
+    31,    // bbb.ww.
     -14,   // wbb.ww.
     8,     // .wb.ww.
-    -18,   // bwb.ww.
+    0,     // bwb.ww.
     13,    // wwb.ww.
     -7,    // ..w.ww.
-    34,    // b.w.ww.
-    -28,   // w.w.ww.
-    -58,   // .bw.ww.
+    61,    // b.w.ww.
+    0,     // w.w.ww.
+    -74,   // .bw.ww.
     0,     // bbw.ww.
     0,     // wbw.ww.
-    0,     // .ww.ww.
-    22,    // bww.ww.
-    24,    // www.ww.
-    51,    // ...bww.
+    -31,   // .ww.ww.
+    26,    // bww.ww.
+    0,     // www.ww.
+    12,    // ...bww.
     38,    // b..bww.
-    76,    // w..bww.
-    22,    // .b.bww.
-    7,     // bb.bww.
+    50,    // w..bww.
+    48,    // .b.bww.
+    34,    // bb.bww.
     8,     // wb.bww.
-    36,    // .w.bww.
-    21,    // bw.bww.
+    58,    // .w.bww.
+    41,    // bw.bww.
     -13,   // ww.bww.
     -22,   // ..bbww.
     -5,    // b.bbww.
     0,     // w.bbww.
-    0,     // .bbbww.
+    -28,   // .bbbww.
     0,     // bbbbww.
-    -21,   // wbbbww.
-    -1,    // .wbbww.
-    0,     // bwbbww.
+    -41,   // wbbbww.
+    -21,   // .wbbww.
+    -16,   // bwbbww.
     -55,   // wwbbww.
-    -25,   // ..wbww.
+    -28,   // ..wbww.
     -59,   // b.wbww.
-    -65,   // w.wbww.
-    -48,   // .bwbww.
-    -26,   // bbwbww.
-    -20,   // wbwbww.
-    -20,   // .wwbww.
-    -35,   // bwwbww.
-    44,    // wwwbww.
-    0,     // ...www.
-    -53,   // b..www.
-    -3,    // w..www.
+    -82,   // w.wbww.
+    -26,   // .bwbww.
+    0,     // bbwbww.
+    -35,   // wbwbww.
+    -10,   // .wwbww.
+    -60,   // bwwbww.
+    32,    // wwwbww.
+    12,    // ...www.
+    -47,   // b..www.
+    -52,   // w..www.
     -22,   // .b.www.
-    -8,    // bb.www.
-    -51,   // wb.www.
+    -40,   // bb.www.
+    -69,   // wb.www.
     -47,   // .w.www.
     0,     // bw.www.
-    30,    // ww.www.
-    -31,   // ..bwww.
-    -37,   // b.bwww.
+    20,    // ww.www.
+    -37,   // ..bwww.
+    -18,   // b.bwww.
     29,    // w.bwww.
-    0,     // .bbwww.
-    -46,   // bbbwww.
-    28,    // wbbwww.
+    28,    // .bbwww.
+    -53,   // bbbwww.
+    48,    // wbbwww.
     0,     // .wbwww.
     0,     // bwbwww.
     20,    // wwbwww.
@@ -724,60 +724,60 @@ vec![
     8,     // w.wwww.
     15,    // .bwwww.
     -16,   // bbwwww.
-    -21,   // wbwwww.
-    -764,  // .wwwww.
-    -999,  // bwwwww.
+    -28,   // wbwwww.
+    -664,  // .wwwww.
+    -1227, // bwwwww.
     -1151, // wwwwww.
-    5,     // ......b
-    -29,   // b.....b
+    52,    // ......b
+    0,     // b.....b
     0,     // w.....b
-    0,     // .b....b
+    69,    // .b....b
     -43,   // bb....b
-    -19,   // wb....b
-    -88,   // .w....b
+    1,     // wb....b
+    -115,  // .w....b
     51,    // bw....b
-    49,    // ww....b
-    -52,   // ..b...b
-    -28,   // b.b...b
+    66,    // ww....b
+    -9,    // ..b...b
+    -22,   // b.b...b
     0,     // w.b...b
-    0,     // .bb...b
-    5,     // bbb...b
+    10,    // .bb...b
+    0,     // bbb...b
     0,     // wbb...b
-    0,     // .wb...b
+    84,    // .wb...b
     -46,   // bwb...b
-    -21,   // wwb...b
-    0,     // ..w...b
-    -22,   // b.w...b
-    56,    // w.w...b
-    -29,   // .bw...b
+    -23,   // wwb...b
+    -10,   // ..w...b
+    -13,   // b.w...b
+    80,    // w.w...b
+    -8,    // .bw...b
     0,     // bbw...b
     84,    // wbw...b
     0,     // .ww...b
     -18,   // bww...b
-    18,    // www...b
+    84,    // www...b
     0,     // ...b..b
-    66,    // b..b..b
+    119,   // b..b..b
     -34,   // w..b..b
     31,    // .b.b..b
-    31,    // bb.b..b
-    13,    // wb.b..b
-    -57,   // .w.b..b
+    8,     // bb.b..b
+    45,    // wb.b..b
+    -28,   // .w.b..b
     34,    // bw.b..b
     0,     // ww.b..b
-    0,     // ..bb..b
-    -31,   // b.bb..b
-    48,    // w.bb..b
-    3,     // .bbb..b
+    -31,   // ..bb..b
+    -33,   // b.bb..b
+    74,    // w.bb..b
+    52,    // .bbb..b
     26,    // bbbb..b
-    -28,   // wbbb..b
-    -16,   // .wbb..b
+    0,     // wbbb..b
+    -59,   // .wbb..b
     8,     // bwbb..b
-    117,   // wwbb..b
+    138,   // wwbb..b
     0,     // ..wb..b
     0,     // b.wb..b
     -32,   // w.wb..b
     0,     // .bwb..b
-    17,    // bbwb..b
+    0,     // bbwb..b
     -1,    // wbwb..b
     38,    // .wwb..b
     -2,    // bwwb..b
@@ -786,359 +786,359 @@ vec![
     -10,   // b..w..b
     34,    // w..w..b
     0,     // .b.w..b
-    -44,   // bb.w..b
-    -26,   // wb.w..b
+    -14,   // bb.w..b
+    0,     // wb.w..b
     -28,   // .w.w..b
     64,    // bw.w..b
     -27,   // ww.w..b
     -38,   // ..bw..b
-    21,    // b.bw..b
-    -30,   // w.bw..b
-    -76,   // .bbw..b
-    34,    // bbbw..b
+    36,    // b.bw..b
+    -48,   // w.bw..b
+    -50,   // .bbw..b
+    10,    // bbbw..b
     13,    // wbbw..b
-    -43,   // .wbw..b
-    20,    // bwbw..b
+    -71,   // .wbw..b
+    0,     // bwbw..b
     0,     // wwbw..b
-    -7,    // ..ww..b
+    -15,   // ..ww..b
     51,    // b.ww..b
     -17,   // w.ww..b
     23,    // .bww..b
-    5,     // bbww..b
-    62,    // wbww..b
-    -53,   // .www..b
+    8,     // bbww..b
+    37,    // wbww..b
+    -47,   // .www..b
     31,    // bwww..b
-    -21,   // wwww..b
-    -23,   // ....b.b
-    -28,   // b...b.b
-    -56,   // w...b.b
+    -27,   // wwww..b
+    -48,   // ....b.b
+    -22,   // b...b.b
+    -80,   // w...b.b
     -50,   // .b..b.b
-    -37,   // bb..b.b
-    25,    // wb..b.b
-    52,    // .w..b.b
-    -7,    // bw..b.b
-    -81,   // ww..b.b
-    -20,   // ..b.b.b
-    -15,   // b.b.b.b
-    -91,   // w.b.b.b
-    28,    // .bb.b.b
-    17,    // bbb.b.b
-    35,    // wbb.b.b
-    17,    // .wb.b.b
+    -21,   // bb..b.b
+    53,    // wb..b.b
+    93,    // .w..b.b
+    1,     // bw..b.b
+    -83,   // ww..b.b
+    -41,   // ..b.b.b
+    -32,   // b.b.b.b
+    -108,  // w.b.b.b
+    0,     // .bb.b.b
+    20,    // bbb.b.b
+    64,    // wbb.b.b
+    33,    // .wb.b.b
     21,    // bwb.b.b
-    0,     // wwb.b.b
-    -69,   // ..w.b.b
-    18,    // b.w.b.b
+    1,     // wwb.b.b
+    -98,   // ..w.b.b
+    0,     // b.w.b.b
     0,     // w.w.b.b
     34,    // .bw.b.b
     0,     // bbw.b.b
-    -57,   // wbw.b.b
-    2,     // .ww.b.b
+    -50,   // wbw.b.b
+    0,     // .ww.b.b
     48,    // bww.b.b
     0,     // www.b.b
     7,     // ...bb.b
-    -31,   // b..bb.b
+    -33,   // b..bb.b
     17,    // w..bb.b
-    26,    // .b.bb.b
+    39,    // .b.bb.b
     -97,   // bb.bb.b
-    6,     // wb.bb.b
-    -8,    // .w.bb.b
-    4,     // bw.bb.b
-    35,    // ww.bb.b
-    11,    // ..bbb.b
-    80,    // b.bbb.b
-    0,     // w.bbb.b
+    14,    // wb.bb.b
+    -45,   // .w.bb.b
+    12,    // bw.bb.b
+    48,    // ww.bb.b
+    4,     // ..bbb.b
+    83,    // b.bbb.b
+    -16,   // w.bbb.b
     -8,    // .bbbb.b
-    999,   // bbbbb.b
+    726,   // bbbbb.b
     -17,   // wbbbb.b
     34,    // .wbbb.b
-    -28,   // bwbbb.b
+    -12,   // bwbbb.b
     1,     // wwbbb.b
-    35,    // ..wbb.b
+    7,     // ..wbb.b
     -25,   // b.wbb.b
     -20,   // w.wbb.b
     -36,   // .bwbb.b
-    -38,   // bbwbb.b
+    -36,   // bbwbb.b
     -12,   // wbwbb.b
     -5,    // .wwbb.b
     0,     // bwwbb.b
     0,     // wwwbb.b
-    -19,   // ...wb.b
-    21,    // b..wb.b
+    -51,   // ...wb.b
+    36,    // b..wb.b
     32,    // w..wb.b
     1,     // .b.wb.b
-    42,    // bb.wb.b
+    41,    // bb.wb.b
     54,    // wb.wb.b
-    5,     // .w.wb.b
+    31,    // .w.wb.b
     28,    // bw.wb.b
     1,     // ww.wb.b
     -60,   // ..bwb.b
     -64,   // b.bwb.b
-    20,    // w.bwb.b
-    65,    // .bbwb.b
-    -108,  // bbbwb.b
-    -21,   // wbbwb.b
-    -17,   // .wbwb.b
+    0,     // w.bwb.b
+    82,    // .bbwb.b
+    -107,  // bbbwb.b
+    -1,    // wbbwb.b
+    -32,   // .wbwb.b
     67,    // bwbwb.b
     15,    // wwbwb.b
-    25,    // ..wwb.b
+    27,    // ..wwb.b
     -18,   // b.wwb.b
     20,    // w.wwb.b
-    -45,   // .bwwb.b
-    32,    // bbwwb.b
-    1,     // wbwwb.b
-    -37,   // .wwwb.b
-    39,    // bwwwb.b
-    63,    // wwwwb.b
-    -26,   // ....w.b
-    -22,   // b...w.b
+    -40,   // .bwwb.b
+    56,    // bbwwb.b
+    -9,    // wbwwb.b
+    -18,   // .wwwb.b
+    27,    // bwwwb.b
+    52,    // wwwwb.b
+    -33,   // ....w.b
+    -13,   // b...w.b
     0,     // w...w.b
     0,     // .b..w.b
     0,     // bb..w.b
     -48,   // wb..w.b
-    -60,   // .w..w.b
-    11,    // bw..w.b
+    -43,   // .w..w.b
+    0,     // bw..w.b
     -13,   // ww..w.b
-    0,     // ..b.w.b
-    18,    // b.b.w.b
+    11,    // ..b.w.b
+    0,     // b.b.w.b
     0,     // w.b.w.b
-    0,     // .bb.w.b
-    44,    // bbb.w.b
-    39,    // wbb.w.b
+    -25,   // .bb.w.b
+    40,    // bbb.w.b
+    46,    // wbb.w.b
     15,    // .wb.w.b
     58,    // bwb.w.b
     0,     // wwb.w.b
-    10,    // ..w.w.b
-    0,     // b.w.w.b
-    91,    // w.w.w.b
+    20,    // ..w.w.b
+    -25,   // b.w.w.b
+    108,   // w.w.w.b
     -40,   // .bw.w.b
     -69,   // bbw.w.b
     61,    // wbw.w.b
-    34,    // .ww.w.b
+    61,    // .ww.w.b
     28,    // bww.w.b
-    -10,   // www.w.b
-    43,    // ...bw.b
+    -14,   // www.w.b
+    53,    // ...bw.b
     0,     // b..bw.b
-    30,    // w..bw.b
+    48,    // w..bw.b
     31,    // .b.bw.b
     30,    // bb.bw.b
     27,    // wb.bw.b
-    49,    // .w.bw.b
-    -39,   // bw.bw.b
+    20,    // .w.bw.b
+    -36,   // bw.bw.b
     2,     // ww.bw.b
-    24,    // ..bbw.b
+    54,    // ..bbw.b
     -25,   // b.bbw.b
     0,     // w.bbw.b
     -29,   // .bbbw.b
-    -12,   // bbbbw.b
+    -18,   // bbbbw.b
     22,    // wbbbw.b
-    -52,   // .wbbw.b
-    -47,   // bwbbw.b
-    -25,   // wwbbw.b
-    30,    // ..wbw.b
+    -39,   // .wbbw.b
+    -29,   // bwbbw.b
+    -26,   // wwbbw.b
+    39,    // ..wbw.b
     -24,   // b.wbw.b
-    -20,   // w.wbw.b
-    -21,   // .bwbw.b
-    -3,    // bbwbw.b
+    0,     // w.wbw.b
+    -30,   // .bwbw.b
+    1,     // bbwbw.b
     -3,    // wbwbw.b
     -59,   // .wwbw.b
-    -3,    // bwwbw.b
-    -56,   // wwwbw.b
+    -24,   // bwwbw.b
+    -41,   // wwwbw.b
     -8,    // ...ww.b
     51,    // b..ww.b
-    -48,   // w..ww.b
-    25,    // .b.ww.b
-    -20,   // bb.ww.b
+    -74,   // w..ww.b
+    0,     // .b.ww.b
+    -41,   // bb.ww.b
     64,    // wb.ww.b
     -70,   // .w.ww.b
-    -8,    // bw.ww.b
-    -10,   // ww.ww.b
-    12,    // ..bww.b
+    0,     // bw.ww.b
+    -20,   // ww.ww.b
+    5,     // ..bww.b
     -18,   // b.bww.b
     0,     // w.bww.b
     0,     // .bbww.b
-    15,    // bbbww.b
-    -27,   // wbbww.b
+    30,    // bbbww.b
+    -34,   // wbbww.b
     27,    // .wbww.b
-    -45,   // bwbww.b
-    42,    // wwbww.b
-    25,    // ..www.b
-    -28,   // b.www.b
-    0,     // w.www.b
-    20,    // .bwww.b
+    -85,   // bwbww.b
+    43,    // wwbww.b
+    19,    // ..www.b
+    -47,   // b.www.b
+    16,    // w.www.b
+    0,     // .bwww.b
     -26,   // bbwww.b
     -33,   // wbwww.b
     -28,   // .wwww.b
     39,    // bwwww.b
-    -1043, // wwwww.b
-    59,    // .....bb
+    -939,  // wwwww.b
+    62,    // .....bb
     -43,   // b....bb
-    -49,   // w....bb
+    -66,   // w....bb
     0,     // .b...bb
-    69,    // bb...bb
-    -113,  // wb...bb
-    -6,    // .w...bb
-    -48,   // bw...bb
+    15,    // bb...bb
+    -110,  // wb...bb
+    -34,   // .w...bb
+    -47,   // bw...bb
     0,     // ww...bb
-    0,     // ..b..bb
-    -37,   // b.b..bb
+    -5,    // ..b..bb
+    -21,   // b.b..bb
     13,    // w.b..bb
-    -28,   // .bb..bb
-    -30,   // bbb..bb
-    -1,    // wbb..bb
-    0,     // .wb..bb
-    0,     // bwb..bb
+    0,     // .bb..bb
+    -61,   // bbb..bb
+    -17,   // wbb..bb
+    15,    // .wb..bb
+    -2,    // bwb..bb
     0,     // wwb..bb
     -2,    // ..w..bb
     0,     // b.w..bb
-    81,    // w.w..bb
+    83,    // w.w..bb
     14,    // .bw..bb
     -12,   // bbw..bb
-    -8,    // wbw..bb
-    -17,   // .ww..bb
-    -19,   // bww..bb
+    -4,    // wbw..bb
+    -10,   // .ww..bb
+    0,     // bww..bb
     2,     // www..bb
-    11,    // ...b.bb
-    31,    // b..b.bb
+    38,    // ...b.bb
+    8,     // b..b.bb
     27,    // w..b.bb
     -35,   // .b.b.bb
-    58,    // bb.b.bb
-    -63,   // wb.b.bb
-    -53,   // .w.b.bb
+    76,    // bb.b.bb
+    -39,   // wb.b.bb
+    -39,   // .w.b.bb
     17,    // bw.b.bb
-    25,    // ww.b.bb
-    31,    // ..bb.bb
+    0,     // ww.b.bb
+    18,    // ..bb.bb
     -97,   // b.bb.bb
-    10,    // w.bb.bb
-    -30,   // .bbb.bb
-    -52,   // bbbb.bb
-    -42,   // wbbb.bb
+    20,    // w.bb.bb
+    -20,   // .bbb.bb
+    -65,   // bbbb.bb
+    -62,   // wbbb.bb
     6,     // .wbb.bb
-    15,    // bwbb.bb
-    -26,   // wwbb.bb
-    0,     // ..wb.bb
+    47,    // bwbb.bb
+    0,     // wwbb.bb
+    -4,    // ..wb.bb
     30,    // b.wb.bb
     -1,    // w.wb.bb
-    -36,   // .bwb.bb
-    -46,   // bbwb.bb
+    -41,   // .bwb.bb
+    -62,   // bbwb.bb
     38,    // wbwb.bb
-    7,     // .wwb.bb
-    -19,   // bwwb.bb
+    34,    // .wwb.bb
+    -20,   // bwwb.bb
     0,     // wwwb.bb
-    -28,   // ...w.bb
-    -44,   // b..w.bb
+    -26,   // ...w.bb
+    -14,   // b..w.bb
     0,     // w..w.bb
     -3,    // .b.w.bb
-    -43,   // bb.w.bb
+    -52,   // bb.w.bb
     16,    // wb.w.bb
-    -7,    // .w.w.bb
-    -42,   // bw.w.bb
-    -25,   // ww.w.bb
+    -31,   // .w.w.bb
+    -39,   // bw.w.bb
+    0,     // ww.w.bb
     -26,   // ..bw.bb
-    42,    // b.bw.bb
+    41,    // b.bw.bb
     -2,    // w.bw.bb
     13,    // .bbw.bb
-    6,     // bbbw.bb
+    30,    // bbbw.bb
     19,    // wbbw.bb
-    15,    // .wbw.bb
-    -34,   // bwbw.bb
+    28,    // .wbw.bb
+    -57,   // bwbw.bb
     -11,   // wwbw.bb
     0,     // ..ww.bb
-    -20,   // b.ww.bb
-    -35,   // w.ww.bb
-    30,    // .bww.bb
-    32,    // bbww.bb
+    -41,   // b.ww.bb
+    -48,   // w.ww.bb
+    22,    // .bww.bb
+    30,    // bbww.bb
     -19,   // wbww.bb
-    -8,    // .www.bb
-    -9,    // bwww.bb
+    -40,   // .www.bb
+    16,    // bwww.bb
     -2,    // wwww.bb
-    -7,    // ....bbb
-    5,     // b...bbb
-    -18,   // w...bbb
-    72,    // .b..bbb
-    -30,   // bb..bbb
-    45,    // wb..bbb
+    38,    // ....bbb
+    0,     // b...bbb
+    -84,   // w...bbb
+    95,    // .b..bbb
+    -61,   // bb..bbb
+    75,    // wb..bbb
     -38,   // .w..bbb
-    -21,   // bw..bbb
+    -68,   // bw..bbb
     -2,    // ww..bbb
-    7,     // ..b.bbb
-    17,    // b.b.bbb
-    10,    // w.b.bbb
-    -24,   // .bb.bbb
-    -39,   // bbb.bbb
+    15,    // ..b.bbb
+    20,    // b.b.bbb
+    14,    // w.b.bbb
+    0,     // .bb.bbb
+    -73,   // bbb.bbb
     -26,   // wbb.bbb
-    15,    // .wb.bbb
-    -13,   // bwb.bbb
-    0,     // wwb.bbb
-    0,     // ..w.bbb
-    44,    // b.w.bbb
+    0,     // .wb.bbb
+    1,     // bwb.bbb
+    -19,   // wwb.bbb
+    -45,   // ..w.bbb
+    40,    // b.w.bbb
     0,     // w.w.bbb
-    21,    // .bw.bbb
-    30,    // bbw.bbb
-    14,    // wbw.bbb
-    3,     // .ww.bbb
-    82,    // bww.bbb
+    2,     // .bw.bbb
+    25,    // bbw.bbb
+    -7,    // wbw.bbb
+    31,    // .ww.bbb
+    111,   // bww.bbb
     0,     // www.bbb
-    250,   // ...bbbb
+    286,   // ...bbbb
     26,    // b..bbbb
-    21,    // w..bbbb
-    0,     // .b.bbbb
-    -52,   // bb.bbbb
+    27,    // w..bbbb
+    25,    // .b.bbbb
+    -65,   // bb.bbbb
     27,    // wb.bbbb
     -5,    // .w.bbbb
-    -18,   // bw.bbbb
+    -22,   // bw.bbbb
     2,     // ww.bbbb
     999,   // ..bbbbb
-    999,   // b.bbbbb
-    1043,  // w.bbbbb
+    726,   // b.bbbbb
+    939,   // w.bbbbb
     1151,  // .bbbbbb
     581,   // bbbbbbb
-    999,   // wbbbbbb
+    944,   // wbbbbbb
     1082,  // .wbbbbb
     748,   // bwbbbbb
-    995,   // wwbbbbb
-    -21,   // ..wbbbb
-    -12,   // b.wbbbb
-    -63,   // w.wbbbb
-    6,     // .bwbbbb
+    1019,  // wwbbbbb
+    -25,   // ..wbbbb
+    -18,   // b.wbbbb
+    -52,   // w.wbbbb
+    32,    // .bwbbbb
     42,    // bbwbbbb
-    46,    // wbwbbbb
+    27,    // wbwbbbb
     0,     // .wwbbbb
-    4,     // bwwbbbb
+    0,     // bwwbbbb
     0,     // wwwbbbb
-    -21,   // ...wbbb
-    34,    // b..wbbb
+    26,    // ...wbbb
+    10,    // b..wbbb
     -52,   // w..wbbb
     66,    // .b.wbbb
-    6,     // bb.wbbb
-    29,    // wb.wbbb
-    2,     // .w.wbbb
-    -33,   // bw.wbbb
+    30,    // bb.wbbb
+    56,    // wb.wbbb
+    34,    // .w.wbbb
+    -58,   // bw.wbbb
     0,     // ww.wbbb
-    -3,    // ..bwbbb
-    -108,  // b.bwbbb
-    56,    // w.bwbbb
-    -44,   // .bbwbbb
-    0,     // bbbwbbb
+    -35,   // ..bwbbb
+    -107,  // b.bwbbb
+    41,    // w.bwbbb
+    -32,   // .bbwbbb
+    -48,   // bbbwbbb
     16,    // wbbwbbb
     1,     // .wbwbbb
     10,    // bwbwbbb
-    34,    // wwbwbbb
+    50,    // wwbwbbb
     0,     // ..wwbbb
-    15,    // b.wwbbb
+    30,    // b.wwbbb
     0,     // w.wwbbb
-    10,    // .bwwbbb
+    20,    // .bwwbbb
     1,     // bbwwbbb
     43,    // wbwwbbb
-    -46,   // .wwwbbb
+    -53,   // .wwwbbb
     2,     // bwwwbbb
     0,     // wwwwbbb
     -24,   // ....wbb
     0,     // b...wbb
-    21,    // w...wbb
-    -58,   // .b..wbb
+    23,    // w...wbb
+    -51,   // .b..wbb
     -12,   // bb..wbb
-    0,     // wb..wbb
+    -15,   // wb..wbb
     7,     // .w..wbb
     29,    // bw..wbb
     0,     // ww..wbb
@@ -1146,344 +1146,344 @@ vec![
     0,     // b.b.wbb
     0,     // w.b.wbb
     -13,   // .bb.wbb
-    30,    // bbb.wbb
-    10,    // wbb.wbb
-    -11,   // .wb.wbb
+    25,    // bbb.wbb
+    0,     // wbb.wbb
+    -25,   // .wb.wbb
     0,     // bwb.wbb
     0,     // wwb.wbb
-    0,     // ..w.wbb
+    -5,    // ..w.wbb
     -69,   // b.w.wbb
-    0,     // w.w.wbb
+    -1,    // w.w.wbb
     7,     // .bw.wbb
-    -14,   // bbw.wbb
+    0,     // bbw.wbb
     8,     // wbw.wbb
     0,     // .ww.wbb
-    -55,   // bww.wbb
-    0,     // www.wbb
+    -39,   // bww.wbb
+    19,    // www.wbb
     0,     // ...bwbb
-    17,    // b..bwbb
+    0,     // b..bwbb
     0,     // w..bwbb
     12,    // .b.bwbb
-    -46,   // bb.bwbb
-    -10,   // wb.bwbb
+    -62,   // bb.bwbb
+    -11,   // wb.bwbb
     28,    // .w.bwbb
     -20,   // bw.bwbb
     11,    // ww.bwbb
     35,    // ..bbwbb
-    -38,   // b.bbwbb
-    -42,   // w.bbwbb
+    -36,   // b.bbwbb
+    -43,   // w.bbwbb
     -20,   // .bbbwbb
     42,    // bbbbwbb
-    -94,   // wbbbwbb
+    -90,   // wbbbwbb
     0,     // .wbbwbb
     -66,   // bwbbwbb
-    -28,   // wwbbwbb
-    0,     // ..wbwbb
-    -3,    // b.wbwbb
+    -15,   // wwbbwbb
+    -14,   // ..wbwbb
+    1,     // b.wbwbb
     -15,   // w.wbwbb
-    -56,   // .bwbwbb
-    -71,   // bbwbwbb
-    38,    // wbwbwbb
-    -26,   // .wwbwbb
+    -60,   // .bwbwbb
+    -83,   // bbwbwbb
+    30,    // wbwbwbb
+    0,     // .wwbwbb
     29,    // bwwbwbb
-    -34,   // wwwbwbb
-    10,    // ...wwbb
-    5,     // b..wwbb
-    -117,  // w..wwbb
+    -50,   // wwwbwbb
+    0,     // ...wwbb
+    8,     // b..wwbb
+    -138,  // w..wwbb
     32,    // .b.wwbb
-    32,    // bb.wwbb
+    30,    // bb.wwbb
     0,     // wb.wwbb
-    -59,   // .w.wwbb
+    -80,   // .w.wwbb
     1,     // bw.wwbb
-    26,    // ww.wwbb
+    0,     // ww.wwbb
     41,    // ..bwwbb
-    32,    // b.bwwbb
-    25,    // w.bwwbb
+    56,    // b.bwwbb
+    26,    // w.bwwbb
     55,    // .bbwwbb
     1,     // bbbwwbb
-    -114,  // wbbwwbb
-    20,    // .wbwwbb
-    46,    // bwbwwbb
-    28,    // wwbwwbb
-    -87,   // ..wwwbb
+    -118,  // wbbwwbb
+    10,    // .wbwwbb
+    50,    // bwbwwbb
+    15,    // wwbwwbb
+    -79,   // ..wwwbb
     -26,   // b.wwwbb
     -1,    // w.wwwbb
     -54,   // .bwwwbb
-    87,    // bbwwwbb
-    0,     // wbwwwbb
+    105,   // bbwwwbb
+    31,    // wbwwwbb
     -16,   // .wwwwbb
-    0,     // bwwwwbb
-    -995,  // wwwwwbb
-    3,     // .....wb
+    -12,   // bwwwwbb
+    -1019, // wwwwwbb
+    12,    // .....wb
     51,    // b....wb
-    19,    // w....wb
-    0,     // .b...wb
-    -48,   // bb...wb
+    -1,    // w....wb
+    17,    // .b...wb
+    -47,   // bb...wb
     0,     // wb...wb
     0,     // .w...wb
-    -53,   // bw...wb
-    113,   // ww...wb
-    0,     // ..b..wb
-    -7,    // b.b..wb
+    -31,   // bw...wb
+    110,   // ww...wb
+    31,    // ..b..wb
+    1,     // b.b..wb
     48,    // w.b..wb
     18,    // .bb..wb
-    -21,   // bbb..wb
-    -21,   // wbb..wb
-    0,     // .wb..wb
-    -69,   // bwb..wb
-    0,     // wwb..wb
-    0,     // ..w..wb
-    11,    // b.w..wb
-    -25,   // w.w..wb
+    -68,   // bbb..wb
+    0,     // wbb..wb
+    -7,    // .wb..wb
+    -20,   // bwb..wb
+    15,    // wwb..wb
+    52,    // ..w..wb
+    0,     // b.w..wb
+    -53,   // w.w..wb
     64,    // .bw..wb
     29,    // bbw..wb
-    6,     // wbw..wb
+    32,    // wbw..wb
     0,     // .ww..wb
-    0,     // bww..wb
-    -45,   // www..wb
-    -90,   // ...b.wb
+    29,    // bww..wb
+    -75,   // www..wb
+    -36,   // ...b.wb
     34,    // b..b.wb
-    26,    // w..b.wb
-    4,     // .b.b.wb
+    0,     // w..b.wb
+    -28,   // .b.b.wb
     17,    // bb.b.wb
-    -5,    // wb.b.wb
-    53,    // .w.b.wb
-    24,    // bw.b.wb
+    -40,   // wb.b.wb
+    33,    // .w.b.wb
+    34,    // bw.b.wb
     -16,   // ww.b.wb
     -76,   // ..bb.wb
-    4,     // b.bb.wb
+    12,    // b.bb.wb
     -64,   // w.bb.wb
-    51,    // .bbb.wb
-    -18,   // bbbb.wb
-    31,    // wbbb.wb
-    0,     // .wbb.wb
-    -43,   // bwbb.wb
+    69,    // .bbb.wb
+    -22,   // bbbb.wb
+    24,    // wbbb.wb
+    36,    // .wbb.wb
+    -20,   // bwbb.wb
     0,     // wwbb.wb
-    -23,   // ..wb.wb
-    -39,   // b.wb.wb
+    -24,   // ..wb.wb
+    -36,   // b.wb.wb
     -54,   // w.wb.wb
-    9,     // .bwb.wb
+    41,    // .bwb.wb
     -20,   // bbwb.wb
     63,    // wbwb.wb
-    21,    // .wwb.wb
+    41,    // .wwb.wb
     31,    // bwwb.wb
-    -29,   // wwwb.wb
+    -56,   // wwwb.wb
     19,    // ...w.wb
     64,    // b..w.wb
-    -13,   // w..w.wb
-    -8,    // .b.w.wb
-    -42,   // bb.w.wb
-    5,     // wb.w.wb
-    31,    // .w.w.wb
+    -45,   // w..w.wb
+    -27,   // .b.w.wb
+    -39,   // bb.w.wb
+    40,    // wb.w.wb
+    27,    // .w.w.wb
     0,     // bw.w.wb
-    63,    // ww.w.wb
-    26,    // ..bw.wb
+    39,    // ww.w.wb
+    -24,   // ..bw.wb
     28,    // b.bw.wb
     -27,   // w.bw.wb
     -8,    // .bbw.wb
-    -33,   // bbbw.wb
+    -58,   // bbbw.wb
     0,     // wbbw.wb
     8,     // .wbw.wb
-    8,     // bwbw.wb
-    10,    // wwbw.wb
-    -38,   // ..ww.wb
-    -8,    // b.ww.wb
-    -6,    // w.ww.wb
-    74,    // .bww.wb
+    3,     // bwbw.wb
+    11,    // wwbw.wb
+    -51,   // ..ww.wb
+    0,     // b.ww.wb
+    -14,   // w.ww.wb
+    80,    // .bww.wb
     1,     // bbww.wb
-    -13,   // wbww.wb
+    -9,    // wbww.wb
     0,     // .www.wb
-    66,    // bwww.wb
+    70,    // bwww.wb
     -27,   // wwww.wb
-    31,    // ....bwb
+    66,    // ....bwb
     -46,   // b...bwb
     -84,   // w...bwb
     -29,   // .b..bwb
-    0,     // bb..bwb
-    -6,    // wb..bwb
-    25,    // .w..bwb
-    -69,   // bw..bwb
-    8,     // ww..bwb
+    -2,    // bb..bwb
+    -32,   // wb..bwb
+    70,    // .w..bwb
+    -20,   // bw..bwb
+    4,     // ww..bwb
     46,    // ..b.bwb
     21,    // b.b.bwb
     -61,   // w.b.bwb
     0,     // .bb.bwb
-    -13,   // bbb.bwb
-    -30,   // wbb.bwb
-    12,    // .wb.bwb
-    56,    // bwb.bwb
+    1,     // bbb.bwb
+    -21,   // wbb.bwb
+    13,    // .wb.bwb
+    75,    // bwb.bwb
     -8,    // wwb.bwb
     0,     // ..w.bwb
     58,    // b.w.bwb
-    57,    // w.w.bwb
+    50,    // w.w.bwb
     -22,   // .bw.bwb
     0,     // bbw.bwb
     0,     // wbw.bwb
-    -18,   // .ww.bwb
-    0,     // bww.bwb
-    -14,   // www.bwb
+    0,     // .ww.bwb
+    -13,   // bww.bwb
+    7,     // www.bwb
     55,    // ...bbwb
     8,     // b..bbwb
-    -62,   // w..bbwb
-    20,    // .b.bbwb
-    15,    // bb.bbwb
-    13,    // wb.bbwb
-    0,     // .w.bbwb
-    -43,   // bw.bbwb
+    -37,   // w..bbwb
+    17,    // .b.bbwb
+    47,    // bb.bbwb
+    9,     // wb.bbwb
+    -12,   // .w.bbwb
+    -20,   // bw.bbwb
     19,    // ww.bbwb
-    0,     // ..bbbwb
-    -28,   // b.bbbwb
+    -17,   // ..bbbwb
+    -12,   // b.bbbwb
     33,    // w.bbbwb
-    21,    // .bbbbwb
+    28,    // .bbbbwb
     748,   // bbbbbwb
-    -17,   // wbbbbwb
-    -35,   // .wbbbwb
-    30,    // bwbbbwb
-    0,     // wwbbbwb
+    -4,    // wbbbbwb
+    -18,   // .wbbbwb
+    53,    // bwbbbwb
+    -31,   // wwbbbwb
     31,    // ..wbbwb
-    -47,   // b.wbbwb
-    -1,    // w.wbbwb
-    -9,    // .bwbbwb
+    -29,   // b.wbbwb
+    9,     // w.wbbwb
+    -6,    // .bwbbwb
     -66,   // bbwbbwb
     34,    // wbwbbwb
-    0,     // .wwbbwb
+    -16,   // .wwbbwb
     2,     // bwwbbwb
     -43,   // wwwbbwb
-    0,     // ...wbwb
-    20,    // b..wbwb
+    -9,    // ...wbwb
+    0,     // b..wbwb
     1,     // w..wbwb
     -18,   // .b.wbwb
-    -34,   // bb.wbwb
+    -57,   // bb.wbwb
     -63,   // wb.wbwb
-    12,    // .w.wbwb
-    8,     // bw.wbwb
+    4,     // .w.wbwb
+    3,     // bw.wbwb
     -38,   // ww.wbwb
-    -13,   // ..bwbwb
+    24,    // ..bwbwb
     67,    // b.bwbwb
     3,     // w.bwbwb
-    20,    // .bbwbwb
+    35,    // .bbwbwb
     10,    // bbbwbwb
-    21,    // wbbwbwb
-    -30,   // .wbwbwb
-    -56,   // bwbwbwb
-    -38,   // wwbwbwb
+    19,    // wbbwbwb
+    -51,   // .wbwbwb
+    -82,   // bwbwbwb
+    -30,   // wwbwbwb
     -74,   // ..wwbwb
-    -45,   // b.wwbwb
+    -85,   // b.wwbwb
     12,    // w.wwbwb
     48,    // .bwwbwb
-    46,    // bbwwbwb
+    50,    // bbwwbwb
     -34,   // wbwwbwb
     0,     // .wwwbwb
     -18,   // bwwwbwb
-    -46,   // wwwwbwb
-    26,    // ....wwb
+    -27,   // wwwwbwb
+    105,   // ....wwb
     -18,   // b...wwb
     0,     // w...wwb
-    6,     // .b..wwb
-    -19,   // bb..wwb
-    21,    // wb..wwb
+    21,    // .b..wwb
+    0,     // bb..wwb
+    0,     // wb..wwb
     -11,   // .w..wwb
-    0,     // bw..wwb
-    1,     // ww..wwb
-    -84,   // ..b.wwb
+    29,    // bw..wwb
+    17,    // ww..wwb
+    -100,  // ..b.wwb
     48,    // b.b.wwb
-    -39,   // w.b.wwb
+    -46,   // w.b.wwb
     14,    // .bb.wwb
-    82,    // bbb.wwb
+    111,   // bbb.wwb
     0,     // wbb.wwb
-    61,    // .wb.wwb
-    0,     // bwb.wwb
-    -10,   // wwb.wwb
-    -40,   // ..w.wwb
+    83,    // .wb.wwb
+    -13,   // bwb.wwb
+    0,     // wwb.wwb
+    -16,   // ..w.wwb
     28,    // b.w.wwb
-    -35,   // w.w.wwb
-    -41,   // .bw.wwb
-    -55,   // bbw.wwb
-    30,    // wbw.wwb
-    22,    // .ww.wwb
-    -28,   // bww.wwb
+    -64,   // w.w.wwb
+    -84,   // .bw.wwb
+    -39,   // bbw.wwb
+    21,    // wbw.wwb
+    26,    // .ww.wwb
+    -6,    // bww.wwb
     26,    // www.wwb
     0,     // ...bwwb
     -2,    // b..bwwb
     -13,   // w..bwwb
-    0,     // .b.bwwb
-    -19,   // bb.bwwb
+    -21,   // .b.bwwb
+    -20,   // bb.bwwb
     0,     // wb.bwwb
-    -2,    // .w.bwwb
+    23,    // .w.bwwb
     31,    // bw.bwwb
     -19,   // ww.bwwb
-    25,    // ..bbwwb
+    49,    // ..bbwwb
     0,     // b.bbwwb
-    27,    // w.bbwwb
-    -28,   // .bbbwwb
-    4,     // bbbbwwb
-    12,    // wbbbwwb
-    55,    // .wbbwwb
+    34,    // w.bbwwb
+    -48,   // .bbbwwb
+    0,     // bbbbwwb
+    -5,    // wbbbwwb
+    80,    // .wbbwwb
     2,     // bwbbwwb
-    114,   // wwbbwwb
-    -54,   // ..wbwwb
-    -3,    // b.wbwwb
-    21,    // w.wbwwb
-    -30,   // .bwbwwb
+    118,   // wwbbwwb
+    -26,   // ..wbwwb
+    -24,   // b.wbwwb
+    1,     // w.wbwwb
+    -18,   // .bwbwwb
     29,    // bbwbwwb
-    -21,   // wbwbwwb
-    -35,   // .wwbwwb
+    -19,   // wbwbwwb
+    -60,   // .wwbwwb
     45,    // bwwbwwb
     -16,   // wwwbwwb
     27,    // ...wwwb
     31,    // b..wwwb
-    28,    // w..wwwb
-    -6,    // .b.wwwb
-    -9,    // bb.wwwb
-    -31,   // wb.wwwb
+    0,     // w..wwwb
+    0,     // .b.wwwb
+    16,    // bb.wwwb
+    -24,   // wb.wwwb
     0,     // .w.wwwb
-    66,    // bw.wwwb
-    42,    // ww.wwwb
-    0,     // ..bwwwb
-    39,    // b.bwwwb
+    70,    // bw.wwwb
+    62,    // ww.wwwb
+    32,    // ..bwwwb
+    27,    // b.bwwwb
     -22,   // w.bwwwb
-    21,    // .bbwwwb
+    41,    // .bbwwwb
     2,     // bbbwwwb
-    -12,   // wbbwwwb
-    -20,   // .wbwwwb
+    5,     // wbbwwwb
+    -38,   // .wbwwwb
     -18,   // bwbwwwb
-    94,    // wwbwwwb
+    90,    // wwbwwwb
     26,    // ..wwwwb
     39,    // b.wwwwb
     17,    // w.wwwwb
-    24,    // .bwwwwb
-    0,     // bbwwwwb
-    17,    // wbwwwwb
-    -999,  // .wwwwwb
-    -1304, // bwwwwwb
-    -999,  // wwwwwwb
-    -5,    // ......w
+    41,    // .bwwwwb
+    -12,   // bbwwwwb
+    4,     // wbwwwwb
+    -1227, // .wwwwwb
+    -1574, // bwwwwwb
+    -944,  // wwwwwwb
+    -52,   // ......w
     0,     // b.....w
-    29,    // w.....w
-    88,    // .b....w
-    -49,   // bb....w
+    0,     // w.....w
+    115,   // .b....w
+    -66,   // bb....w
     -51,   // wb....w
-    0,     // .w....w
-    19,    // bw....w
+    -69,   // .w....w
+    -1,    // bw....w
     43,    // ww....w
-    0,     // ..b...w
-    -56,   // b.b...w
-    22,    // w.b...w
+    10,    // ..b...w
+    -80,   // b.b...w
+    13,    // w.b...w
     0,     // .bb...w
-    -18,   // bbb...w
+    -84,   // bbb...w
     18,    // wbb...w
-    29,    // .wb...w
+    8,     // .wb...w
     -84,   // bwb...w
     0,     // wwb...w
-    52,    // ..w...w
+    9,     // ..w...w
     0,     // b.w...w
-    28,    // w.w...w
-    0,     // .bw...w
-    21,    // bbw...w
+    22,    // w.w...w
+    -84,   // .bw...w
+    23,    // bbw...w
     46,    // wbw...w
-    0,     // .ww...w
+    -10,   // .ww...w
     0,     // bww...w
-    -5,    // www...w
+    0,     // www...w
     0,     // ...b..w
     -34,   // b..b..w
     10,    // w..b..w
@@ -1491,35 +1491,35 @@ vec![
     27,    // bb.b..w
     -64,   // wb.b..w
     0,     // .w.b..w
-    26,    // bw.b..w
-    44,    // ww.b..w
-    7,     // ..bb..w
+    0,     // bw.b..w
+    14,    // ww.b..w
+    15,    // ..bb..w
     17,    // b.bb..w
     -51,   // w.bb..w
-    53,    // .bbb..w
-    21,    // bbbb..w
+    47,    // .bbb..w
+    27,    // bbbb..w
     -31,   // wbbb..w
     -23,   // .wbb..w
-    -62,   // bwbb..w
-    -5,    // wwbb..w
+    -37,   // bwbb..w
+    -8,    // wwbb..w
     38,    // ..wb..w
-    30,    // b.wb..w
-    -21,   // w.wb..w
-    43,    // .bwb..w
+    48,    // b.wb..w
+    -36,   // w.wb..w
+    71,    // .bwb..w
     0,     // bbwb..w
-    -20,   // wbwb..w
-    76,    // .wwb..w
+    0,     // wbwb..w
+    50,    // .wwb..w
     -13,   // bwwb..w
-    -34,   // wwwb..w
+    -10,   // wwwb..w
     0,     // ...w..w
     34,    // b..w..w
-    -66,   // w..w..w
-    57,    // .b.w..w
+    -119,  // w..w..w
+    28,    // .b.w..w
     0,     // bb.w..w
     -34,   // wb.w..w
     -31,   // .w.w..w
-    -13,   // bw.w..w
-    -31,   // ww.w..w
+    -45,   // bw.w..w
+    -8,    // ww.w..w
     0,     // ..bw..w
     32,    // b.bw..w
     0,     // w.bw..w
@@ -1528,161 +1528,161 @@ vec![
     2,     // wbbw..w
     0,     // .wbw..w
     1,     // bwbw..w
-    -17,   // wwbw..w
-    0,     // ..ww..w
-    -48,   // b.ww..w
-    31,    // w.ww..w
-    16,    // .bww..w
-    -117,  // bbww..w
+    0,     // wwbw..w
+    31,    // ..ww..w
+    -74,   // b.ww..w
+    33,    // w.ww..w
+    59,    // .bww..w
+    -138,  // bbww..w
     -8,    // wbww..w
-    -3,    // .www..w
-    28,    // bwww..w
+    -52,   // .www..w
+    0,     // bwww..w
     -26,   // wwww..w
-    26,    // ....b.w
+    33,    // ....b.w
     0,     // b...b.w
-    22,    // w...b.w
-    60,    // .b..b.w
+    13,    // w...b.w
+    43,    // .b..b.w
     13,    // bb..b.w
-    -11,   // wb..b.w
+    0,     // wb..b.w
     0,     // .w..b.w
     48,    // bw..b.w
     0,     // ww..b.w
-    -10,   // ..b.b.w
-    -91,   // b.b.b.w
-    0,     // w.b.b.w
-    -34,   // .bb.b.w
-    10,    // bbb.b.w
+    -20,   // ..b.b.w
+    -108,  // b.b.b.w
+    25,    // w.b.b.w
+    -61,   // .bb.b.w
+    14,    // bbb.b.w
     -28,   // wbb.b.w
     40,    // .wb.b.w
     -61,   // bwb.b.w
     69,    // wwb.b.w
-    0,     // ..w.b.w
+    -11,   // ..w.b.w
     0,     // b.w.b.w
-    -18,   // w.w.b.w
+    0,     // w.w.b.w
     -15,   // .bw.b.w
     0,     // bbw.b.w
     -58,   // wbw.b.w
-    0,     // .ww.b.w
-    -39,   // bww.b.w
-    -44,   // www.b.w
+    25,    // .ww.b.w
+    -46,   // bww.b.w
+    -40,   // www.b.w
     8,     // ...bb.w
-    48,    // b..bb.w
+    74,    // b..bb.w
     -51,   // w..bb.w
     70,    // .b.bb.w
-    10,    // bb.bb.w
-    8,     // wb.bb.w
-    -25,   // .w.bb.w
+    20,    // bb.bb.w
+    0,     // wb.bb.w
+    0,     // .w.bb.w
     -64,   // bw.bb.w
-    20,    // ww.bb.w
-    -25,   // ..bbb.w
-    0,     // b.bbb.w
-    28,    // w.bbb.w
+    41,    // ww.bb.w
+    -19,   // ..bbb.w
+    -16,   // b.bbb.w
+    47,    // w.bbb.w
     28,    // .bbbb.w
-    1043,  // bbbbb.w
+    939,   // bbbbb.w
     -39,   // wbbbb.w
-    -20,   // .wbbb.w
+    0,     // .wbbb.w
     33,    // bwbbb.w
     26,    // wwbbb.w
-    -12,   // ..wbb.w
+    -5,    // ..wbb.w
     0,     // b.wbb.w
     18,    // w.wbb.w
     -27,   // .bwbb.w
-    -42,   // bbwbb.w
-    45,    // wbwbb.w
+    -43,   // bbwbb.w
+    85,    // wbwbb.w
     0,     // .wwbb.w
-    27,    // bwwbb.w
-    -15,   // wwwbb.w
-    -43,   // ...wb.w
-    -30,   // b..wb.w
+    34,    // bwwbb.w
+    -30,   // wwwbb.w
+    -53,   // ...wb.w
+    -48,   // b..wb.w
     0,     // w..wb.w
-    -49,   // .b.wb.w
+    -20,   // .b.wb.w
     -2,    // bb.wb.w
-    39,    // wb.wb.w
+    36,    // wb.wb.w
     -31,   // .w.wb.w
     -27,   // bw.wb.w
     -30,   // ww.wb.w
-    -30,   // ..bwb.w
-    20,    // b.bwb.w
+    -39,   // ..bwb.w
+    0,     // b.bwb.w
     24,    // w.bwb.w
     59,    // .bbwb.w
-    56,    // bbbwb.w
-    3,     // wbbwb.w
-    21,    // .wbwb.w
+    41,    // bbbwb.w
+    24,    // wbbwb.w
+    30,    // .wbwb.w
     3,     // bwbwb.w
-    3,     // wwbwb.w
-    -24,   // ..wwb.w
+    -1,    // wwbwb.w
+    -54,   // ..wwb.w
     0,     // b.wwb.w
     25,    // w.wwb.w
-    52,    // .bwwb.w
-    25,    // bbwwb.w
-    47,    // wbwwb.w
+    39,    // .bwwb.w
+    26,    // bbwwb.w
+    29,    // wbwwb.w
     29,    // .wwwb.w
     -22,   // bwwwb.w
-    12,    // wwwwb.w
-    23,    // ....w.w
-    56,    // b...w.w
-    28,    // w...w.w
-    -52,   // .b..w.w
-    81,    // bb..w.w
-    7,     // wb..w.w
+    18,    // wwwwb.w
+    48,    // ....w.w
+    80,    // b...w.w
+    22,    // w...w.w
+    -93,   // .b..w.w
+    83,    // bb..w.w
+    -1,    // wb..w.w
     50,    // .w..w.w
-    -25,   // bw..w.w
-    37,    // ww..w.w
-    69,    // ..b.w.w
+    -53,   // bw..w.w
+    21,    // ww..w.w
+    98,    // ..b.w.w
     0,     // b.b.w.w
-    -18,   // w.b.w.w
-    -2,    // .bb.w.w
+    0,     // w.b.w.w
+    0,     // .bb.w.w
     0,     // bbb.w.w
     -48,   // wbb.w.w
     -34,   // .wb.w.w
-    57,    // bwb.w.w
+    50,    // bwb.w.w
     0,     // wwb.w.w
-    20,    // ..w.w.w
-    91,    // b.w.w.w
-    15,    // w.w.w.w
-    -17,   // .bw.w.w
-    0,     // bbw.w.w
+    41,    // ..w.w.w
+    108,   // b.w.w.w
+    32,    // w.w.w.w
+    -33,   // .bw.w.w
+    -1,    // bbw.w.w
     -21,   // wbw.w.w
-    -28,   // .ww.w.w
-    -35,   // bww.w.w
-    -17,   // www.w.w
-    19,    // ...bw.w
+    0,     // .ww.w.w
+    -64,   // bww.w.w
+    -20,   // www.w.w
+    51,    // ...bw.w
     -32,   // b..bw.w
-    -21,   // w..bw.w
-    -5,    // .b.bw.w
+    -36,   // w..bw.w
+    -31,   // .b.bw.w
     -1,    // bb.bw.w
     -28,   // wb.bw.w
     -1,    // .w.bw.w
     -54,   // bw.bw.w
-    -42,   // ww.bw.w
-    -25,   // ..bbw.w
+    -41,   // ww.bw.w
+    -27,   // ..bbw.w
     -20,   // b.bbw.w
     18,    // w.bbw.w
-    37,    // .bbbw.w
-    -63,   // bbbbw.w
-    -39,   // wbbbw.w
-    45,    // .wbbw.w
-    -1,    // bwbbw.w
-    -32,   // wwbbw.w
+    18,    // .bbbw.w
+    -52,   // bbbbw.w
+    -27,   // wbbbw.w
+    40,    // .wbbw.w
+    9,     // bwbbw.w
+    -56,   // wwbbw.w
     60,    // ..wbw.w
-    -20,   // b.wbw.w
+    0,     // b.wbw.w
     64,    // w.wbw.w
-    17,    // .bwbw.w
+    32,    // .bwbw.w
     -15,   // bbwbw.w
     -67,   // wbwbw.w
-    -65,   // .wwbw.w
-    21,    // bwwbw.w
-    108,   // wwwbw.w
+    -82,   // .wwbw.w
+    1,     // bwwbw.w
+    107,   // wwwbw.w
     -7,    // ...ww.w
     -17,   // b..ww.w
-    31,    // w..ww.w
-    8,     // .b.ww.w
-    -35,   // bb.ww.w
-    -4,    // wb.ww.w
-    -26,   // .w.ww.w
-    -6,    // bw.ww.w
+    33,    // w..ww.w
+    45,    // .b.ww.w
+    -48,   // bb.ww.w
+    -12,   // wb.ww.w
+    -39,   // .w.ww.w
+    -14,   // bw.ww.w
     97,    // ww.ww.w
-    -35,   // ..bww.w
+    -7,    // ..bww.w
     20,    // b.bww.w
     25,    // w.bww.w
     5,     // .bbww.w
@@ -1690,509 +1690,509 @@ vec![
     0,     // wbbww.w
     36,    // .wbww.w
     12,    // bwbww.w
-    38,    // wwbww.w
-    -11,   // ..www.w
-    0,     // b.www.w
-    -80,   // w.www.w
+    36,    // wwbww.w
+    -4,    // ..www.w
+    16,    // b.www.w
+    -83,   // w.www.w
     -34,   // .bwww.w
     -1,    // bbwww.w
-    28,    // wbwww.w
+    12,    // wbwww.w
     8,     // .wwww.w
     17,    // bwwww.w
-    -999,  // wwwww.w
-    -3,    // .....bw
-    -19,   // b....bw
+    -726,  // wwwww.w
+    -12,   // .....bw
+    1,     // b....bw
     -51,   // w....bw
     0,     // .b...bw
-    -113,  // bb...bw
-    53,    // wb...bw
-    0,     // .w...bw
+    -110,  // bb...bw
+    31,    // wb...bw
+    -17,   // .w...bw
     0,     // bw...bw
-    48,    // ww...bw
-    0,     // ..b..bw
-    25,    // b.b..bw
-    -11,   // w.b..bw
+    47,    // ww...bw
+    -52,   // ..b..bw
+    53,    // b.b..bw
+    0,     // w.b..bw
     0,     // .bb..bw
-    45,    // bbb..bw
-    0,     // wbb..bw
+    75,    // bbb..bw
+    -29,   // wbb..bw
     -64,   // .wb..bw
-    -6,    // bwb..bw
+    -32,   // bwb..bw
     -29,   // wwb..bw
-    0,     // ..w..bw
+    -31,   // ..w..bw
     -48,   // b.w..bw
-    7,     // w.w..bw
-    0,     // .bw..bw
-    0,     // bbw..bw
-    69,    // wbw..bw
+    -1,    // w.w..bw
+    7,     // .bw..bw
+    -15,   // bbw..bw
+    20,    // wbw..bw
     -18,   // .ww..bw
-    21,    // bww..bw
-    21,    // www..bw
+    0,     // bww..bw
+    68,    // www..bw
     -19,   // ...b.bw
-    13,    // b..b.bw
+    45,    // b..b.bw
     -64,   // w..b.bw
-    -31,   // .b.b.bw
-    -63,   // bb.b.bw
+    -27,   // .b.b.bw
+    -39,   // bb.b.bw
     0,     // wb.b.bw
-    8,     // .w.b.bw
-    -5,    // bw.b.bw
-    42,    // ww.b.bw
-    38,    // ..bb.bw
-    6,     // b.bb.bw
-    8,     // w.bb.bw
+    27,    // .w.b.bw
+    -40,   // bw.b.bw
+    39,    // ww.b.bw
+    51,    // ..bb.bw
+    14,    // b.bb.bw
+    0,     // w.bb.bw
     0,     // .bbb.bw
     27,    // bbbb.bw
-    -66,   // wbbb.bw
-    -74,   // .wbb.bw
-    13,    // bwbb.bw
+    -70,   // wbbb.bw
+    -80,   // .wbb.bw
+    9,     // bwbb.bw
     -1,    // wwbb.bw
-    -26,   // ..wb.bw
+    24,    // ..wb.bw
     27,    // b.wb.bw
     -28,   // w.wb.bw
     -8,    // .bwb.bw
-    -10,   // bbwb.bw
-    -8,    // wbwb.bw
+    -11,   // bbwb.bw
+    -3,    // wbwb.bw
     8,     // .wwb.bw
     0,     // bwwb.bw
-    33,    // wwwb.bw
-    90,    // ...w.bw
-    -26,   // b..w.bw
+    58,    // wwwb.bw
+    36,    // ...w.bw
+    0,     // b..w.bw
     -34,   // w..w.bw
-    -53,   // .b.w.bw
+    -33,   // .b.w.bw
     16,    // bb.w.bw
-    -24,   // wb.w.bw
-    -4,    // .w.w.bw
-    5,     // bw.w.bw
+    -34,   // wb.w.bw
+    28,    // .w.w.bw
+    40,    // bw.w.bw
     -17,   // ww.w.bw
-    23,    // ..bw.bw
+    24,    // ..bw.bw
     54,    // b.bw.bw
-    39,    // w.bw.bw
-    -21,   // .bbw.bw
-    29,    // bbbw.bw
+    36,    // w.bw.bw
+    -41,   // .bbw.bw
+    56,    // bbbw.bw
     -31,   // wbbw.bw
-    -9,    // .wbw.bw
+    -41,   // .wbw.bw
     -63,   // bwbw.bw
     20,    // wwbw.bw
     76,    // ..ww.bw
     64,    // b.ww.bw
-    -4,    // w.ww.bw
-    0,     // .bww.bw
+    -12,   // w.ww.bw
+    -36,   // .bww.bw
     0,     // bbww.bw
-    43,    // wbww.bw
-    -51,   // .www.bw
-    -31,   // bwww.bw
-    18,    // wwww.bw
-    -26,   // ....bbw
+    20,    // wbww.bw
+    -69,   // .www.bw
+    -24,   // bwww.bw
+    22,    // wwww.bw
+    -105,  // ....bbw
     0,     // b...bbw
     18,    // w...bbw
     11,    // .b..bbw
-    -1,    // bb..bbw
-    0,     // wb..bbw
-    -6,    // .w..bbw
-    -21,   // bw..bbw
-    19,    // ww..bbw
-    40,    // ..b.bbw
-    35,    // b.b.bbw
+    -17,   // bb..bbw
+    -29,   // wb..bbw
+    -21,   // .w..bbw
+    0,     // bw..bbw
+    0,     // ww..bbw
+    16,    // ..b.bbw
+    64,    // b.b.bbw
     -28,   // w.b.bbw
-    -22,   // .bb.bbw
+    -26,   // .bb.bbw
     -26,   // bbb.bbw
-    28,    // wbb.bbw
-    41,    // .wb.bbw
-    -30,   // bwb.bbw
-    55,    // wwb.bbw
-    84,    // ..w.bbw
-    39,    // b.w.bbw
+    6,     // wbb.bbw
+    84,    // .wb.bbw
+    -21,   // bwb.bbw
+    39,    // wwb.bbw
+    100,   // ..w.bbw
+    46,    // b.w.bbw
     -48,   // w.w.bbw
-    -61,   // .bw.bbw
-    10,    // bbw.bbw
-    0,     // wbw.bbw
+    -83,   // .bw.bbw
+    0,     // bbw.bbw
+    13,    // wbw.bbw
     -14,   // .ww.bbw
     0,     // bww.bbw
-    -82,   // www.bbw
+    -111,  // www.bbw
     -27,   // ...bbbw
-    -28,   // b..bbbw
+    0,     // b..bbbw
     -31,   // w..bbbw
     0,     // .b.bbbw
-    -42,   // bb.bbbw
-    -66,   // wb.bbbw
-    6,     // .w.bbbw
-    31,    // bw.bbbw
-    9,     // ww.bbbw
+    -62,   // bb.bbbw
+    -70,   // wb.bbbw
+    0,     // .w.bbbw
+    24,    // bw.bbbw
+    -16,   // ww.bbbw
     -26,   // ..bbbbw
     -17,   // b.bbbbw
     -39,   // w.bbbbw
-    999,   // .bbbbbw
-    999,   // bbbbbbw
-    1304,  // wbbbbbw
-    -24,   // .wbbbbw
-    -17,   // bwbbbbw
-    0,     // wwbbbbw
-    0,     // ..wbbbw
+    1227,  // .bbbbbw
+    944,   // bbbbbbw
+    1574,  // wbbbbbw
+    -41,   // .wbbbbw
+    -4,    // bwbbbbw
+    12,    // wwbbbbw
+    -32,   // ..wbbbw
     22,    // b.wbbbw
-    -39,   // w.wbbbw
-    20,    // .bwbbbw
-    -94,   // bbwbbbw
+    -27,   // w.wbbbw
+    38,    // .bwbbbw
+    -90,   // bbwbbbw
     18,    // wbwbbbw
-    -21,   // .wwbbbw
-    12,    // bwwbbbw
+    -41,   // .wwbbbw
+    -5,    // bwwbbbw
     -2,    // wwwbbbw
     0,     // ...wbbw
     13,    // b..wbbw
     2,     // w..wbbw
-    2,     // .b.wbbw
+    -23,   // .b.wbbw
     19,    // bb.wbbw
     -31,   // wb.wbbw
-    0,     // .w.wbbw
+    21,    // .w.wbbw
     0,     // bw.wbbw
-    19,    // ww.wbbw
-    54,    // ..bwbbw
-    -21,   // b.bwbbw
-    3,     // w.bwbbw
-    35,    // .bbwbbw
+    20,    // ww.wbbw
+    26,    // ..bwbbw
+    -1,    // b.bwbbw
+    24,    // w.bwbbw
+    60,    // .bbwbbw
     16,    // bbbwbbw
     -45,   // wbbwbbw
-    30,    // .wbwbbw
-    21,    // bwbwbbw
+    18,    // .wbwbbw
+    19,    // bwbwbbw
     -29,   // wwbwbbw
-    -25,   // ..wwbbw
-    -27,   // b.wwbbw
+    -49,   // ..wwbbw
+    -34,   // b.wwbbw
     0,     // w.wwbbw
-    -55,   // .bwwbbw
-    -114,  // bbwwbbw
+    -80,   // .bwwbbw
+    -118,  // bbwwbbw
     -2,    // wbwwbbw
-    28,    // .wwwbbw
-    -12,   // bwwwbbw
-    -4,    // wwwwbbw
-    -31,   // ....wbw
+    48,    // .wwwbbw
+    5,     // bwwwbbw
+    0,     // wwwwbbw
+    -66,   // ....wbw
     84,    // b...wbw
     46,    // w...wbw
-    -25,   // .b..wbw
-    -8,    // bb..wbw
-    69,    // wb..wbw
+    -70,   // .b..wbw
+    -4,    // bb..wbw
+    20,    // wb..wbw
     29,    // .w..wbw
-    6,     // bw..wbw
-    0,     // ww..wbw
+    32,    // bw..wbw
+    2,     // ww..wbw
     0,     // ..b.wbw
-    -57,   // b.b.wbw
+    -50,   // b.b.wbw
     -58,   // w.b.wbw
-    18,    // .bb.wbw
-    14,    // bbb.wbw
-    0,     // wbb.wbw
+    0,     // .bb.wbw
+    -7,    // bbb.wbw
+    13,    // wbb.wbw
     22,    // .wb.wbw
     0,     // bwb.wbw
     0,     // wwb.wbw
     -46,   // ..w.wbw
     61,    // b.w.wbw
     -21,   // w.w.wbw
-    -12,   // .bw.wbw
+    -13,   // .bw.wbw
     8,     // bbw.wbw
-    -56,   // wbw.wbw
+    -75,   // wbw.wbw
     0,     // .ww.wbw
-    30,    // bww.wbw
-    13,    // www.wbw
-    0,     // ...bwbw
+    21,    // bww.wbw
+    -1,    // www.wbw
+    9,     // ...bwbw
     -1,    // b..bwbw
-    -20,   // w..bwbw
-    -12,   // .b.bwbw
+    0,     // w..bwbw
+    -4,    // .b.bwbw
     38,    // bb.bwbw
-    -8,    // wb.bwbw
+    -3,    // wb.bwbw
     18,    // .w.bwbw
     63,    // bw.bwbw
-    34,    // ww.bwbw
+    57,    // ww.bwbw
     74,    // ..bbwbw
     -12,   // b.bbwbw
-    45,    // w.bbwbw
+    85,    // w.bbwbw
     0,     // .bbbwbw
-    46,    // bbbbwbw
+    27,    // bbbbwbw
     18,    // wbbbwbw
     -48,   // .wbbwbw
     34,    // bwbbwbw
-    -46,   // wwbbwbw
-    13,    // ..wbwbw
+    -50,   // wwbbwbw
+    -24,   // ..wbwbw
     -3,    // b.wbwbw
     -67,   // w.wbwbw
-    30,    // .bwbwbw
-    38,    // bbwbwbw
-    56,    // wbwbwbw
-    -20,   // .wwbwbw
-    -21,   // bwwbwbw
+    51,    // .bwbwbw
+    30,    // bbwbwbw
+    82,    // wbwbwbw
+    -35,   // .wwbwbw
+    -19,   // bwwbwbw
     -10,   // wwwbwbw
     -55,   // ...wwbw
-    62,    // b..wwbw
+    37,    // b..wwbw
     -8,    // w..wwbw
-    0,     // .b.wwbw
+    12,    // .b.wwbw
     -19,   // bb.wwbw
-    43,    // wb.wwbw
-    -20,   // .w.wwbw
-    -13,   // bw.wwbw
-    -15,   // ww.wwbw
+    20,    // wb.wwbw
+    -17,   // .w.wwbw
+    -9,    // bw.wwbw
+    -47,   // ww.wwbw
     -31,   // ..bwwbw
-    1,     // b.bwwbw
-    47,    // w.bwwbw
-    0,     // .bbwwbw
+    -9,    // b.bwwbw
+    29,    // w.bwwbw
+    16,    // .bbwwbw
     43,    // bbbwwbw
     -2,    // wbbwwbw
-    9,     // .wbwwbw
+    6,     // .wbwwbw
     -34,   // bwbwwbw
     66,    // wwbwwbw
-    0,     // ..wwwbw
+    17,    // ..wwwbw
     -33,   // b.wwwbw
-    28,    // w.wwwbw
-    35,    // .bwwwbw
-    0,     // bbwwwbw
-    -30,   // wbwwwbw
-    -21,   // .wwwwbw
-    17,    // bwwwwbw
+    12,    // w.wwwbw
+    18,    // .bwwwbw
+    31,    // bbwwwbw
+    -53,   // wbwwwbw
+    -28,   // .wwwwbw
+    4,     // bwwwwbw
     -748,  // wwwwwbw
-    -59,   // .....ww
-    49,    // b....ww
+    -62,   // .....ww
+    66,    // b....ww
     43,    // w....ww
-    6,     // .b...ww
+    34,    // .b...ww
     0,     // bb...ww
-    48,    // wb...ww
+    47,    // wb...ww
     0,     // .w...ww
-    113,   // bw...ww
-    -69,   // ww...ww
+    110,   // bw...ww
+    -15,   // ww...ww
     2,     // ..b..ww
-    -81,   // b.b..ww
+    -83,   // b.b..ww
     0,     // w.b..ww
-    17,    // .bb..ww
+    10,    // .bb..ww
     -2,    // bbb..ww
-    19,    // wbb..ww
+    0,     // wbb..ww
     -14,   // .wb..ww
-    8,     // bwb..ww
+    4,     // bwb..ww
     12,    // wwb..ww
-    0,     // ..w..ww
+    5,     // ..w..ww
     -13,   // b.w..ww
-    37,    // w.w..ww
-    0,     // .bw..ww
+    21,    // w.w..ww
+    -15,   // .bw..ww
     0,     // bbw..ww
-    0,     // wbw..ww
-    28,    // .ww..ww
-    1,     // bww..ww
-    30,    // www..ww
-    28,    // ...b.ww
+    2,     // wbw..ww
+    0,     // .ww..ww
+    17,    // bww..ww
+    61,    // www..ww
+    26,    // ...b.ww
     0,     // b..b.ww
-    44,    // w..b.ww
-    7,     // .b.b.ww
-    25,    // bb.b.ww
-    42,    // wb.b.ww
+    14,    // w..b.ww
+    31,    // .b.b.ww
+    0,     // bb.b.ww
+    39,    // wb.b.ww
     3,     // .w.b.ww
     -16,   // bw.b.ww
-    43,    // ww.b.ww
+    52,    // ww.b.ww
     0,     // ..bb.ww
-    35,    // b.bb.ww
-    20,    // w.bb.ww
-    8,     // .bbb.ww
+    48,    // b.bb.ww
+    41,    // w.bb.ww
+    40,    // .bbb.ww
     2,     // bbbb.ww
-    9,     // wbbb.ww
-    -30,   // .wbb.ww
+    -16,   // wbbb.ww
+    -22,   // .wbb.ww
     19,    // bwbb.ww
-    -32,   // wwbb.ww
+    -30,   // wwbb.ww
     26,    // ..wb.ww
     2,     // b.wb.ww
-    -42,   // w.wb.ww
-    -15,   // .bwb.ww
+    -41,   // w.wb.ww
+    -28,   // .bwb.ww
     11,    // bbwb.ww
-    34,    // wbwb.ww
+    57,    // wbwb.ww
     -13,   // .wwb.ww
     -19,   // bwwb.ww
-    -6,    // wwwb.ww
-    -11,   // ...w.ww
+    -30,   // wwwb.ww
+    -38,   // ...w.ww
     -27,   // b..w.ww
-    -31,   // w..w.ww
-    53,    // .b.w.ww
-    -25,   // bb.w.ww
+    -8,    // w..w.ww
+    39,    // .b.w.ww
+    0,     // bb.w.ww
     -17,   // wb.w.ww
     35,    // .w.w.ww
-    63,    // bw.w.ww
-    -58,   // ww.w.ww
-    0,     // ..bw.ww
+    39,    // bw.w.ww
+    -76,   // ww.w.ww
+    4,     // ..bw.ww
     1,     // b.bw.ww
     -30,   // w.bw.ww
-    -7,    // .bbw.ww
+    -34,   // .bbw.ww
     0,     // bbbw.ww
-    19,    // wbbw.ww
-    36,    // .wbw.ww
+    20,    // wbbw.ww
+    41,    // .wbw.ww
     -38,   // bwbw.ww
-    46,    // wwbw.ww
-    -31,   // ..ww.ww
-    -10,   // b.ww.ww
+    62,    // wwbw.ww
+    -18,   // ..ww.ww
+    -20,   // b.ww.ww
     97,    // w.ww.ww
     -6,    // .bww.ww
-    26,    // bbww.ww
-    -15,   // wbww.ww
-    30,    // .www.ww
-    42,    // bwww.ww
-    52,    // wwww.ww
+    0,     // bbww.ww
+    -47,   // wbww.ww
+    20,    // .www.ww
+    62,    // bwww.ww
+    65,    // wwww.ww
     24,    // ....bww
-    -21,   // b...bww
+    -23,   // b...bww
     0,     // w...bww
     -7,    // .b..bww
     0,     // bb..bww
     -29,   // wb..bww
-    58,    // .w..bww
-    0,     // bw..bww
+    51,    // .w..bww
+    15,    // bw..bww
     12,    // ww..bww
-    0,     // ..b.bww
-    0,     // b.b.bww
+    5,     // ..b.bww
+    1,     // b.b.bww
     69,    // w.b.bww
     0,     // .bb.bww
-    0,     // bbb.bww
-    55,    // wbb.bww
+    -19,   // bbb.bww
+    39,    // wbb.bww
     -7,    // .wb.bww
     -8,    // bwb.bww
-    14,    // wwb.bww
+    0,     // wwb.bww
     4,     // ..w.bww
     0,     // b.w.bww
     0,     // w.w.bww
-    11,    // .bw.bww
+    25,    // .bw.bww
     0,     // bbw.bww
     0,     // wbw.bww
     13,    // .ww.bww
-    -10,   // bww.bww
-    -30,   // www.bww
-    -10,   // ...bbww
-    117,   // b..bbww
-    -5,    // w..bbww
-    59,    // .b.bbww
-    -26,   // bb.bbww
+    0,     // bww.bww
+    -25,   // www.bww
+    0,     // ...bbww
+    138,   // b..bbww
+    -8,    // w..bbww
+    80,    // .b.bbww
+    0,     // bb.bbww
     -1,    // wb.bbww
     -32,   // .w.bbww
     0,     // bw.bbww
-    -32,   // ww.bbww
-    87,    // ..bbbww
+    -30,   // ww.bbww
+    79,    // ..bbbww
     1,     // b.bbbww
     26,    // w.bbbww
     16,    // .bbbbww
-    995,   // bbbbbww
-    0,     // wbbbbww
+    1019,  // bbbbbww
+    12,    // wbbbbww
     54,    // .wbbbww
-    0,     // bwbbbww
-    -87,   // wwbbbww
+    -31,   // bwbbbww
+    -105,  // wwbbbww
     -41,   // ..wbbww
-    -25,   // b.wbbww
-    -32,   // w.wbbww
-    -20,   // .bwbbww
-    -28,   // bbwbbww
-    -46,   // wbwbbww
+    -26,   // b.wbbww
+    -56,   // w.wbbww
+    -10,   // .bwbbww
+    -15,   // bbwbbww
+    -50,   // wbwbbww
     -55,   // .wwbbww
-    114,   // bwwbbww
+    118,   // bwwbbww
     -1,    // wwwbbww
     0,     // ...wbww
     0,     // b..wbww
-    -17,   // w..wbww
+    0,     // w..wbww
     -28,   // .b.wbww
     -11,   // bb.wbww
     20,    // wb.wbww
     -12,   // .w.wbww
-    10,    // bw.wbww
-    46,    // ww.wbww
-    0,     // ..bwbww
+    11,    // bw.wbww
+    62,    // ww.wbww
+    14,    // ..bwbww
     15,    // b.bwbww
-    3,     // w.bwbww
-    26,    // .bbwbww
-    34,    // bbbwbww
+    -1,    // w.bwbww
+    0,     // .bbwbww
+    50,    // bbbwbww
     -29,   // wbbwbww
-    56,    // .wbwbww
-    -38,   // bwbwbww
-    71,    // wwbwbww
+    60,    // .wbwbww
+    -30,   // bwbwbww
+    83,    // wwbwbww
     -35,   // ..wwbww
-    42,    // b.wwbww
-    38,    // w.wwbww
+    43,    // b.wwbww
+    36,    // w.wwbww
     0,     // .bwwbww
-    28,    // bbwwbww
+    15,    // bbwwbww
     66,    // wbwwbww
     20,    // .wwwbww
-    94,    // bwwwbww
+    90,    // bwwwbww
     -42,   // wwwwbww
-    7,     // ....www
-    18,    // b...www
-    -5,    // w...www
+    -38,   // ....www
+    84,    // b...www
+    0,     // w...www
     38,    // .b..www
     2,     // bb..www
-    21,    // wb..www
-    -72,   // .w..www
-    -45,   // bw..www
-    30,    // ww..www
-    0,     // ..b.www
+    68,    // wb..www
+    -95,   // .w..www
+    -75,   // bw..www
+    61,    // ww..www
+    45,    // ..b.www
     0,     // b.b.www
-    -44,   // w.b.www
-    -3,    // .bb.www
+    -40,   // w.b.www
+    -31,   // .bb.www
     0,     // bbb.www
-    -82,   // wbb.www
-    -21,   // .wb.www
-    -14,   // bwb.www
-    -30,   // wwb.www
-    -7,    // ..w.www
-    -10,   // b.w.www
-    -17,   // w.w.www
-    -15,   // .bw.www
-    0,     // bbw.www
-    13,    // wbw.www
-    24,    // .ww.www
+    -111,  // wbb.www
+    -2,    // .wb.www
+    7,     // bwb.www
+    -25,   // wwb.www
+    -15,   // ..w.www
+    -14,   // b.w.www
+    -20,   // w.w.www
+    0,     // .bw.www
+    19,    // bbw.www
+    -1,    // wbw.www
+    0,     // .ww.www
     26,    // bww.www
-    39,    // www.www
-    21,    // ...bwww
+    73,    // www.www
+    -26,   // ...bwww
     52,    // b..bwww
-    -34,   // w..bwww
-    -2,    // .b.bwww
+    -10,   // w..bwww
+    -34,   // .b.bwww
     0,     // bb.bwww
-    33,    // wb.bwww
+    58,    // wb.bwww
     -66,   // .w.bwww
-    -29,   // bw.bwww
-    -6,    // ww.bwww
+    -56,   // bw.bwww
+    -30,   // ww.bwww
     0,     // ..bbwww
     0,     // b.bbwww
-    -15,   // w.bbwww
-    46,    // .bbbwww
+    -30,   // w.bbwww
+    53,    // .bbbwww
     0,     // bbbbwww
     -2,    // wbbbwww
-    -10,   // .wbbwww
+    -20,   // .wbbwww
     -43,   // bwbbwww
     -1,    // wwbbwww
-    3,     // ..wbwww
-    -56,   // b.wbwww
-    108,   // w.wbwww
+    35,    // ..wbwww
+    -41,   // b.wbwww
+    107,   // w.wbwww
     -1,    // .bwbwww
-    -34,   // bbwbwww
+    -50,   // bbwbwww
     -10,   // wbwbwww
-    44,    // .wwbwww
+    32,    // .wwbwww
     -16,   // bwwbwww
-    0,     // wwwbwww
-    250,   // ...wwww
-    -21,   // b..wwww
+    48,    // wwwbwww
+    -286,  // ...wwww
+    -27,   // b..wwww
     -26,   // w..wwww
     5,     // .b.wwww
     -2,    // bb.wwww
-    18,    // wb.wwww
-    0,     // .w.wwww
+    22,    // wb.wwww
+    -25,   // .w.wwww
     -27,   // bw.wwww
-    52,    // ww.wwww
-    21,    // ..bwwww
-    63,    // b.bwwww
-    12,    // w.bwwww
+    65,    // ww.wwww
+    25,    // ..bwwww
+    52,    // b.bwwww
+    18,    // w.bwwww
     0,     // .bbwwww
     0,     // bbbwwww
-    -4,    // wbbwwww
-    -6,    // .wbwwww
-    -46,   // bwbwwww
+    0,     // wbbwwww
+    -32,   // .wbwwww
+    -27,   // bwbwwww
     -42,   // wwbwwww
     -999,  // ..wwwww
-    -1043, // b.wwwww
-    -999,  // w.wwwww
+    -939,  // b.wwwww
+    -726,  // w.wwwww
     -1082, // .bwwwww
-    -995,  // bbwwwww
+    -1019, // bbwwwww
     -748,  // wbwwwww
     -1151, // .wwwwww
-    -999,  // bwwwwww
+    -944,  // bwwwwww
     -581,  // wwwwwww
-    104,   // ccc
-    117,   // cc
-    74,    // c
-    0,     // ttt
-    175,   // tt
-    53,    // t
-    6,     // ct
-    53,    // cct
-    76,    // ctt
+    74,    // ccc
+    176,   // cc
+    62,    // c
+    21,    // ttt
+    116,   // tt
+    81,    // t
+    90,    // ct
+    57,    // cct
+    96,    // ctt
 ].into_boxed_slice()
