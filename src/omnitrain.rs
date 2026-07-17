@@ -36,7 +36,6 @@ const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
 const MAX_COEFF_VALUE: i64 = 999_999;
 const MIN_COEFF_VALUE: i64 = -MAX_COEFF_VALUE;
 
-#[expect(clippy::too_many_lines)]
 pub fn run(num_threads: Option<usize>) {
     // TODO: if 1 thread, no parallelism
     // TODO: no global (if we need to do stuff after training)
@@ -82,31 +81,22 @@ pub fn run(num_threads: Option<usize>) {
             should_mutate
         };
 
-        let all_wins = (0..PAIRS_BY_EPOCH)
+        let all_wins: Vec<u32> = (0..PAIRS_BY_EPOCH)
             .into_par_iter()
             .map(|pair_idx| {
                 let mut new_coeffs = best_coeffs.clone();
                 for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
                     if mutate {
-                        let new_value = mutations[i];
-                        if i >= UNIQUE_STENCIL_INDICES {
-                            new_coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] = new_value;
-                        } else {
-                            new_coeffs[STENCIL_INDICES[i]] = new_value;
-                            new_coeffs[STENCIL_INDICES_SYM[i]] = new_value;
-                            new_coeffs[STENCIL_INDICES_OPP[i]] = -new_value;
-                            new_coeffs[STENCIL_INDICES_SYM_OPP[i]] = -new_value;
-                        }
+                        update_coeffs(&mut new_coeffs, i, mutations[i]);
                     }
                 }
-
                 let new_player = Player::Bot {
                     bot: idabp,
                     heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
                 };
                 play_pair(&prev_player, &new_player)
             })
-            .collect::<Vec<u32>>();
+            .collect();
 
         let mut win_differentials = [0i32; N_MUTATIONS];
         for (pair_idx, wins) in all_wins.iter().enumerate() {
@@ -120,15 +110,7 @@ pub fn run(num_threads: Option<usize>) {
         for (i, &win_differential) in win_differentials.iter().enumerate() {
             if win_differential >= REQUIRED_WIN_DIFFERENTIAL {
                 updates += 1;
-                let new_value = mutations[i];
-                if i >= UNIQUE_STENCIL_INDICES {
-                    best_coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] = new_value;
-                } else {
-                    best_coeffs[STENCIL_INDICES[i]] = new_value;
-                    best_coeffs[STENCIL_INDICES_SYM[i]] = new_value;
-                    best_coeffs[STENCIL_INDICES_OPP[i]] = -new_value;
-                    best_coeffs[STENCIL_INDICES_SYM_OPP[i]] = -new_value;
-                }
+                update_coeffs(&mut best_coeffs, i, mutations[i]);
             }
         }
 
@@ -177,6 +159,17 @@ fn random_coeff(old_coeff: i64) -> i64 {
         new_coeff + 1
     } else {
         new_coeff
+    }
+}
+
+fn update_coeffs(coeffs: &mut [i64], i: usize, new_value: i64) {
+    if i >= UNIQUE_STENCIL_INDICES {
+        coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] = new_value;
+    } else {
+        coeffs[STENCIL_INDICES[i]] = new_value;
+        coeffs[STENCIL_INDICES_SYM[i]] = new_value;
+        coeffs[STENCIL_INDICES_OPP[i]] = -new_value;
+        coeffs[STENCIL_INDICES_SYM_OPP[i]] = -new_value;
     }
 }
 
