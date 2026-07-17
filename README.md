@@ -4,12 +4,11 @@
 
 ### misc
 
-- `mod bots` -> `mod search`
+- better grid search (update more values and sample ~100 of 2^mutation pairs of games)
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
 - compute during human time (flag)
-- iterative alpha-beta pruning to always return a move in less than 1s
 - arena with elo ranking
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
@@ -23,6 +22,7 @@
 - clock in human vs (human | bot)
 - no depth in leaf_value, if win found in iterative deepening, stop
 - include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
+- `mod bots` -> `mod search`
 
 ### design
 
