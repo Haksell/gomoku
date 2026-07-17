@@ -26,7 +26,7 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
 }
 
 // TODO: different max_dist and number of best moves to check depending on depth
-const MAX_DEPTH: usize = 2;
+const MAX_DEPTH: usize = 1;
 const TIME_LIMIT: Duration = Duration::from_millis(50); // TODO: flag with default value of 500ms
 
 /// Maximizes for the current player, not necessarily black.
