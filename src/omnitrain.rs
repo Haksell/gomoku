@@ -100,7 +100,7 @@ pub fn run() {
             }
         }
 
-        println!("Epoch #{epoch}: {updates} updates");
+        println!("Epoch {epoch}: {updates} updates");
         if updates != 0
             && let Err(err) = write_coeffs(&best_coeffs)
         {
