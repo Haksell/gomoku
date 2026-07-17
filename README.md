@@ -7,6 +7,8 @@
 - better grid search:
   - update more values and sample ~100 of 2^mutation pairs of games
   - recheck statistical significance before mutating
+  - shuffle the coeff indices instead of full random
+- update double threes in `do_move` and `undo_move`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
@@ -25,6 +27,13 @@
 - no depth in leaf_value, if win found in iterative deepening, stop
 - include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
 - `mod bots` -> `mod search`
+
+### self-improving heuristic
+
+- on calcule l'heuristique a depth 1/2
+- on fait l'alpha-beta pruning a depth 3/4 (il faut la meme parite qu'a la premiere etape pour que ca soit biaise pour le meme joueur)
+- on compare
+- si l'heuristique a depth 3/4 est plus grande on incremente la valeur des patterns a depth 1/2, sinon on decremente
 
 ### design
 
