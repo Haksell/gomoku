@@ -873,7 +873,7 @@ vec![
     57,    // bw.wb.b
     1,     // ww.wb.b
     -60,   // ..bwb.b
-    -64,   // b.bwb.b
+    -158,  // b.bwb.b
     0,     // w.bwb.b
     82,    // .bbwb.b
     -107,  // bbbwb.b
@@ -1666,7 +1666,7 @@ vec![
     -56,   // wwbbw.w
     60,    // ..wbw.w
     0,     // b.wbw.w
-    64,    // w.wbw.w
+    158,   // w.wbw.w
     53,    // .bwbw.w
     -24,   // bbwbw.w
     -98,   // wbwbw.w
@@ -2192,7 +2192,7 @@ vec![
     0,     // ttt
     0,     // tt
     929,   // t
-    48,    // ct
-    148,   // cct
+    183,   // ct
+    39,    // cct
     0,     // ctt
 ].into_boxed_slice()
