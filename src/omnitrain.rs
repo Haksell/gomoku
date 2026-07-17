@@ -19,7 +19,6 @@ use rayon::{
 use std::{
     array,
     cmp::{max, min},
-    sync::{Arc, Mutex},
     thread::available_parallelism,
 };
 
@@ -27,7 +26,7 @@ const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const GAMES_BY_EPOCH: usize = 100;
 const PAIRS_BY_EPOCH: usize = GAMES_BY_EPOCH / 2;
-const REQUIRED_WIN_DIFFERENTIAL: i32 = 12;
+const REQUIRED_WIN_DIFFERENTIAL: i32 = 10;
 
 const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
@@ -83,38 +82,41 @@ pub fn run(num_threads: Option<usize>) {
             should_mutate
         };
 
-        let win_differentials = Arc::new(Mutex::new([0i32; N_MUTATIONS]));
-
-        (0..PAIRS_BY_EPOCH).into_par_iter().for_each(|pair_idx| {
-            let mut new_coeffs = best_coeffs.clone();
-            for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
-                if mutate {
-                    let new_value = mutations[i];
-                    if i >= UNIQUE_STENCIL_INDICES {
-                        new_coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] = new_value;
-                    } else {
-                        new_coeffs[STENCIL_INDICES[i]] = new_value;
-                        new_coeffs[STENCIL_INDICES_SYM[i]] = new_value;
-                        new_coeffs[STENCIL_INDICES_OPP[i]] = -new_value;
-                        new_coeffs[STENCIL_INDICES_SYM_OPP[i]] = -new_value;
+        let all_wins = (0..PAIRS_BY_EPOCH)
+            .into_par_iter()
+            .map(|pair_idx| {
+                let mut new_coeffs = best_coeffs.clone();
+                for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
+                    if mutate {
+                        let new_value = mutations[i];
+                        if i >= UNIQUE_STENCIL_INDICES {
+                            new_coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] = new_value;
+                        } else {
+                            new_coeffs[STENCIL_INDICES[i]] = new_value;
+                            new_coeffs[STENCIL_INDICES_SYM[i]] = new_value;
+                            new_coeffs[STENCIL_INDICES_OPP[i]] = -new_value;
+                            new_coeffs[STENCIL_INDICES_SYM_OPP[i]] = -new_value;
+                        }
                     }
                 }
-            }
 
-            let new_player = Player::Bot {
-                bot: idabp,
-                heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
-            };
-            let wins = play_pair(&prev_player, &new_player) as i32;
+                let new_player = Player::Bot {
+                    bot: idabp,
+                    heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
+                };
+                play_pair(&prev_player, &new_player)
+            })
+            .collect::<Vec<u32>>();
 
-            let mut win_differentials_lock = win_differentials.lock().unwrap();
+        let mut win_differentials = [0i32; N_MUTATIONS];
+        for (pair_idx, wins) in all_wins.iter().enumerate() {
+            let wins = *wins as i32;
             for (i, &mutate) in should_mutate[pair_idx].iter().enumerate() {
-                win_differentials_lock[i] += if mutate { wins } else { -wins };
+                win_differentials[i] += if mutate { wins } else { -wins };
             }
-        });
+        }
 
         let mut updates = 0;
-        let win_differentials = *win_differentials.lock().unwrap();
         for (i, &win_differential) in win_differentials.iter().enumerate() {
             if win_differential >= REQUIRED_WIN_DIFFERENTIAL {
                 updates += 1;
