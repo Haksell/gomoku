@@ -4,6 +4,8 @@
 
 ### misc
 
+- omnisearch
+- setup parallelism in main
 - better grid search:
   - update more values and sample ~100 of 2^mutation pairs of games
   - recheck statistical significance before mutating
@@ -27,6 +29,7 @@
 - no depth in leaf_value, if win found in iterative deepening, stop
 - include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
 - `mod bots` -> `mod search`
+- different heuristics at different depths?
 
 ### self-improving heuristic
 

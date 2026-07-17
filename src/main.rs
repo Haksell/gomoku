@@ -6,11 +6,13 @@ mod genetrain;
 mod gridtrain;
 mod gui;
 mod heuristics;
+mod omnitrain;
 mod player;
 
 use crate::player::Player;
 use clap::Parser;
 
+#[expect(clippy::struct_excessive_bools)] // TODO: fix with Training enum
 #[derive(Debug, Parser)]
 struct Args {
     black_player: Player,
@@ -25,10 +27,16 @@ struct Args {
     dueltrain: bool,
     #[arg(long)]
     gridtrain: bool,
+    #[arg(long)]
+    omnitrain: bool,
 }
 
 fn main() {
     let args = Args::parse();
+    if args.omnitrain {
+        omnitrain::run(args.num_threads);
+        return;
+    }
     if args.gridtrain {
         gridtrain::run(args.num_threads);
         return;
