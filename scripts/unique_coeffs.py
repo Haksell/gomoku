@@ -30,13 +30,13 @@ indices = sorted(
 )
 
 n = len(indices)
-print(f"static STENCIL_INDICES: [usize; UNIQUE_STENCIL_INDICES] = {indices};")
+print(f"pub static STENCIL_INDICES: [usize; UNIQUE_STENCIL_INDICES] = {indices};")
 print(
-    f"static STENCIL_INDICES_SYM: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym, indices))};"
+    f"pub static STENCIL_INDICES_SYM: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym, indices))};"
 )
 print(
-    f"static STENCIL_INDICES_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(opp, indices))};"
+    f"pub static STENCIL_INDICES_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(opp, indices))};"
 )
 print(
-    f"static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym_opp, indices))};"
+    f"pub static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = {list(map(sym_opp, indices))};"
 )
