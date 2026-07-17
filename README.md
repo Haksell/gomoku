@@ -23,6 +23,7 @@
 - coup force (4 captures...)
 - clock in human vs (human | bot)
 - no depth in leaf_value, if win found in iterative deepening, stop
+- include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
 
 ### design
 
