@@ -29,54 +29,54 @@ vec![
     -14,   // ...b...
     0,     // b..b...
     0,     // w..b...
-    22,    // .b.b...
+    80,    // .b.b...
     57,    // bb.b...
     19,    // wb.b...
     0,     // .w.b...
     -36,   // bw.b...
     1,     // ww.b...
     -14,   // ..bb...
-    0,     // b.bb...
+    41,    // b.bb...
     62,    // w.bb...
     0,     // .bbb...
     286,   // bbbb...
     -148,  // wbbb...
     -61,   // .wbb...
-    55,    // bwbb...
+    88,    // bwbb...
     0,     // wwbb...
     -21,   // ..wb...
     27,    // b.wb...
-    0,     // w.wb...
-    -78,   // .bwb...
-    16,    // bbwb...
+    -26,   // w.wb...
+    -48,   // .bwb...
+    65,    // bbwb...
     9,     // wbwb...
     -106,  // .wwb...
     0,     // bwwb...
-    -34,   // wwwb...
+    0,     // wwwb...
     14,    // ...w...
     0,     // b..w...
     0,     // w..w...
     0,     // .b.w...
     -1,    // bb.w...
     36,    // wb.w...
-    -22,   // .w.w...
+    -80,   // .w.w...
     -19,   // bw.w...
     -57,   // ww.w...
     21,    // ..bw...
-    0,     // b.bw...
+    26,    // b.bw...
     -27,   // w.bw...
     106,   // .bbw...
-    34,    // bbbw...
+    0,     // bbbw...
     0,     // wbbw...
-    78,    // .wbw...
+    48,    // .wbw...
     -9,    // bwbw...
-    -16,   // wwbw...
+    -65,   // wwbw...
     14,    // ..ww...
     -62,   // b.ww...
-    0,     // w.ww...
+    -41,   // w.ww...
     61,    // .bww...
     0,     // bbww...
-    -55,   // wbww...
+    -88,   // wbww...
     0,     // .www...
     148,   // bwww...
     -286,  // wwww...
@@ -90,7 +90,7 @@ vec![
     93,    // bw..b..
     0,     // ww..b..
     75,    // ..b.b..
-    -33,   // b.b.b..
+    -65,   // b.b.b..
     0,     // w.b.b..
     80,    // .bb.b..
     15,    // bbb.b..
@@ -103,15 +103,15 @@ vec![
     98,    // w.w.b..
     -92,   // .bw.b..
     -31,   // bbw.b..
-    -16,   // wbw.b..
+    -59,   // wbw.b..
     -63,   // .ww.b..
     -118,  // bww.b..
-    43,    // www.b..
+    0,     // www.b..
     -14,   // ...bb..
     -55,   // b..bb..
     15,    // w..bb..
     70,    // .b.bb..
-    73,    // bb.bb..
+    52,    // bb.bb..
     32,    // wb.bb..
     -53,   // .w.bb..
     -81,   // bw.bb..
@@ -125,7 +125,7 @@ vec![
     -123,  // .wbbb..
     -17,   // bwbbb..
     79,    // wwbbb..
-    11,    // ..wbb..
+    22,    // ..wbb..
     22,    // b.wbb..
     -27,   // w.wbb..
     -56,   // .bwbb..
@@ -151,14 +151,14 @@ vec![
     8,     // wbbwb..
     59,    // .wbwb..
     7,     // bwbwb..
-    11,    // wwbwb..
-    -11,   // ..wwb..
+    1,     // wwbwb..
+    -22,   // ..wwb..
     12,    // b.wwb..
     -7,    // w.wwb..
     24,    // .bwwb..
     41,    // bbwwb..
     -55,   // wbwwb..
-    50,    // .wwwb..
+    109,   // .wwwb..
     80,    // bwwwb..
     107,   // wwwwb..
     22,    // ....w..
@@ -174,14 +174,14 @@ vec![
     -98,   // b.b.w..
     0,     // w.b.w..
     63,    // .bb.w..
-    -43,   // bbb.w..
+    0,     // bbb.w..
     118,   // wbb.w..
     92,    // .wb.w..
-    16,    // bwb.w..
+    59,    // bwb.w..
     31,    // wwb.w..
     -75,   // ..w.w..
     0,     // b.w.w..
-    33,    // w.w.w..
+    65,    // w.w.w..
     54,    // .bw.w..
     -60,   // bbw.w..
     -46,   // wbw.w..
@@ -197,10 +197,10 @@ vec![
     -51,   // .w.bw..
     -31,   // bw.bw..
     26,    // ww.bw..
-    11,    // ..bbw..
+    22,    // ..bbw..
     7,     // b.bbw..
     -12,   // w.bbw..
-    -50,   // .bbbw..
+    -109,  // .bbbw..
     -107,  // bbbbw..
     -80,   // wbbbw..
     -24,   // .wbbw..
@@ -210,7 +210,7 @@ vec![
     90,    // b.wbw..
     60,    // w.wbw..
     -59,   // .bwbw..
-    -11,   // bbwbw..
+    -1,    // bbwbw..
     -7,    // wbwbw..
     -47,   // .wwbw..
     -8,    // bwwbw..
@@ -223,8 +223,8 @@ vec![
     81,    // wb.ww..
     -70,   // .w.ww..
     -32,   // bw.ww..
-    -73,   // ww.ww..
-    -11,   // ..bww..
+    -52,   // ww.ww..
+    -22,   // ..bww..
     27,    // b.bww..
     -22,   // w.bww..
     35,    // .bbww..
@@ -264,12 +264,12 @@ vec![
     46,    // b.w..b.
     -93,   // w.w..b.
     -47,   // .bw..b.
-    -51,   // bbw..b.
+    -58,   // bbw..b.
     -70,   // wbw..b.
     0,     // .ww..b.
     -54,   // bww..b.
     38,    // www..b.
-    22,    // ...b.b.
+    80,    // ...b.b.
     -55,   // b..b.b.
     110,   // w..b.b.
     -24,   // .b.b.b.
@@ -319,7 +319,7 @@ vec![
     45,    // w.ww.b.
     -11,   // .bww.b.
     88,    // bbww.b.
-    0,     // wbww.b.
+    57,    // wbww.b.
     -49,   // .www.b.
     -14,   // bwww.b.
     5,     // wwww.b.
@@ -338,7 +338,7 @@ vec![
     31,    // .bb.bb.
     0,     // bbb.bb.
     -16,   // wbb.bb.
-    44,    // .wb.bb.
+    93,    // .wb.bb.
     0,     // bwb.bb.
     -30,   // wwb.bb.
     63,    // ..w.bb.
@@ -367,8 +367,8 @@ vec![
     1572,  // wbbbbb.
     -15,   // .wbbbb.
     28,    // bwbbbb.
-    66,    // wwbbbb.
-    -50,   // ..wbbb.
+    43,    // wwbbbb.
+    -109,  // ..wbbb.
     -54,   // b.wbbb.
     0,     // w.wbbb.
     53,    // .bwbbb.
@@ -411,7 +411,7 @@ vec![
     14,    // bb..wb.
     66,    // wb..wb.
     14,    // .w..wb.
-    62,    // bw..wb.
+    11,    // bw..wb.
     -15,   // ww..wb.
     -92,   // ..b.wb.
     34,    // b.b.wb.
@@ -421,17 +421,17 @@ vec![
     -83,   // wbb.wb.
     0,     // .wb.wb.
     20,    // bwb.wb.
-    55,    // wwb.wb.
+    42,    // wwb.wb.
     54,    // ..w.wb.
     -40,   // b.w.wb.
     -54,   // w.w.wb.
     -7,    // .bw.wb.
     0,     // bbw.wb.
     0,     // wbw.wb.
-    -44,   // .ww.wb.
+    -93,   // .ww.wb.
     -12,   // bww.wb.
     4,     // www.wb.
-    -78,   // ...bwb.
+    -48,   // ...bwb.
     0,     // b..bwb.
     78,    // w..bwb.
     -5,    // .b.bwb.
@@ -502,7 +502,7 @@ vec![
     54,    // wbb..w.
     47,    // .wb..w.
     70,    // bwb..w.
-    51,    // wwb..w.
+    58,    // wwb..w.
     -9,    // ..w..w.
     0,     // b.w..w.
     7,     // w.w..w.
@@ -528,7 +528,7 @@ vec![
     -5,    // bbbb.w.
     14,    // wbbb.w.
     11,    // .wbb.w.
-    0,     // bwbb.w.
+    -57,   // bwbb.w.
     -88,   // wwbb.w.
     -51,   // ..wb.w.
     0,     // b.wb.w.
@@ -539,7 +539,7 @@ vec![
     58,    // .wwb.w.
     86,    // bwwb.w.
     -100,  // wwwb.w.
-    -22,   // ...w.w.
+    -80,   // ...w.w.
     -110,  // b..w.w.
     55,    // w..w.w.
     33,    // .b.w.w.
@@ -571,14 +571,14 @@ vec![
     8,     // w...bw.
     -14,   // .b..bw.
     15,    // bb..bw.
-    -62,   // wb..bw.
+    -11,   // wb..bw.
     47,    // .w..bw.
     -66,   // bw..bw.
     -14,   // ww..bw.
     -54,   // ..b.bw.
     54,    // b.b.bw.
     40,    // w.b.bw.
-    44,    // .bb.bw.
+    93,    // .bb.bw.
     -4,    // bbb.bw.
     12,    // wbb.bw.
     7,     // .wb.bw.
@@ -588,7 +588,7 @@ vec![
     12,    // b.w.bw.
     -34,   // w.w.bw.
     0,     // .bw.bw.
-    -55,   // bbw.bw.
+    -42,   // bbw.bw.
     -20,   // wbw.bw.
     2,     // .ww.bw.
     83,    // bww.bw.
@@ -620,7 +620,7 @@ vec![
     -78,   // .wwbbw.
     111,   // bwwbbw.
     -20,   // wwwbbw.
-    78,    // ...wbw.
+    48,    // ...wbw.
     -78,   // b..wbw.
     0,     // w..wbw.
     90,    // .b.wbw.
@@ -668,7 +668,7 @@ vec![
     -80,   // ..w.ww.
     27,    // b.w.ww.
     18,    // w.w.ww.
-    -44,   // .bw.ww.
+    -93,   // .bw.ww.
     30,    // bbw.ww.
     0,     // wbw.ww.
     -31,   // .ww.ww.
@@ -710,7 +710,7 @@ vec![
     -154,  // .w.www.
     19,    // bw.www.
     20,    // ww.www.
-    50,    // ..bwww.
+    109,   // ..bwww.
     0,     // b.bwww.
     54,    // w.bwww.
     18,    // .bbwww.
@@ -723,7 +723,7 @@ vec![
     0,     // b.wwww.
     0,     // w.wwww.
     15,    // .bwwww.
-    -66,   // bbwwww.
+    -43,   // bbwwww.
     -28,   // wbwwww.
     -841,  // .wwwww.
     -1572, // bwwwww.
@@ -733,7 +733,7 @@ vec![
     0,     // w.....b
     69,    // .b....b
     -43,   // bb....b
-    0,     // wb....b
+    43,    // wb....b
     -115,  // .w....b
     0,     // bw....b
     66,    // ww....b
@@ -778,7 +778,7 @@ vec![
     -32,   // w.wb..b
     0,     // .bwb..b
     0,     // bbwb..b
-    -1,    // wbwb..b
+    0,     // wbwb..b
     38,    // .wwb..b
     -2,    // bwwb..b
     52,    // wwwb..b
@@ -816,9 +816,9 @@ vec![
     -24,   // bb..b.b
     0,     // wb..b.b
     93,    // .w..b.b
-    1,     // bw..b.b
+    0,     // bw..b.b
     -83,   // ww..b.b
-    -33,   // ..b.b.b
+    -65,   // ..b.b.b
     -32,   // b.b.b.b
     -112,  // w.b.b.b
     -18,   // .bb.b.b
@@ -836,7 +836,7 @@ vec![
     -78,   // .ww.b.b
     8,     // bww.b.b
     -51,   // www.b.b
-    0,     // ...bb.b
+    41,    // ...bb.b
     -58,   // b..bb.b
     43,    // w..bb.b
     52,    // .b.bb.b
@@ -863,7 +863,7 @@ vec![
     -24,   // .wwbb.b
     23,    // bwwbb.b
     -33,   // wwwbb.b
-    0,     // ...wb.b
+    26,    // ...wb.b
     36,    // b..wb.b
     32,    // w..wb.b
     0,     // .b.wb.b
@@ -897,7 +897,7 @@ vec![
     19,    // bb..w.b
     -48,   // wb..w.b
     0,     // .w..w.b
-    0,     // bw..w.b
+    56,    // bw..w.b
     -60,   // ww..w.b
     0,     // ..b.w.b
     0,     // b.b.w.b
@@ -934,7 +934,7 @@ vec![
     0,     // wbbbw.b
     -39,   // .wbbw.b
     -55,   // bwbbw.b
-    -168,  // wwbbw.b
+    -197,  // wwbbw.b
     90,    // ..wbw.b
     -117,  // b.wbw.b
     0,     // w.wbw.b
@@ -996,7 +996,7 @@ vec![
     -14,   // bbw..bb
     -20,   // wbw..bb
     -10,   // .ww..bb
-    0,     // bww..bb
+    39,    // bww..bb
     0,     // www..bb
     57,    // ...b.bb
     0,     // b..b.bb
@@ -1007,7 +1007,7 @@ vec![
     -39,   // .w.b.bb
     44,    // bw.b.bb
     1,     // ww.b.bb
-    73,    // ..bb.bb
+    52,    // ..bb.bb
     -224,  // b.bb.bb
     20,    // w.bb.bb
     -20,   // .bbb.bb
@@ -1023,7 +1023,7 @@ vec![
     -62,   // bbwb.bb
     95,    // wbwb.bb
     34,    // .wwb.bb
-    -60,   // bwwb.bb
+    -7,    // bwwb.bb
     -52,   // wwwb.bb
     -1,    // ...w.bb
     -47,   // b..w.bb
@@ -1070,7 +1070,7 @@ vec![
     -4,    // .wb.bbb
     1,     // bwb.bbb
     -19,   // wwb.bbb
-    -43,   // ..w.bbb
+    0,     // ..w.bbb
     63,    // b.w.bbb
     51,    // w.w.bbb
     27,    // .bw.bbb
@@ -1106,7 +1106,7 @@ vec![
     0,     // .wwbbbb
     -10,   // bwwbbbb
     -18,   // wwwbbbb
-    34,    // ...wbbb
+    0,     // ...wbbb
     36,    // b..wbbb
     -52,   // w..wbbb
     100,   // .b.wbbb
@@ -1136,7 +1136,7 @@ vec![
     -15,   // ....wbb
     -18,   // b...wbb
     31,    // w...wbb
-    -51,   // .b..wbb
+    -58,   // .b..wbb
     -14,   // bb..wbb
     93,    // wb..wbb
     55,    // .w..wbb
@@ -1148,7 +1148,7 @@ vec![
     -13,   // .bb.wbb
     0,     // bbb.wbb
     28,    // wbb.wbb
-    -55,   // .wb.wbb
+    -42,   // .wb.wbb
     31,    // bwb.wbb
     0,     // wwb.wbb
     -60,   // ..w.wbb
@@ -1160,7 +1160,7 @@ vec![
     30,    // .ww.wbb
     -39,   // bww.wbb
     19,    // www.wbb
-    16,    // ...bwbb
+    65,    // ...bwbb
     0,     // b..bwbb
     -1,    // w..bwbb
     9,     // .b.bwbb
@@ -1176,9 +1176,9 @@ vec![
     42,    // bbbbwbb
     -90,   // wbbbwbb
     0,     // .wbbwbb
-    -89,   // bwbbwbb
+    -96,   // bwbbwbb
     -55,   // wwbbwbb
-    -11,   // ..wbwbb
+    -1,    // ..wbwbb
     0,     // b.wbwbb
     -24,   // w.wbwbb
     -113,  // .bwbwbb
@@ -1198,7 +1198,7 @@ vec![
     11,    // ww.wwbb
     41,    // ..bwwbb
     56,    // b.bwwbb
-    168,   // w.bwwbb
+    197,   // w.bwwbb
     86,    // .bbwwbb
     1,     // bbbwwbb
     -118,  // wbbwwbb
@@ -1211,20 +1211,20 @@ vec![
     -54,   // .bwwwbb
     169,   // bbwwwbb
     21,    // wbwwwbb
-    -66,   // .wwwwbb
+    -43,   // .wwwwbb
     -12,   // bwwwwbb
     -1375, // wwwwwbb
     18,    // .....wb
     0,     // b....wb
-    0,     // w....wb
+    -43,   // w....wb
     47,    // .b...wb
     -40,   // bb...wb
     0,     // wb...wb
     0,     // .w...wb
-    -31,   // bw...wb
+    -38,   // bw...wb
     93,    // ww...wb
     93,    // ..b..wb
-    1,     // b.b..wb
+    0,     // b.b..wb
     48,    // w.b..wb
     18,    // .bb..wb
     -176,  // bbb..wb
@@ -1233,9 +1233,9 @@ vec![
     -20,   // bwb..wb
     -93,   // wwb..wb
     96,    // ..w..wb
-    0,     // b.w..wb
+    56,    // b.w..wb
     0,     // w.w..wb
-    62,    // .bw..wb
+    11,    // .bw..wb
     27,    // bbw..wb
     42,    // wbw..wb
     0,     // .ww..wb
@@ -1246,7 +1246,7 @@ vec![
     -43,   // w..b.wb
     -52,   // .b.b.wb
     44,    // bb.b.wb
-    -72,   // wb.b.wb
+    -124,  // wb.b.wb
     33,    // .w.b.wb
     34,    // bw.b.wb
     0,     // ww.b.wb
@@ -1257,7 +1257,7 @@ vec![
     -22,   // bbbb.wb
     37,    // wbbb.wb
     36,    // .wbb.wb
-    -20,   // bwbb.wb
+    0,     // bwbb.wb
     0,     // wwbb.wb
     -31,   // ..wb.wb
     -36,   // b.wb.wb
@@ -1273,7 +1273,7 @@ vec![
     -45,   // w..w.wb
     -27,   // .b.w.wb
     -39,   // bb.w.wb
-    72,    // wb.w.wb
+    124,   // wb.w.wb
     41,    // .w.w.wb
     50,    // bw.w.wb
     39,    // ww.w.wb
@@ -1313,7 +1313,7 @@ vec![
     0,     // .wb.bwb
     31,    // bwb.bwb
     -8,    // wwb.bwb
-    16,    // ..w.bwb
+    59,    // ..w.bwb
     106,   // b.w.bwb
     32,    // w.w.bwb
     20,    // .bw.bwb
@@ -1322,14 +1322,14 @@ vec![
     68,    // .ww.bwb
     -13,   // bww.bwb
     14,    // www.bwb
-    55,    // ...bbwb
+    88,    // ...bbwb
     19,    // b..bbwb
     -69,   // w..bbwb
     17,    // .b.bbwb
     47,    // bb.bbwb
     27,    // wb.bbwb
-    0,     // .w.bbwb
-    -20,   // bw.bbwb
+    -57,   // .w.bbwb
+    0,     // bw.bbwb
     6,     // ww.bbwb
     -17,   // ..bbbwb
     -12,   // b.bbbwb
@@ -1344,14 +1344,14 @@ vec![
     -55,   // b.wbbwb
     43,    // w.wbbwb
     0,     // .bwbbwb
-    -89,   // bbwbbwb
+    -96,   // bbwbbwb
     34,    // wbwbbwb
     34,    // .wwbbwb
     6,     // bwwbbwb
     -43,   // wwwbbwb
     -9,    // ...wbwb
     45,    // b..wbwb
-    1,     // w..wbwb
+    0,     // w..wbwb
     -78,   // .b.wbwb
     -57,   // bb.wbwb
     -64,   // wb.wbwb
@@ -1380,7 +1380,7 @@ vec![
     -18,   // b...wwb
     -21,   // w...wwb
     -54,   // .b..wwb
-    0,     // bb..wwb
+    39,    // bb..wwb
     -15,   // wb..wwb
     -11,   // .w..wwb
     29,    // bw..wwb
@@ -1407,7 +1407,7 @@ vec![
     -2,    // b..bwwb
     -13,   // w..bwwb
     -52,   // .b.bwwb
-    -60,   // bb.bwwb
+    -7,    // bb.bwwb
     -20,   // wb.bwwb
     86,    // .w.bwwb
     31,    // bw.bwwb
@@ -1455,7 +1455,7 @@ vec![
     -12,   // bbwwwwb
     4,     // wbwwwwb
     -1572, // .wwwwwb
-    -1574, // bwwwwwb
+    -1355, // bwwwwwb
     -1136, // wwwwwwb
     -29,   // ......w
     0,     // b.....w
@@ -1464,7 +1464,7 @@ vec![
     -66,   // bb....w
     0,     // wb....w
     -69,   // .w....w
-    0,     // bw....w
+    -43,   // bw....w
     43,    // ww....w
     10,    // ..b...w
     -73,   // b.b...w
@@ -1527,7 +1527,7 @@ vec![
     -52,   // bbbw..w
     2,     // wbbw..w
     0,     // .wbw..w
-    1,     // bwbw..w
+    0,     // bwbw..w
     0,     // wwbw..w
     55,    // ..ww..w
     -125,  // b.ww..w
@@ -1543,7 +1543,7 @@ vec![
     -20,   // w...b.w
     0,     // .b..b.w
     60,    // bb..b.w
-    0,     // wb..b.w
+    -56,   // wb..b.w
     -46,   // .w..b.w
     48,    // bw..b.w
     -19,   // ww..b.w
@@ -1614,7 +1614,7 @@ vec![
     0,     // b.wwb.w
     25,    // w.wwb.w
     39,    // .bwwb.w
-    168,   // bbwwb.w
+    197,   // bbwwb.w
     55,    // wbwwb.w
     54,    // .wwwb.w
     0,     // bwwwb.w
@@ -1624,7 +1624,7 @@ vec![
     69,    // w...w.w
     -93,   // .b..w.w
     83,    // bb..w.w
-    -1,    // wb..w.w
+    0,     // wb..w.w
     7,     // .w..w.w
     0,     // bw..w.w
     24,    // ww..w.w
@@ -1637,7 +1637,7 @@ vec![
     -34,   // .wb.w.w
     32,    // bwb.w.w
     38,    // wwb.w.w
-    33,    // ..w.w.w
+    65,    // ..w.w.w
     112,   // b.w.w.w
     32,    // w.w.w.w
     -54,   // .bw.w.w
@@ -1646,7 +1646,7 @@ vec![
     18,    // .ww.w.w
     -65,   // bww.w.w
     0,     // www.w.w
-    0,     // ...bw.w
+    -26,   // ...bw.w
     -32,   // b..bw.w
     -36,   // w..bw.w
     -31,   // .b.bw.w
@@ -1673,7 +1673,7 @@ vec![
     -82,   // .wwbw.w
     1,     // bwwbw.w
     107,   // wwwbw.w
-    0,     // ...ww.w
+    -41,   // ...ww.w
     -43,   // b..ww.w
     58,    // w..ww.w
     45,    // .b.ww.w
@@ -1701,26 +1701,26 @@ vec![
     8,     // bwwww.w
     -726,  // wwwww.w
     -18,   // .....bw
-    0,     // b....bw
+    43,    // b....bw
     0,     // w....bw
     0,     // .b...bw
     -93,   // bb...bw
-    31,    // wb...bw
+    38,    // wb...bw
     -47,   // .w...bw
     0,     // bw...bw
     40,    // ww...bw
     -96,   // ..b..bw
     0,     // b.b..bw
-    0,     // w.b..bw
+    -56,   // w.b..bw
     0,     // .bb..bw
     74,    // bbb..bw
     -29,   // wbb..bw
-    -62,   // .wb..bw
+    -11,   // .wb..bw
     -42,   // bwb..bw
     -27,   // wwb..bw
     -93,   // ..w..bw
     -48,   // b.w..bw
-    -1,    // w.w..bw
+    0,     // w.w..bw
     66,    // .bw..bw
     93,    // bbw..bw
     20,    // wbw..bw
@@ -1734,7 +1734,7 @@ vec![
     -39,   // bb.b.bw
     -50,   // wb.b.bw
     27,    // .w.b.bw
-    -72,   // bw.b.bw
+    -124,  // bw.b.bw
     39,    // ww.b.bw
     32,    // ..bb.bw
     14,    // b.bb.bw
@@ -1761,7 +1761,7 @@ vec![
     0,     // bb.w.bw
     -34,   // wb.w.bw
     52,    // .w.w.bw
-    72,    // bw.w.bw
+    124,   // bw.w.bw
     -44,   // ww.w.bw
     31,    // ..bw.bw
     70,    // b.bw.bw
@@ -1777,7 +1777,7 @@ vec![
     0,     // w.ww.bw
     -36,   // .bww.bw
     0,     // bbww.bw
-    20,    // wbww.bw
+    0,     // wbww.bw
     -69,   // .www.bw
     -37,   // bwww.bw
     22,    // wwww.bw
@@ -1789,7 +1789,7 @@ vec![
     -29,   // wb..bbw
     54,    // .w..bbw
     15,    // bw..bbw
-    0,     // ww..bbw
+    -39,   // ww..bbw
     0,     // ..b.bbw
     65,    // b.b.bbw
     -28,   // w.b.bbw
@@ -1822,7 +1822,7 @@ vec![
     0,     // w.bbbbw
     1572,  // .bbbbbw
     1136,  // bbbbbbw
-    1574,  // wbbbbbw
+    1355,  // wbbbbbw
     -41,   // .wbbbbw
     -4,    // bwbbbbw
     12,    // wwbbbbw
@@ -1843,7 +1843,7 @@ vec![
     -31,   // wb.wbbw
     52,    // .w.wbbw
     20,    // bw.wbbw
-    60,    // ww.wbbw
+    7,     // ww.wbbw
     8,     // ..bwbbw
     -1,    // b.bwbbw
     24,    // w.bwbbw
@@ -1871,7 +1871,7 @@ vec![
     29,    // .w..wbw
     42,    // bw..wbw
     -25,   // ww..wbw
-    -16,   // ..b.wbw
+    -59,   // ..b.wbw
     -32,   // b.b.wbw
     -106,  // w.b.wbw
     -68,   // .bb.wbw
@@ -1890,7 +1890,7 @@ vec![
     21,    // bww.wbw
     -1,    // www.wbw
     9,     // ...bwbw
-    -1,    // b..bwbw
+    0,     // b..bwbw
     -45,   // w..bwbw
     -4,    // .b.bwbw
     95,    // bb.bwbw
@@ -1916,12 +1916,12 @@ vec![
     -70,   // .wwbwbw
     -30,   // bwwbwbw
     -37,   // wwwbwbw
-    -55,   // ...wwbw
+    -88,   // ...wwbw
     69,    // b..wwbw
     -19,   // w..wwbw
-    0,     // .b.wwbw
+    57,    // .b.wwbw
     -6,    // bb.wwbw
-    20,    // wb.wwbw
+    0,     // wb.wwbw
     -17,   // .w.wwbw
     -27,   // bw.wwbw
     -47,   // ww.wwbw
@@ -1933,7 +1933,7 @@ vec![
     -6,    // wbbwwbw
     0,     // .wbwwbw
     -34,   // bwbwwbw
-    89,    // wwbwwbw
+    96,    // wwbwwbw
     17,    // ..wwwbw
     -33,   // b.wwwbw
     12,    // w.wwwbw
@@ -1957,7 +1957,7 @@ vec![
     -19,   // w.b..ww
     10,    // .bb..ww
     0,     // bbb..ww
-    0,     // wbb..ww
+    -39,   // wbb..ww
     -14,   // .wb..ww
     20,    // bwb..ww
     14,    // wwb..ww
@@ -2011,11 +2011,11 @@ vec![
     -30,   // w.bw.ww
     -34,   // .bbw.ww
     52,    // bbbw.ww
-    60,    // wbbw.ww
+    7,     // wbbw.ww
     119,   // .wbw.ww
     -95,   // bwbw.ww
     62,    // wwbw.ww
-    -73,   // ..ww.ww
+    -52,   // ..ww.ww
     -20,   // b.ww.ww
     224,   // w.ww.ww
     34,    // .bww.ww
@@ -2030,7 +2030,7 @@ vec![
     -55,   // .b..bww
     23,    // bb..bww
     -27,   // wb..bww
-    51,    // .w..bww
+    58,    // .w..bww
     -93,   // bw..bww
     14,    // ww..bww
     60,    // ..b.bww
@@ -2045,7 +2045,7 @@ vec![
     31,    // ..w.bww
     -60,   // b.w.bww
     38,    // w.w.bww
-    55,    // .bw.bww
+    42,    // .bw.bww
     0,     // bbw.bww
     -31,   // wbw.bww
     13,    // .ww.bww
@@ -2063,14 +2063,14 @@ vec![
     79,    // ..bbbww
     1,     // b.bbbww
     66,    // w.bbbww
-    66,    // .bbbbww
+    43,    // .bbbbww
     1375,  // bbbbbww
     12,    // wbbbbww
     54,    // .wbbbww
     -21,   // bwbbbww
     -169,  // wwbbbww
     -41,   // ..wbbww
-    -168,  // b.wbbww
+    -197,  // b.wbbww
     -56,   // w.wbbww
     -10,   // .bwbbww
     -55,   // bbwbbww
@@ -2078,7 +2078,7 @@ vec![
     -86,   // .wwbbww
     118,   // bwwbbww
     -1,    // wwwbbww
-    -16,   // ...wbww
+    -65,   // ...wbww
     1,     // b..wbww
     0,     // w..wbww
     -28,   // .b.wbww
@@ -2087,7 +2087,7 @@ vec![
     -9,    // .w.wbww
     65,    // bw.wbww
     62,    // ww.wbww
-    11,    // ..bwbww
+    1,     // ..bwbww
     24,    // b.bwbww
     0,     // w.bwbww
     0,     // .bbwbww
@@ -2101,7 +2101,7 @@ vec![
     36,    // w.wwbww
     0,     // .bwwbww
     55,    // bbwwbww
-    89,    // wbwwbww
+    96,    // wbwwbww
     20,    // .wwwbww
     90,    // bwwwbww
     -42,   // wwwwbww
@@ -2114,7 +2114,7 @@ vec![
     -95,   // .w..www
     -74,   // bw..www
     77,    // ww..www
-    43,    // ..b.www
+    0,     // ..b.www
     -51,   // b.b.www
     -63,   // w.b.www
     -31,   // .bb.www
@@ -2132,7 +2132,7 @@ vec![
     0,     // .ww.www
     26,    // bww.www
     73,    // www.www
-    -34,   // ...bwww
+    0,     // ...bwww
     52,    // b..bwww
     -36,   // w..bwww
     -28,   // .b.bwww
@@ -2188,11 +2188,11 @@ vec![
     -489,  // wwwwwww
     101,   // ccc
     204,   // cc
-    57,    // c
+    8,     // c
     3,     // ttt
-    43,    // tt
+    100,   // tt
     71,    // t
-    60,    // ct
+    0,     // ct
     45,    // cct
     111,   // ctt
 ].into_boxed_slice()
