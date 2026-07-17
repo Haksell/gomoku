@@ -22,7 +22,7 @@ const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const GAMES_BY_EPOCH: usize = 200;
 const PAIRS_BY_EPOCH: usize = GAMES_BY_EPOCH / 2;
-const REQUIRED_WIN_DIFFERENTIAL: i32 = 20;
+const REQUIRED_WIN_DIFFERENTIAL: i32 = 19;
 
 const MAX_ADDITIVE_MUTATION: i64 = 64;
 // bias towards values closer to 0
@@ -85,9 +85,9 @@ pub fn run() {
 
         let mut win_differentials = [0i32; N_MUTATIONS];
         for (pair_idx, wins) in all_wins.iter().enumerate() {
-            let wins = *wins as i32;
+            let win_diff = (*wins as i32) - 1;
             for (i, &mutate_2) in should_mutate_2[pair_idx].iter().enumerate() {
-                win_differentials[i] += if mutate_2 { wins } else { -wins };
+                win_differentials[i] += if mutate_2 { win_diff } else { -win_diff };
             }
         }
 
