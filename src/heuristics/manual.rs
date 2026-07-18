@@ -119,8 +119,8 @@ fn fill_combos(
     let mut cur_color = None;
     let mut cur_length = 0;
 
-    for &(x, y) in line {
-        let player_color = board[y][x];
+    for &pos in line {
+        let player_color = board.get(pos);
         if player_color == cur_color {
             cur_length += 1;
             continue;
@@ -178,8 +178,8 @@ fn fill_patterns(
 ) {
     let mut stencil = 0;
 
-    for &(x, y) in line {
-        let player_color = board[y][x];
+    for &pos in line {
+        let player_color = board.get(pos);
         stencil <<= 2;
         stencil |= match player_color {
             None => 0b01,

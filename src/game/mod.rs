@@ -41,7 +41,7 @@ impl Game {
     pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
-            board: [[None; BOARD_SIZE]; BOARD_SIZE],
+            board: Board::default(),
             close_moves: [[0; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
@@ -55,18 +55,18 @@ impl Game {
         }
     }
 
-    pub fn do_move(&mut self, (x, y): Position) {
+    pub fn do_move(&mut self, pos: Position) {
         debug_assert!(self.state.is_playing());
-        debug_assert!(self.board[y][x].is_none());
+        debug_assert!(self.board.get(pos).is_none());
 
         self.ply += 1;
 
-        self.board[y][x] = Some(self.current_color);
+        self.board.set(pos, Some(self.current_color));
 
-        self.update_close_moves((x, y), UpdateSign::Positive);
-        self.handle_captures((x, y));
+        self.update_close_moves(pos, UpdateSign::Positive);
+        self.handle_captures(pos);
 
-        self.state = self.update_state((x, y));
+        self.state = self.update_state(pos);
 
         if let GameState::Playing(forced_moves) = &self.state
             && !forced_moves.is_empty()
@@ -75,12 +75,12 @@ impl Game {
         }
 
         self.current_color = !self.current_color;
-        self.moves.push((x, y));
+        self.moves.push(pos);
     }
 
     /// Every operation from [`Self::do_move`] in reverse order.
     pub fn undo_last_move(&mut self) {
-        let (x, y) = self.moves.pop().unwrap();
+        let last_pos = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
         self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
 
@@ -94,7 +94,7 @@ impl Game {
 
         // undo capture
         while self.captures.last().is_some_and(|(ply, _, _)| *ply == self.ply) {
-            let (_, (x1, y1), (x2, y2)) = self.captures.pop().unwrap();
+            let (_, pos1, pos2) = self.captures.pop().unwrap();
 
             match self.current_color {
                 PlayerColor::Black => {
@@ -105,15 +105,15 @@ impl Game {
                 }
             }
 
-            self.update_close_moves((x1, y1), UpdateSign::Positive);
-            self.update_close_moves((x2, y2), UpdateSign::Positive);
-            self.board[y1][x1] = Some(!self.current_color);
-            self.board[y2][x2] = Some(!self.current_color);
+            self.update_close_moves(pos1, UpdateSign::Positive);
+            self.update_close_moves(pos2, UpdateSign::Positive);
+            self.board.set(pos1, Some(!self.current_color));
+            self.board.set(pos2, Some(!self.current_color));
         }
 
-        self.update_close_moves((x, y), UpdateSign::Negative);
+        self.update_close_moves(last_pos, UpdateSign::Negative);
 
-        self.board[y][x] = None;
+        self.board.set(last_pos, None);
 
         self.ply -= 1;
     }
@@ -178,7 +178,7 @@ impl Game {
         let mut legal_moves = Vec::new();
         for (x, y) in SPIRALLING_POSITIONS {
             if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                && self.board[y][x].is_none()
+                && self.board.get((x, y)).is_none()
                 && !self.creates_double_three((x, y))
             {
                 legal_moves.push((x, y));
@@ -204,7 +204,7 @@ impl Game {
                 let ry = rng
                     .gen_range(HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center);
                 if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
-                    && self.board[ry][rx].is_none()
+                    && self.board.get((rx, ry)).is_none()
                 {
                     self.do_move((rx, ry));
                     break;

@@ -14,22 +14,20 @@ impl Game {
             }
 
             let (x, y) = (x as isize, y as isize);
-            let captured_x1 = (x + dx) as usize;
-            let captured_y1 = (y + dy) as usize;
-            let captured_x2 = (x + 2 * dx) as usize;
-            let captured_y2 = (y + 2 * dy) as usize;
+            let captured1 = ((x + dx) as usize, (y + dy) as usize);
+            let captured2 = ((x + 2 * dx) as usize, (y + 2 * dy) as usize);
 
-            self.board[captured_y1][captured_x1] = None;
-            self.board[captured_y2][captured_x2] = None;
-            self.update_close_moves((captured_x1, captured_y1), UpdateSign::Negative);
-            self.update_close_moves((captured_x2, captured_y2), UpdateSign::Negative);
+            self.board.set(captured1, None);
+            self.board.set(captured2, None);
+            self.update_close_moves(captured1, UpdateSign::Negative);
+            self.update_close_moves(captured2, UpdateSign::Negative);
 
             match self.current_color {
                 PlayerColor::Black => self.black_captures += 1,
                 PlayerColor::White => self.white_captures += 1,
             }
 
-            self.captures.push((self.ply, (captured_x1, captured_y1), (captured_x2, captured_y2)));
+            self.captures.push((self.ply, captured1, captured2));
         }
     }
 }

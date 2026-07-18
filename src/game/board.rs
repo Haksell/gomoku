@@ -1,8 +1,7 @@
 use crate::player::PlayerColor;
 use nannou::math::num_traits::Euclid as _;
-use std::fmt::{Display, Write};
+use std::fmt::{Display, Write as _};
 
-pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
 pub type Position = (usize, usize);
 pub type Direction = (isize, isize);
 
@@ -30,11 +29,18 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
-pub struct BitBoard {
-    board: [u64; 12],
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Board {
+    blocks: [u64; Self::BLOCKS],
 }
 
-impl Display for BitBoard {
+impl Default for Board {
+    fn default() -> Self {
+        Self { blocks: [0x5555_5555_5555_5555; Self::BLOCKS] }
+    }
+}
+
+impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "╔{}╗", "═".repeat(3 * BOARD_SIZE + 1))?;
         for y in (0..BOARD_SIZE).rev() {
@@ -55,17 +61,13 @@ impl Display for BitBoard {
     }
 }
 
-impl Default for BitBoard {
-    fn default() -> Self {
-        Self { board: [0x5555_5555_5555_5555; 12] }
-    }
-}
+impl Board {
+    const BLOCKS: usize = (2 * BOARD_SIZE * BOARD_SIZE).div_ceil(64);
 
-impl BitBoard {
     pub fn get(&self, (x, y): Position) -> Option<PlayerColor> {
         let cell_idx = 2 * (BOARD_SIZE * y + x);
         let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
-        let cell = (self.board[arr_idx] >> shift) & 0b11;
+        let cell = (self.blocks[arr_idx] >> shift) & 0b11;
         match cell {
             0b01 => None,
             0b10 => Some(PlayerColor::Black),
@@ -84,24 +86,7 @@ impl BitBoard {
         let cell_idx = 2 * (BOARD_SIZE * y + x);
         let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
         let mask = !(0b11 << shift);
-        self.board[arr_idx] = (self.board[arr_idx] & mask) | (val << shift);
-    }
-}
-
-#[expect(unused)]
-pub fn print_board(board: &Board) {
-    for row in board {
-        for player_color in row {
-            print!(
-                "{}",
-                match player_color {
-                    Some(PlayerColor::Black) => 'B',
-                    Some(PlayerColor::White) => 'W',
-                    None => '.',
-                }
-            );
-        }
-        println!();
+        self.blocks[arr_idx] = (self.blocks[arr_idx] & mask) | (val << shift);
     }
 }
 
@@ -146,7 +131,7 @@ pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize,
         && y >= 0
         && x < BOARD_SIZE as isize
         && y < BOARD_SIZE as isize
-        && board[y as usize][x as usize] == player
+        && board.get((x as usize, y as usize)) == player
 }
 
 pub fn is_capture(

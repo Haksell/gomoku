@@ -26,7 +26,7 @@ pub fn mouse_to_board(app: &App, model: &Model) -> Option<Position> {
     let (x, y) = (x as usize, y as usize);
     if x >= BOARD_SIZE
         || y >= BOARD_SIZE
-        || model.game.board[y][x].is_some()
+        || model.game.board.get((x, y)).is_some()
         || model.game.creates_double_three((x, y))
     {
         return None;

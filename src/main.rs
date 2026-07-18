@@ -11,10 +11,7 @@ mod player;
 
 use std::thread::available_parallelism;
 
-use crate::{
-    game::board::{BOARD_SIZE, BitBoard},
-    player::{Player, PlayerColor},
-};
+use crate::player::Player;
 use clap::Parser;
 use rayon::ThreadPoolBuilder;
 
@@ -38,21 +35,6 @@ struct Args {
 }
 
 fn main() {
-    let mut board = BitBoard::default();
-    for y in 0..BOARD_SIZE {
-        for x in 0..BOARD_SIZE {
-            let cell = match (x + y) % 3 {
-                0 => None,
-                1 => Some(PlayerColor::Black),
-                2 => Some(PlayerColor::White),
-                _ => panic!("FAIUFABIFAIBFAIAF"),
-            };
-            board.set((x, y), cell);
-        }
-    }
-    println!("{board}");
-    return;
-
     let args = Args::parse();
     init_thread_pool(args.num_threads);
     if args.omnitrain {

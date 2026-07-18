@@ -247,8 +247,8 @@ fn evaluate_patterns(
     let mut stencil = 0;
     let mut h = 0;
 
-    for (i, &(x, y)) in line.iter().enumerate() {
-        let player_color = board[y][x];
+    for (i, &pos) in line.iter().enumerate() {
+        let player_color = board.get(pos);
         let new_bits = match player_color {
             None => 0b01,
             Some(PlayerColor::Black) => 0b10,
