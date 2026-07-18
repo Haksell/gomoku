@@ -56,14 +56,15 @@ pub fn run() {
             }
         }
 
-        let epoch = epoch.fetch_add(1, Ordering::Relaxed);
+        let epoch = epoch.fetch_add(1, Ordering::Relaxed) + 1;
         println!("Epoch {epoch} done.");
 
         if epoch.is_multiple_of(10) {
             // clone to release the lock
             let best_coeffs = best_coeffs.lock().unwrap().clone();
-            if let Err(err) = write_coeffs(&best_coeffs) {
-                eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`");
+            match write_coeffs(&best_coeffs) {
+                Ok(()) => eprintln!("Best coeffs written to file {COEFFS_FILE}"),
+                Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
     });
