@@ -75,7 +75,7 @@ fn update_coeffs(coeffs: &mut [i64], i: usize, update: i64) {
     } else {
         coeffs[STENCIL_INDICES[i]] += update;
         coeffs[STENCIL_INDICES_OPP[i]] -= update;
-        if i != STENCIL_INDICES_SYM[i] {
+        if STENCIL_INDICES[i] != STENCIL_INDICES_SYM[i] {
             coeffs[STENCIL_INDICES_SYM[i]] += update;
             coeffs[STENCIL_INDICES_SYM_OPP[i]] -= update;
         }
