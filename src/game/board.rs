@@ -1,4 +1,6 @@
 use crate::player::PlayerColor;
+use nannou::math::num_traits::Euclid as _;
+use std::fmt::{Display, Write};
 
 pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
 pub type Position = (usize, usize);
@@ -27,6 +29,64 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     }
     out
 };
+
+pub struct BitBoard {
+    board: [u64; 12],
+}
+
+impl Display for BitBoard {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "╔{}╗", "═".repeat(3 * BOARD_SIZE + 1))?;
+        for y in (0..BOARD_SIZE).rev() {
+            f.write_str("║ ")?;
+            for x in 0..BOARD_SIZE {
+                let s = match self.get((x, y)) {
+                    Some(PlayerColor::Black) => "⚫",
+                    Some(PlayerColor::White) => "⚪",
+                    None => "  ",
+                };
+                f.write_str(s)?;
+                f.write_char(' ')?;
+            }
+            f.write_str("║\n")?;
+        }
+        write!(f, "╚{}╝", "═".repeat(3 * BOARD_SIZE + 1))?;
+        Ok(())
+    }
+}
+
+impl Default for BitBoard {
+    fn default() -> Self {
+        Self { board: [0x5555_5555_5555_5555; 12] }
+    }
+}
+
+impl BitBoard {
+    pub fn get(&self, (x, y): Position) -> Option<PlayerColor> {
+        let cell_idx = 2 * (BOARD_SIZE * y + x);
+        let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
+        let cell = (self.board[arr_idx] >> shift) & 0b11;
+        match cell {
+            0b01 => None,
+            0b10 => Some(PlayerColor::Black),
+            0b11 => Some(PlayerColor::White),
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn set(&mut self, (x, y): Position, player_color: Option<PlayerColor>) {
+        let val = match player_color {
+            None => 0b01,
+            Some(PlayerColor::Black) => 0b10,
+            Some(PlayerColor::White) => 0b11,
+        };
+
+        let cell_idx = 2 * (BOARD_SIZE * y + x);
+        let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
+        let mask = !(0b11 << shift);
+        self.board[arr_idx] = (self.board[arr_idx] & mask) | (val << shift);
+    }
+}
 
 #[expect(unused)]
 pub fn print_board(board: &Board) {
