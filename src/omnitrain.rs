@@ -15,68 +15,58 @@ use crate::{
 };
 use nannou::rand::{Rng as _, thread_rng};
 use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
+use std::{
+    array,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicU32, Ordering},
+    },
+};
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 pub fn run() {
-    let initial_player = Player::Bot {
-        bot: idabp,
-        heuristic: Heuristic { fun: coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) },
-    };
-    let mut best_coeffs = INITIAL_COEFFS.clone();
+    let epoch = AtomicU32::default();
+    let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
 
-    for epoch in 1u64.. {
-        let mut coeffs1 = best_coeffs.clone();
-        let mut coeffs2 = best_coeffs.clone();
-        for i in 0..N_MUTATIONS {
-            if thread_rng().gen_ratio(1, 2) {
-                update_coeffs(&mut coeffs1, i, -1);
-                update_coeffs(&mut coeffs2, i, 1);
-            } else {
-                update_coeffs(&mut coeffs1, i, 1);
-                update_coeffs(&mut coeffs2, i, -1);
-            }
+    (0..u128::MAX).into_par_iter().for_each(|_| {
+        let mut coeffs1 = best_coeffs.lock().unwrap().clone();
+        let mut coeffs2 = coeffs1.clone();
+        let updates1: [i64; N_MUTATIONS] =
+            array::from_fn(|_| if thread_rng().gen_ratio(1, 2) { 1 } else { -1 });
+        for (i, &update1) in updates1.iter().enumerate() {
+            update_coeffs(&mut coeffs1, i, update1);
+            update_coeffs(&mut coeffs2, i, -update1);
         }
 
         let player1 = Player::Bot {
             bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs1.clone()) },
+            heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs1) },
         };
         let player2 = Player::Bot {
             bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs2.clone()) },
+            heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs2) },
         };
 
-        match play_pair(&player1, &player2) {
-            0 => best_coeffs.clone_from(&coeffs1),
-            1 => {}
-            2 => best_coeffs.clone_from(&coeffs2),
-            _ => unreachable!(),
+        let wins2 = play_pair(&player1, &player2);
+        if wins2 != 1 {
+            let mut best_coeffs = best_coeffs.lock().unwrap();
+            for (i, &update1) in updates1.iter().enumerate() {
+                update_coeffs(&mut best_coeffs, i, if wins2 == 0 { update1 } else { -update1 });
+            }
         }
 
+        let epoch = epoch.fetch_add(1, Ordering::Relaxed);
+        println!("Epoch {epoch} done.");
+
         if epoch.is_multiple_of(10) {
-            println!("Epoch {epoch} done.");
+            // clone to release the lock
+            let best_coeffs = best_coeffs.lock().unwrap().clone();
             if let Err(err) = write_coeffs(&best_coeffs) {
                 eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`");
             }
         }
-
-        if epoch.is_multiple_of(100) {
-            let new_player = Player::Bot {
-                bot: idabp,
-                heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs.clone()) },
-            };
-            let pairs = 50;
-            let total_games = 2 * pairs;
-            let wins_against_initial = play_pairs(pairs, &initial_player, &new_player);
-            let wins_against_manual = play_pairs(pairs, &Player::MANUAL, &new_player);
-            let dividing_line = "=".repeat(80);
-            println!("{dividing_line}");
-            println!("Current won {wins_against_initial}/{total_games} games against initial bot");
-            println!("Current won {wins_against_manual}/{total_games} games against manual bot");
-            println!("{dividing_line}");
-        }
-    }
+    });
 }
 
 fn update_coeffs(coeffs: &mut [i64], i: usize, update: i64) {
@@ -90,10 +80,6 @@ fn update_coeffs(coeffs: &mut [i64], i: usize, update: i64) {
             coeffs[STENCIL_INDICES_SYM_OPP[i]] -= update;
         }
     }
-}
-
-fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player) -> u32 {
-    (0..pairs).into_par_iter().map(|_| play_pair(old_player, new_player)).sum()
 }
 
 fn play_pair(old_player: &Player, new_player: &Player) -> u32 {
