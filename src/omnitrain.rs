@@ -49,11 +49,12 @@ pub fn run() {
 
         let should_mutate_2: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
             let mut should_mutate_2 = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
+            let mut rng = thread_rng();
             for i in 0..N_MUTATIONS {
                 let mut remaining_mutations = PAIRS_BY_EPOCH / 2;
                 for j in 0..PAIRS_BY_EPOCH {
-                    let mutate_2 = thread_rng()
-                        .gen_ratio(remaining_mutations as u32, (PAIRS_BY_EPOCH - j) as u32);
+                    let mutate_2 =
+                        rng.gen_ratio(remaining_mutations as u32, (PAIRS_BY_EPOCH - j) as u32);
                     should_mutate_2[j][i] = mutate_2;
                     remaining_mutations -= mutate_2 as usize;
                 }
