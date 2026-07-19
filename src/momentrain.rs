@@ -22,7 +22,7 @@ use std::{
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const UPDATE_RANGE: f64 = 32.;
-const LEARNING_RATE: f64 = 0.01;
+const LEARNING_RATE: f64 = 0.005;
 const GAMMA: f64 = 0.9;
 
 struct Params {
