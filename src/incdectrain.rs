@@ -1,5 +1,3 @@
-// TODO: bring back true omnitrain and call this one incdec_train or whatever
-
 use crate::{
     bots::idabp::idabp,
     game::{Game, state::GameState},
