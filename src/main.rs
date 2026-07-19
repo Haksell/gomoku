@@ -7,6 +7,7 @@ mod gridtrain;
 mod gui;
 mod heuristics;
 mod incdectrain;
+mod omnitrain;
 mod player;
 
 use crate::player::Player;
@@ -30,6 +31,8 @@ struct Args {
     #[arg(long)]
     gridtrain: bool,
     #[arg(long)]
+    omnitrain: bool,
+    #[arg(long)]
     incdectrain: bool,
 }
 
@@ -40,6 +43,10 @@ fn main() {
     // TODO: --train flag or put them in a bin
     if args.incdectrain {
         incdectrain::run();
+        return;
+    }
+    if args.omnitrain {
+        omnitrain::run();
         return;
     }
     if args.gridtrain {
