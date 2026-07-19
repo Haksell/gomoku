@@ -29,15 +29,10 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct Board {
-    blocks: [u64; Self::BLOCKS],
-}
-
-impl Default for Board {
-    fn default() -> Self {
-        Self { blocks: [0x5555_5555_5555_5555; Self::BLOCKS] }
-    }
+    black_pieces: [u64; Self::BLOCKS],
+    white_pieces: [u64; Self::BLOCKS],
 }
 
 impl Display for Board {
@@ -62,31 +57,36 @@ impl Display for Board {
 }
 
 impl Board {
-    const BLOCKS: usize = (2 * BOARD_SIZE * BOARD_SIZE).div_ceil(64);
+    const BLOCKS: usize = (BOARD_SIZE * BOARD_SIZE).div_ceil(64);
 
     pub fn get(&self, (x, y): Position) -> Option<PlayerColor> {
-        let cell_idx = 2 * (BOARD_SIZE * y + x);
+        let cell_idx = BOARD_SIZE * y + x;
         let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
-        let cell = (self.blocks[arr_idx] >> shift) & 0b11;
-        match cell {
-            0b01 => None,
-            0b10 => Some(PlayerColor::Black),
-            0b11 => Some(PlayerColor::White),
-            _ => unreachable!(),
+        if (self.black_pieces[arr_idx] >> shift) & 1 != 0 {
+            return Some(PlayerColor::Black);
         }
+        if (self.white_pieces[arr_idx] >> shift) & 1 != 0 {
+            return Some(PlayerColor::White);
+        }
+        None
     }
 
     pub fn set(&mut self, (x, y): Position, player_color: Option<PlayerColor>) {
-        let val = match player_color {
-            None => 0b01,
-            Some(PlayerColor::Black) => 0b10,
-            Some(PlayerColor::White) => 0b11,
-        };
-
-        let cell_idx = 2 * (BOARD_SIZE * y + x);
+        let cell_idx = BOARD_SIZE * y + x;
         let (arr_idx, shift) = cell_idx.div_rem_euclid(&64);
-        let mask = !(0b11 << shift);
-        self.blocks[arr_idx] = (self.blocks[arr_idx] & mask) | (val << shift);
+        let mask = 1 << shift;
+        match player_color {
+            Some(PlayerColor::Black) => {
+                self.black_pieces[arr_idx] |= mask;
+            }
+            Some(PlayerColor::White) => {
+                self.white_pieces[arr_idx] |= mask;
+            }
+            None => {
+                self.black_pieces[arr_idx] &= !mask;
+                self.white_pieces[arr_idx] &= !mask;
+            }
+        }
     }
 }
 

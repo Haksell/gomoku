@@ -44,33 +44,33 @@ impl Game {
             PlayerColor::White => self.white_captures,
         };
 
-        let mut alignments = Vec::new();
+        let mut winning_alignments = Vec::new();
         for &dir in &DIRECTIONS4 {
             let longest_row_in_dir = self.get_longest_row_in_dir(pos, dir);
             if longest_row_in_dir.len() >= STONES_IN_A_ROW {
-                alignments.push(longest_row_in_dir);
+                winning_alignments.push(longest_row_in_dir);
             }
         }
 
         if captures >= REQUIRED_CAPTURES {
             return GameState::Won(
                 self.current_color,
-                WinningWay { win_by_captures: true, winning_alignments: alignments },
+                WinningWay { win_by_captures: true, winning_alignments },
             );
         }
 
         let mut forced_moves = HashSet::new();
-        for alignment in &mut alignments {
+        for alignment in &mut winning_alignments {
             let break_possibilities = self.get_break_possibilities(alignment);
             if forced_moves.is_empty() {
                 forced_moves = break_possibilities;
             } else {
-                forced_moves.retain(|item| break_possibilities.contains(item));
+                forced_moves.retain(|fpos| break_possibilities.contains(fpos));
             }
             if forced_moves.is_empty() {
                 return GameState::Won(
                     self.current_color,
-                    WinningWay { win_by_captures: false, winning_alignments: alignments },
+                    WinningWay { win_by_captures: false, winning_alignments },
                 );
             }
         }
@@ -88,13 +88,16 @@ impl Game {
         potential_winner.sort_unstable();
         let overflow = potential_winner.len() - STONES_IN_A_ROW;
         for &(x, y) in &potential_winner[overflow..STONES_IN_A_ROW] {
-            break_possibilities.extend(self.find_breakable((x as isize, y as isize)));
+            self.add_breakable((x as isize, y as isize), &mut break_possibilities);
         }
         break_possibilities
     }
 
-    fn find_breakable(&self, (new_x, new_y): (isize, isize)) -> HashSet<Position> {
-        let mut breaking_positions = HashSet::new();
+    fn add_breakable(
+        &self,
+        (new_x, new_y): (isize, isize),
+        break_possibilities: &mut HashSet<Position>,
+    ) {
         for (dx, dy) in &DIRECTIONS8 {
             if is_same_color(&self.board, None, (new_x - dx, new_y - dy))
                 && is_same_color(&self.board, Some(self.current_color), (new_x + dx, new_y + dy))
@@ -104,18 +107,18 @@ impl Game {
                     (new_x + 2 * dx, new_y + 2 * dy),
                 )
             {
-                breaking_positions.insert(((new_x - dx) as usize, (new_y - dy) as usize));
+                break_possibilities.insert(((new_x - dx) as usize, (new_y - dy) as usize));
             }
             if is_same_color(&self.board, Some(!self.current_color), (new_x - dx, new_y - dy))
                 && is_same_color(&self.board, Some(self.current_color), (new_x + dx, new_y + dy))
                 && is_same_color(&self.board, None, (new_x + 2 * dx, new_y + 2 * dy))
             {
-                breaking_positions.insert(((new_x + 2 * dx) as usize, (new_y + 2 * dy) as usize));
+                break_possibilities.insert(((new_x + 2 * dx) as usize, (new_y + 2 * dy) as usize));
             }
         }
-        breaking_positions
     }
 
+    // TODO: Make this return sorted every time
     fn get_longest_row_in_dir(&self, (x, y): Position, (dx, dy): Direction) -> Vec<Position> {
         let mut row: Vec<Position> = vec![(x, y)];
 
