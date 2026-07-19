@@ -17,7 +17,7 @@ pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
 
     let maximizing_player = game.current_color;
     let mut game = game.clone();
-    game.get_legal_moves(Some(2), true)
+    game.get_legal_moves(Some(2))
         .into_iter()
         .max_by_key(|&pos| {
             game.do_move(pos);
@@ -53,13 +53,13 @@ fn minimax_helper(
         }
     }
 
-    let close_moves = game.get_legal_moves(Some(2), false);
+    let close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = game.current_color == maximizing_player;
     let initial_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
-    game.get_legal_moves(Some(2), false).into_iter().fold(initial_h, |best_h, pos| {
+    close_moves.into_iter().fold(initial_h, |best_h, pos| {
         game.do_move(pos);
         let h = minimax_helper(game, heuristic, maximizing_player, depth + 1);
         game.undo_last_move();

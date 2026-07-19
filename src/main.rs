@@ -6,14 +6,14 @@ mod genetrain;
 mod gridtrain;
 mod gui;
 mod heuristics;
+mod incdectrain;
 mod omnitrain;
 mod player;
-
-use std::thread::available_parallelism;
 
 use crate::player::Player;
 use clap::Parser;
 use rayon::ThreadPoolBuilder;
+use std::thread::available_parallelism;
 
 #[expect(clippy::struct_excessive_bools)] // TODO: fix with Training enum
 #[derive(Debug, Parser)]
@@ -21,9 +21,9 @@ struct Args {
     black_player: Player,
     white_player: Player,
     #[arg(short('g'), long, default_value_t = 1)] // TODO: clap validate > 0
-    num_games: usize, // TODO: Option like num_threads
-    #[arg(short('t'), long)]
-    num_threads: Option<usize>,
+    num_games: usize,
+    #[arg(short('t'), long, default_value_t = 1)] // TODO: clap validate > 0
+    num_threads: usize,
     #[arg(long)]
     genetrain: bool,
     #[arg(long)]
@@ -32,11 +32,19 @@ struct Args {
     gridtrain: bool,
     #[arg(long)]
     omnitrain: bool,
+    #[arg(long)]
+    incdectrain: bool,
 }
 
 fn main() {
     let args = Args::parse();
     init_thread_pool(args.num_threads);
+
+    // TODO: --train flag or put them in a bin
+    if args.incdectrain {
+        incdectrain::run();
+        return;
+    }
     if args.omnitrain {
         omnitrain::run();
         return;
@@ -53,6 +61,7 @@ fn main() {
         genetrain::run();
         return;
     }
+
     match args.num_games {
         0 => panic!("Can't play 0 games."),
         1 => gui::run(),
@@ -63,8 +72,7 @@ fn main() {
     }
 }
 
-fn init_thread_pool(num_threads: Option<usize>) {
-    let num_threads = num_threads.unwrap_or(1);
+fn init_thread_pool(num_threads: usize) {
     let available_cpus = available_parallelism().unwrap().get();
     assert!(num_threads > 0, "Can't run with 0 threads.");
     assert!(

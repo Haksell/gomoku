@@ -32,6 +32,16 @@
 - on compare
 - si l'heuristique a depth 3/4 est plus grande on incremente la valeur des patterns a depth 1/2, sinon on decremente
 
+### patterns with forbidden moves
+
+Il faudrait 6 types de cases :
+- noir
+- blanc
+- vide jouable par les deux
+- vide jouable par les noirs
+- vide jouable par les blancs
+- vide jouable par personne
+
 ### design
 
 - change hover font

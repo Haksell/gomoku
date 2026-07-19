@@ -12,13 +12,12 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
-use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
+use rayon::iter::ParallelIterator as _;
 use std::{
     cmp::{max, min},
     sync::{Arc, Mutex},
 };
 
-const EPOCHS: usize = 100_000;
 const N_MUTATIONS: i64 = 1;
 const MAX_ADDITIVE_MUTATION: i64 = 16;
 const MAX_MULTIPLICATIVE_MUTATION: f64 = 1.2;
@@ -29,7 +28,7 @@ pub fn run() {
     let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));
 
-    (0..EPOCHS).into_par_iter().for_each(|_| {
+    rayon::iter::repeat(()).for_each(|()| {
         let mut rng = thread_rng();
         let old_player = Player::Bot {
             bot: idabp,
@@ -134,7 +133,7 @@ fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
 }
 
 fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
-    std::iter::repeat_with(|| play_pair(old_player, new_player, rng)).take(pairs).sum()
+    (0..pairs).map(|_| play_pair(old_player, new_player, rng)).sum()
 }
 
 fn play_pair(old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {

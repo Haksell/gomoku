@@ -1,5 +1,5 @@
 use crate::{
-    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value},
+    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value, random_mover::random_mover},
     game::{
         Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
@@ -10,9 +10,11 @@ use std::{cmp::max, time::Instant};
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
-// TODO: if MAX_DEPTH > 7, u64 is too small for the key
+// TODO: u128 -> u64 if possible: (MAX_DEPTH+1) & BITS_PER_MOVE <= 64
+type CacheKey = u128;
+
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
-type Cache = fxhash::FxHashMap<u64, i64>;
+type Cache = fxhash::FxHashMap<CacheKey, i64>;
 
 pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
@@ -20,18 +22,19 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     }
 
     let t0 = Instant::now();
-    let mut cache = Cache::default();
+    let random_move = random_mover(game, heuristic);
     let mut game = game.clone();
+    let mut cache = Cache::default();
+    let mut searched_depth = -1;
+    let mut best_move = random_move;
 
-    let mut best_move = (usize::MAX, usize::MAX);
-    // let mut explored_depth = -1;
-    for max_depth in 0..=MAX_DEPTH {
-        let mut best_move_at_depth = (usize::MAX, usize::MAX);
+    for depth in 0..=MAX_DEPTH {
+        let mut best_move_at_depth = random_move;
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
             0,
-            max_depth,
+            depth,
             -i64::MAX,
             i64::MAX,
             &mut best_move_at_depth,
@@ -39,15 +42,21 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
             0,
             t0,
         );
+
         // TODO: break if close to time limit (predict time for next depth)
         if t0.elapsed() > TIME_LIMIT {
             // TODO: try using best_move_at_depth if possible
             break;
         }
-        // explored_depth = max_depth as i32;
+
+        searched_depth = depth as i32;
         best_move = best_move_at_depth;
     }
-    // println!("{explored_depth}");
+
+    if game.black_player.is_human() || game.white_player.is_human() {
+        println!("IDABP search depth: {searched_depth}");
+    }
+
     best_move
 }
 
@@ -61,23 +70,21 @@ fn alpha_beta_pruning_helper(
     max_h: i64,
     best_move: &mut Position,
     cache: &mut Cache,
-    cache_key: u64,
+    cache_key: CacheKey,
     t0: Instant,
 ) -> i64 {
-    if t0.elapsed() > TIME_LIMIT {
+    // Only check time limit at low depth to avoid useless syscalls
+    if depth <= 3 && t0.elapsed() > TIME_LIMIT {
         return min_h;
     }
 
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
-        let previous = cache.insert(cache_key, leaf_value);
-        debug_assert!(previous.is_none());
+        cache.insert(cache_key, leaf_value);
         return leaf_value;
     }
 
-    let mut close_moves = game.get_legal_moves(Some(2), depth == 0);
+    let mut close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
-
-    let mut best_h = i64::MIN;
 
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
@@ -85,6 +92,8 @@ fn alpha_beta_pruning_helper(
             cache.get(&update_cache_key(cache_key, pos)).unwrap_or(&default_h)
         });
     }
+
+    let mut best_h = i64::MIN;
 
     for pos in close_moves {
         game.do_move(pos);
@@ -115,6 +124,6 @@ fn alpha_beta_pruning_helper(
     best_h
 }
 
-const fn update_cache_key(cache_key: u64, (x, y): Position) -> u64 {
-    (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as u64
+const fn update_cache_key(cache_key: CacheKey, (x, y): Position) -> CacheKey {
+    (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as CacheKey
 }

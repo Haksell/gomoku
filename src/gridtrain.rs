@@ -13,7 +13,7 @@ use crate::{
 };
 use itertools::Itertools as _;
 use nannou::rand::{Rng as _, rngs::ThreadRng, thread_rng};
-use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
+use rayon::iter::ParallelIterator as _;
 use std::{
     cmp::{max, min},
     sync::{Arc, Mutex},
@@ -35,8 +35,7 @@ pub fn run() {
     let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
     let stats = Arc::new(Mutex::new((0u32, 0u32)));
 
-    // TODO: find a cleaner infinite loop
-    (0..usize::MAX).into_par_iter().for_each(|_| {
+    rayon::iter::repeat(()).for_each(|()| {
         let prev_coeffs = best_coeffs.lock().unwrap().clone();
         let prev_player = Player::Bot {
             bot: idabp,
@@ -92,7 +91,7 @@ pub fn run() {
                 bot: idabp,
                 heuristic: Heuristic { fun: coeffistic, coeffs: Some(new_coeffs) },
             };
-            let wins = play_pair(&prev_player, &new_player, &mut rng);
+            let wins = play_pair(&prev_player, &new_player);
             for i in &mutated_indices {
                 total_wins[*i] += wins;
             }
@@ -143,8 +142,8 @@ pub fn run() {
             };
             let pairs = 50;
             let total_games = 2 * pairs;
-            let wins_against_initial = play_pairs(pairs, &initial_player, &best_player, &mut rng);
-            let wins_against_manual = play_pairs(pairs, &Player::MANUAL, &best_player, &mut rng);
+            let wins_against_initial = play_pairs(pairs, &initial_player, &best_player);
+            let wins_against_manual = play_pairs(pairs, &Player::MANUAL, &best_player);
             let dividing_line = "=".repeat(80);
             println!("{dividing_line}");
             println!("Current won {wins_against_initial}/{total_games} games against initial bot");
@@ -173,13 +172,13 @@ fn random_coeff(rng: &mut ThreadRng, old_coeff: i64) -> i64 {
     }
 }
 
-fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
-    std::iter::repeat_with(|| play_pair(old_player, new_player, rng)).take(pairs).sum()
+fn play_pairs(pairs: usize, old_player: &Player, new_player: &Player) -> u32 {
+    (0..pairs).map(|_| play_pair(old_player, new_player)).sum()
 }
 
-fn play_pair(old_player: &Player, new_player: &Player, rng: &mut ThreadRng) -> u32 {
+fn play_pair(old_player: &Player, new_player: &Player) -> u32 {
     let mut old_new = Game::new(old_player, new_player);
-    let random_moves = rng.gen_range(3..=4);
+    let random_moves = thread_rng().gen_range(3..=4);
     old_new.play_random_moves(random_moves, 5);
 
     let mut new_old = old_new.clone();

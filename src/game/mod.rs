@@ -7,13 +7,13 @@ pub mod state;
 use crate::{
     Player,
     game::{
-        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
-use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
+use nannou::rand::{Rng as _, thread_rng};
 
 const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
@@ -165,7 +165,7 @@ impl Game {
         }
     }
 
-    pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
+    pub fn get_legal_moves(&self, max_dist: Option<usize>) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
         if let GameState::Playing(forced_moves) = &self.state
@@ -176,18 +176,15 @@ impl Game {
 
         // TODO: preallocate with number of close moves (or forced moves)
         let mut legal_moves = Vec::new();
-        for (x, y) in SPIRALLING_POSITIONS {
-            if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                && self.board[y][x].is_none()
-                && !self.creates_double_three((x, y))
-            {
-                legal_moves.push((x, y));
+        for y in 0..BOARD_SIZE {
+            for x in 0..BOARD_SIZE {
+                if (max_dist.is_none() || self.close_moves[y][x] > 0)
+                    && self.board[y][x].is_none()
+                    && !self.creates_double_three((x, y))
+                {
+                    legal_moves.push((x, y));
+                }
             }
-        }
-
-        if shuffle {
-            let mut rng = thread_rng();
-            legal_moves.shuffle(&mut rng);
         }
 
         legal_moves

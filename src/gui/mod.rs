@@ -34,18 +34,12 @@ pub fn run() {
 struct Model {
     game: Game,
     hover: Option<Position>,
-    ai_thinking_time: Option<u128>, // TODO: duration?
     finished_time: Option<Instant>,
 }
 
 impl Model {
     fn new(black_player: &Player, white_player: &Player) -> Self {
-        Self {
-            game: Game::new(black_player, white_player),
-            hover: None,
-            ai_thinking_time: None,
-            finished_time: None,
-        }
+        Self { game: Game::new(black_player, white_player), hover: None, finished_time: None }
     }
 }
 
@@ -78,14 +72,17 @@ fn update(app: &App, model: &mut Model, _: Update) {
         let start = Instant::now();
         // let bot_thread = std::thread::spawn(|| bot(model., *heuristic));
         let pos = bot(&model.game, heuristic);
-        model.ai_thinking_time = Some(start.elapsed().as_millis());
+        let ai_thinking_duration = Some(start.elapsed().as_millis());
+
         model.game.do_move(pos);
+
         // TODO: show in UI and delete this println (MANDATORY!)
-        println!("AI move computed in {:?} ms", model.ai_thinking_time.unwrap());
+        println!("AI move computed in {ai_thinking_duration:?} ms");
         println!(
             "Captures: black={}, white={}",
             model.game.black_captures, model.game.white_captures
         );
+        println!();
     }
 
     if !model.game.state.is_playing() && model.finished_time.is_none() {
