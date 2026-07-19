@@ -10,9 +10,11 @@ use std::{cmp::max, time::Instant};
 
 const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
 
-// TODO: if MAX_DEPTH > 7, u64 is too small for the key
+// TODO: u128 -> u64 if possible: (MAX_DEPTH+1) & BITS_PER_MOVE <= 64
+type CacheKey = u128;
+
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
-type Cache = fxhash::FxHashMap<u64, i64>;
+type Cache = fxhash::FxHashMap<CacheKey, i64>;
 
 pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
@@ -61,7 +63,7 @@ fn alpha_beta_pruning_helper(
     max_h: i64,
     best_move: &mut Position,
     cache: &mut Cache,
-    cache_key: u64,
+    cache_key: CacheKey,
     t0: Instant,
 ) -> i64 {
     if t0.elapsed() > TIME_LIMIT {
@@ -115,6 +117,6 @@ fn alpha_beta_pruning_helper(
     best_h
 }
 
-const fn update_cache_key(cache_key: u64, (x, y): Position) -> u64 {
-    (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as u64
+const fn update_cache_key(cache_key: CacheKey, (x, y): Position) -> CacheKey {
+    (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as CacheKey
 }
