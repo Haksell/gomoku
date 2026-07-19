@@ -1,5 +1,5 @@
 use crate::{
-    bots::MAX_DEPTH,
+    bots::{MAX_DEPTH, TIME_LIMIT},
     game::{
         Game,
         board::{Board, Position},
@@ -18,12 +18,16 @@ pub const STENCIL_SIZE: usize = 7;
 pub const COEFFS_FILE: &str = match STENCIL_SIZE {
     6 => match MAX_DEPTH {
         2 => "./coeffs/incdec_stencil6_depth2.rs",
-        10 => "./coeffs/incdec_stencil6_depth10.rs",
+        10 => "./coeffs/incdec_stencil6_512ms.rs",
         _ => unreachable!(),
     },
     7 => match MAX_DEPTH {
         2 => "./coeffs/incdec_stencil7_depth2.rs",
-        10 => "./coeffs/incdec_stencil7_depth10.rs",
+        10 => match TIME_LIMIT.as_millis() {
+            // 128 => "./coeffs/incdec_stencil7_128ms.rs",
+            512 => "./coeffs/incdec_stencil7_512ms.rs",
+            _ => unreachable!(),
+        },
         _ => unreachable!(),
     },
     _ => unreachable!(),
@@ -33,12 +37,16 @@ pub const COEFFS_FILE: &str = match STENCIL_SIZE {
 pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match STENCIL_SIZE {
     6 => match MAX_DEPTH {
         2 => include!("../../coeffs/incdec_stencil6_depth2.rs"),
-        10 => include!("../../coeffs/incdec_stencil6_depth10.rs"),
+        10 => include!("../../coeffs/incdec_stencil6_512ms.rs"),
         _ => unreachable!(),
     },
     7 => match MAX_DEPTH {
         2 => include!("../../coeffs/incdec_stencil7_depth2.rs"),
-        10 => include!("../../coeffs/incdec_stencil7_depth10.rs"),
+        10 => match TIME_LIMIT.as_millis() {
+            // 128 => include!("../../coeffs/incdec_stencil7_128ms.rs"),
+            512 => include!("../../coeffs/incdec_stencil7_512ms.rs"),
+            _ => unreachable!(),
+        },
         _ => unreachable!(),
     },
     _ => unreachable!(),
