@@ -20,9 +20,8 @@ use std::{
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
-const PAIRS_BY_EPOCH: usize = 8;
 
-const LEARNING_RATE: f64 = 0.2;
+const LEARNING_RATE: f64 = 1.;
 const BETA_M: f64 = 0.9;
 const BETA_V: f64 = 0.999;
 const EPS: f64 = 1e-8;
@@ -62,8 +61,8 @@ pub fn run() {
             heuristic: Heuristic { fun: coeffistic, coeffs: Some(round_coeffs(&coeffs2).into()) },
         };
 
-        let wins2: u32 = (0..PAIRS_BY_EPOCH).map(|_| play_pair(&player1, &player2)).sum();
-        let grad_factor = -(wins2 as f64 / (PAIRS_BY_EPOCH as f64) - 1.);
+        let wins2 = play_pair(&player1, &player2);
+        let grad_factor = 1. - wins2 as f64;
         let grads = updates1.map(|u1| u1 * grad_factor);
 
         let epoch = {
@@ -83,15 +82,14 @@ pub fn run() {
         };
 
         if epoch.is_multiple_of(10) {
-            println!("Epoch {epoch} done.");
             let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&best_coeffs) {
-                Ok(()) => eprintln!("Best coeffs written to file {COEFFS_FILE}"),
+                Ok(()) => println!("Epoch {epoch} done and saved."),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(500) {
             let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into_boxed_slice();
             stats(best_coeffs, 50);
         }
