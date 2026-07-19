@@ -24,8 +24,6 @@ use std::{
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
-const PAIRS_BY_EPOCH: u32 = 8;
-const MAX_MUTATION: i64 = 8;
 
 pub fn run() {
     let epoch = AtomicU32::default();
@@ -33,13 +31,16 @@ pub fn run() {
 
     // TODO: find a cleaner rayon infinite loop
     rayon::iter::repeat(()).for_each(|()| {
-        let update_sums = (0..PAIRS_BY_EPOCH)
+        let max_abs_coeff = best_coeffs.lock().unwrap().iter().map(|x| x.abs()).max().unwrap();
+        let learning_rate = ((max_abs_coeff as f64).sqrt().ceil() as i64).max(1);
+
+        let update_sums = (0..learning_rate)
             .map(|_| {
                 let mut coeffs1 = best_coeffs.lock().unwrap().clone();
                 let mut coeffs2 = coeffs1.clone();
                 let mut rng = thread_rng();
                 let updates1: [i64; N_MUTATIONS] =
-                    array::from_fn(|_| rng.gen_range(-MAX_MUTATION..=MAX_MUTATION));
+                    array::from_fn(|_| rng.gen_range(-learning_rate..=learning_rate));
                 for (i, &update1) in updates1.iter().enumerate() {
                     update_coeffs(&mut coeffs1, i, update1);
                     update_coeffs(&mut coeffs2, i, -update1);
@@ -71,9 +72,9 @@ pub fn run() {
         }
 
         let epoch = epoch.fetch_add(1, Ordering::Relaxed) + 1;
-        println!("Epoch {epoch} done.");
 
         if epoch.is_multiple_of(10) {
+            println!("Epoch {epoch} done with learning_rate={learning_rate}.");
             let best_coeffs = best_coeffs.lock().unwrap().clone();
             match write_coeffs(&best_coeffs) {
                 Ok(()) => eprintln!("Best coeffs written to file {COEFFS_FILE}"),

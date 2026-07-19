@@ -15,13 +15,13 @@ use std::{
 pub const STENCIL_SIZE: usize = 6;
 
 pub const COEFFS_FILE: &str = match STENCIL_SIZE {
-    6 => "./coeffs/incdec6.rs",
+    6 => "./coeffs/incdec_stencil6_depth2.rs",
     7 => "./coeffs/omnisearch7.rs",
     _ => unreachable!(),
 };
 pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match STENCIL_SIZE {
     // include! needs a literal, so we can't give it COEFFS_FILE
-    6 => include!("../../coeffs/incdec6.rs"),
+    6 => include!("../../coeffs/incdec_stencil6_depth2.rs"),
     7 => include!("../../coeffs/omnisearch7.rs"),
     _ => unreachable!(),
 });
