@@ -24,7 +24,7 @@ pub const COEFFS_FILE: &str = match STENCIL_SIZE {
     7 => match MAX_DEPTH {
         2 => "./coeffs/incdec_stencil7_depth2.rs",
         10 => match TIME_LIMIT.as_millis() {
-            // 128 => "./coeffs/incdec_stencil7_128ms.rs",
+            128 => "./coeffs/incdec_stencil7_128ms.rs",
             512 => "./coeffs/incdec_stencil7_512ms.rs",
             _ => unreachable!(),
         },
@@ -43,7 +43,7 @@ pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match STENCIL_SIZ
     7 => match MAX_DEPTH {
         2 => include!("../../coeffs/incdec_stencil7_depth2.rs"),
         10 => match TIME_LIMIT.as_millis() {
-            // 128 => include!("../../coeffs/incdec_stencil7_128ms.rs"),
+            128 => include!("../../coeffs/incdec_stencil7_128ms.rs"),
             512 => include!("../../coeffs/incdec_stencil7_512ms.rs"),
             _ => unreachable!(),
         },
