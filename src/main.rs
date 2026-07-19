@@ -1,3 +1,4 @@
+mod adamtrain;
 mod arena;
 mod bots;
 mod dueltrain;
@@ -37,6 +38,8 @@ struct Args {
     omnitrain: bool,
     #[arg(long)]
     incdectrain: bool,
+    #[arg(long)]
+    adamtrain: bool,
 }
 
 fn main() {
@@ -44,6 +47,10 @@ fn main() {
     init_thread_pool(args.num_threads);
 
     // TODO: --train flag or put them in a bin
+    if args.adamtrain {
+        adamtrain::run();
+        return;
+    }
     if args.incdectrain {
         incdectrain::run();
         return;
