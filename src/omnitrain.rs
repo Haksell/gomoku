@@ -24,13 +24,12 @@ use std::{
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
-const LEARNING_RATE_EXP: f64 = 0.6;
+const LEARNING_RATE_EXP: f64 = 0.5;
 
 pub fn run() {
     let epoch = AtomicU32::default();
     let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
 
-    // TODO: find a cleaner rayon infinite loop
     rayon::iter::repeat(()).for_each(|()| {
         let max_abs_coeff = best_coeffs.lock().unwrap().iter().map(|x| x.abs()).max().unwrap();
         let learning_rate = ((max_abs_coeff as f64).powf(LEARNING_RATE_EXP).ceil() as i64).max(1);
