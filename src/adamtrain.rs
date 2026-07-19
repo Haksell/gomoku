@@ -63,7 +63,7 @@ pub fn run() {
         };
 
         let wins2: u32 = (0..PAIRS_BY_EPOCH).map(|_| play_pair(&player1, &player2)).sum();
-        let grad_factor = wins2 as f64 / (PAIRS_BY_EPOCH as f64) - 1.;
+        let grad_factor = -(wins2 as f64 / (PAIRS_BY_EPOCH as f64) - 1.);
         let grads = updates1.map(|u1| u1 * grad_factor);
 
         let epoch = {
