@@ -7,7 +7,7 @@ pub mod state;
 use crate::{
     Player,
     game::{
-        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
     player::PlayerColor,
@@ -176,12 +176,14 @@ impl Game {
 
         // TODO: preallocate with number of close moves (or forced moves)
         let mut legal_moves = Vec::new();
-        for (x, y) in SPIRALLING_POSITIONS {
-            if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                && self.board[y][x].is_none()
-                && !self.creates_double_three((x, y))
-            {
-                legal_moves.push((x, y));
+        for y in 0..BOARD_SIZE {
+            for x in 0..BOARD_SIZE {
+                if (max_dist.is_none() || self.close_moves[y][x] > 0)
+                    && self.board[y][x].is_none()
+                    && !self.creates_double_three((x, y))
+                {
+                    legal_moves.push((x, y));
+                }
             }
         }
 

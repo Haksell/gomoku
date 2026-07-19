@@ -75,8 +75,7 @@ fn alpha_beta_pruning_helper(
     }
 
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
-        let previous = cache.insert(cache_key, leaf_value);
-        debug_assert!(previous.is_none());
+        cache.insert(cache_key, leaf_value);
         return leaf_value;
     }
 
