@@ -150,6 +150,10 @@ Il faudrait 6 types de cases :
 - if some lib is not used seriously (e.g. itertools), remove the dependency
 - avoid panics and asserts (eprintln + exit(1 | 2))
 
+## after push
+
+- remove useless Makefile rules
+
 ## evaluation
 
 ### preliminary checks

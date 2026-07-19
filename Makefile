@@ -1,5 +1,5 @@
 NAME := gomoku
-SYMLINK := Gomoku
+BIN := Gomoku
 
 .PHONY: all test fmt lint clean fclean re loc new_to_old setup_git_hooks flamegraph
 
@@ -7,7 +7,7 @@ SYMLINK := Gomoku
 
 all:
 	cargo build --release
-	ln -sf target/release/$(NAME) $(SYMLINK)
+	cp target/release/$(NAME) $(BIN)
 
 clean:
 	cargo clean
@@ -16,7 +16,7 @@ clean:
 	rm -f *.svg
 
 fclean: clean
-	rm -f $(SYMLINK)
+	rm -f $(BIN)
 
 re: fclean all
 
