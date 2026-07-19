@@ -13,10 +13,9 @@
 - wins by captures or alignment in stats
 - unit test of rules
 - compute during human time (flag)
-- arena with elo ranking
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
-- feature nannou: don't compile the lib if running headless arena
+- feature nannou: don't compile the lib if running headless
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
@@ -98,7 +97,6 @@ Il faudrait 6 types de cases :
 ### bonus ideas
 
 - [x] bot vs bot
-- [ ] bot arena
 - [ ] alternate start rules (swap, swap2...)
 - [ ] variable board size (clap arg?)
 - [ ] gomoku vs renju rules
