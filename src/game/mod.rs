@@ -224,7 +224,7 @@ mod tests {
 
     #[test]
     fn board_size() {
-        assert!(BOARD_SIZE % 2 == 1);
+        assert_eq!(BOARD_SIZE % 2, 1);
         assert!(BOARD_SIZE >= 3);
     }
 

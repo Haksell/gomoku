@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn directions() {
-        assert!(DIRECTIONS8[..4] == DIRECTIONS4);
+        assert_eq!(DIRECTIONS8[..4], DIRECTIONS4);
         assert!(
             DIRECTIONS8[4..]
                 .iter()
