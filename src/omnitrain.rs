@@ -73,9 +73,9 @@ pub fn run() {
         }
 
         let epoch = epoch.fetch_add(1, Ordering::Relaxed) + 1;
-        println!("Epoch {epoch} done with learning_rate={learning_rate}.");
 
-        if epoch.is_multiple_of(5) {
+        if epoch.is_multiple_of(10) {
+            println!("Epoch {epoch} done with learning_rate={learning_rate}.");
             let best_coeffs = best_coeffs.lock().unwrap().clone();
             match write_coeffs(&best_coeffs) {
                 Ok(()) => eprintln!("Best coeffs written to file {COEFFS_FILE}"),
@@ -83,9 +83,9 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(20) {
+        if epoch.is_multiple_of(100) {
             let best_coeffs = best_coeffs.lock().unwrap().clone();
-            stats(best_coeffs, 5);
+            stats(best_coeffs, 50);
         }
     });
 }
