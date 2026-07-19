@@ -6,7 +6,7 @@ mod genetrain;
 mod gridtrain;
 mod gui;
 mod heuristics;
-mod omnitrain;
+mod incdectrain;
 mod player;
 
 use crate::player::Player;
@@ -30,7 +30,7 @@ struct Args {
     #[arg(long)]
     gridtrain: bool,
     #[arg(long)]
-    omnitrain: bool,
+    incdectrain: bool,
 }
 
 fn main() {
@@ -38,8 +38,8 @@ fn main() {
     init_thread_pool(args.num_threads);
 
     // TODO: --train flag or put them in a bin
-    if args.omnitrain {
-        omnitrain::run();
+    if args.incdectrain {
+        incdectrain::run();
         return;
     }
     if args.gridtrain {
