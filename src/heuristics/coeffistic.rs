@@ -15,44 +15,29 @@ use std::{
 
 pub const STENCIL_SIZE: usize = 7;
 
-pub const COEFFS_FILE: &str = match STENCIL_SIZE {
-    6 => match MAX_DEPTH {
-        2 => "./coeffs/incdec_stencil6_depth2.rs",
-        10 => "./coeffs/incdec_stencil6_512ms.rs",
-        _ => unreachable!(),
-    },
-    7 => match MAX_DEPTH {
-        2 => "./coeffs/incdec_stencil7_depth2.rs",
-        10 => match TIME_LIMIT.as_millis() {
-            128 => "./coeffs/incdec_stencil7_128ms.rs",
-            512 => "./coeffs/incdec_stencil7_512ms.rs",
-            _ => unreachable!(),
-        },
-        _ => unreachable!(),
-    },
+pub const COEFFS_FILE: &str = match (STENCIL_SIZE, MAX_DEPTH, TIME_LIMIT.as_millis()) {
+    (6, 2, 8..) => "./coeffs/incdec_stencil6_depth2.rs",
+    (6, 10, 512) => "./coeffs/incdec_stencil6_512ms.rs",
+    (7, 2, 8..) => "./coeffs/incdec_stencil7_depth2.rs",
+    (7, 10, 32) => "./coeffs/incdec_stencil7_32ms.rs",
+    (7, 10, 128) => "./coeffs/incdec_stencil7_128ms.rs",
+    (7, 10, 512) => "./coeffs/incdec_stencil7_512ms.rs",
     _ => unreachable!(),
 };
 
 // include! needs a literal, so we can't give it COEFFS_FILE
-pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match STENCIL_SIZE {
-    6 => match MAX_DEPTH {
-        2 => include!("../../coeffs/incdec_stencil6_depth2.rs"),
-        10 => include!("../../coeffs/incdec_stencil6_512ms.rs"),
+pub static INITIAL_COEFFS: LazyLock<Coeffs> =
+    LazyLock::new(|| match (STENCIL_SIZE, MAX_DEPTH, TIME_LIMIT.as_millis()) {
+        (6, 2, 8..) => include!("../../coeffs/incdec_stencil6_depth2.rs"),
+        (6, 10, 512) => include!("../../coeffs/incdec_stencil6_512ms.rs"),
+        (7, 2, 8..) => include!("../../coeffs/incdec_stencil7_depth2.rs"),
+        (7, 10, 32) => include!("../../coeffs/incdec_stencil7_32ms.rs"),
+        (7, 10, 128) => include!("../../coeffs/incdec_stencil7_128ms.rs"),
+        (7, 10, 512) => include!("../../coeffs/incdec_stencil7_512ms.rs"),
         _ => unreachable!(),
-    },
-    7 => match MAX_DEPTH {
-        2 => include!("../../coeffs/incdec_stencil7_depth2.rs"),
-        10 => match TIME_LIMIT.as_millis() {
-            128 => include!("../../coeffs/incdec_stencil7_128ms.rs"),
-            512 => include!("../../coeffs/incdec_stencil7_512ms.rs"),
-            _ => unreachable!(),
-        },
-        _ => unreachable!(),
-    },
-    _ => unreachable!(),
-});
+    });
 
-// TODO: compute dynamically
+// TODO: compute
 pub const UNIQUE_STENCIL_INDICES: usize = match STENCIL_SIZE {
     6 => 182,
     7 => 560,
