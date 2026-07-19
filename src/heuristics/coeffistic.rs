@@ -18,7 +18,7 @@ pub const STENCIL_SIZE: usize = 7;
 pub const COEFFS_FILE: &str = match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
     (6, 8) => "./coeffs/coeffs_stencil6_008ms.rs",
     (6, 512) => "./coeffs/coeffs_stencil6_512ms.rs",
-    (7, 8) => "./coeffs/adam.rs",
+    (7, 8) => "./coeffs/wip.rs",
     (7, 32) => "./coeffs/coeffs_stencil7_032ms.rs",
     (7, 128) => "./coeffs/coeffs_stencil7_128ms.rs",
     (7, 512) => "./coeffs/coeffs_stencil7_512ms.rs",
@@ -30,7 +30,7 @@ pub static INITIAL_COEFFS: LazyLock<Coeffs> =
     LazyLock::new(|| match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
         (6, 8) => include!("../../coeffs/coeffs_stencil6_008ms.rs"),
         (6, 512) => include!("../../coeffs/coeffs_stencil6_512ms.rs"),
-        (7, 8) => include!("../../coeffs/adam.rs"),
+        (7, 8) => include!("../../coeffs/wip.rs"),
         (7, 32) => include!("../../coeffs/coeffs_stencil7_032ms.rs"),
         (7, 128) => include!("../../coeffs/coeffs_stencil7_128ms.rs"),
         (7, 512) => include!("../../coeffs/coeffs_stencil7_512ms.rs"),

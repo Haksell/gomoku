@@ -8,6 +8,7 @@ mod gridtrain;
 mod gui;
 mod heuristics;
 mod incdectrain;
+mod momentrain;
 mod omnitrain;
 mod player;
 
@@ -40,6 +41,8 @@ struct Args {
     incdectrain: bool,
     #[arg(long)]
     adamtrain: bool,
+    #[arg(long)]
+    momentrain: bool,
 }
 
 fn main() {
@@ -47,6 +50,10 @@ fn main() {
     init_thread_pool(args.num_threads);
 
     // TODO: --train flag or put them in a bin
+    if args.momentrain {
+        momentrain::run();
+        return;
+    }
     if args.adamtrain {
         adamtrain::run();
         return;
