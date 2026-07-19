@@ -21,8 +21,9 @@ use std::{
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
+const UPDATE_RANGE: f64 = 32.;
 const LEARNING_RATE: f64 = 1.;
-const BETA_M: f64 = 0.9;
+const BETA_M: f64 = 0.8;
 const BETA_V: f64 = 0.999;
 const EPS: f64 = 1e-8;
 
@@ -43,7 +44,8 @@ pub fn run() {
 
     rayon::iter::repeat(()).for_each(|()| {
         let mut rng = thread_rng();
-        let updates1: [f64; N_MUTATIONS] = array::from_fn(|_| rng.gen_range(-32.0..=32.0));
+        let updates1: [f64; N_MUTATIONS] =
+            array::from_fn(|_| rng.gen_range(-UPDATE_RANGE..=UPDATE_RANGE));
 
         let mut coeffs1 = params.lock().unwrap().coeffs.clone();
         let mut coeffs2 = coeffs1.clone();
