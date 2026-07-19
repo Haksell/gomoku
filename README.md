@@ -6,6 +6,7 @@
 
 - improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
 - incdec -> adam optimizer
+- coeff for each pair of (captures, threats) + additional factor if many threats
 - dynamic stencil indices and coeff files based on stencil size, depth and thinking time
 - update double threes in `do_move` and `undo_move`
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
