@@ -13,7 +13,9 @@ mod player;
 use crate::player::Player;
 use clap::Parser;
 use rayon::ThreadPoolBuilder;
-use std::thread::available_parallelism;
+use std::{thread::available_parallelism, time::Duration};
+
+const TIME_LIMIT: Duration = Duration::from_millis(32); // TODO: flag with default value of 500ms
 
 #[expect(clippy::struct_excessive_bools)] // TODO: fix with Training enum
 #[derive(Debug, Parser)]

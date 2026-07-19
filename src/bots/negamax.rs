@@ -1,5 +1,5 @@
 use crate::{
-    bots::{MAX_DEPTH, leaf_value},
+    bots::leaf_value,
     game::{
         Game,
         board::{BOARD_CENTER, Position},
@@ -7,6 +7,8 @@ use crate::{
     heuristics::Heuristic,
 };
 use std::cmp::max;
+
+const MAX_DEPTH: usize = 4;
 
 pub fn negamax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {

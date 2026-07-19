@@ -2,7 +2,8 @@
 // Then we should be able to use best_move_at_depth, whether the search finished or not
 
 use crate::{
-    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value, random_mover::random_mover},
+    TIME_LIMIT,
+    bots::{leaf_value, random_mover::random_mover},
     game::{
         Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
@@ -31,7 +32,7 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     let mut searched_depth = -1;
     let mut best_move = random_move;
 
-    for depth in 0..=MAX_DEPTH {
+    for depth in 0.. {
         let mut best_move_at_depth = random_move;
         alpha_beta_pruning_helper(
             &mut game,

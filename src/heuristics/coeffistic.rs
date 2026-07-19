@@ -1,5 +1,5 @@
 use crate::{
-    bots::{MAX_DEPTH, TIME_LIMIT},
+    TIME_LIMIT,
     game::{
         Game,
         board::{Board, Position},
@@ -15,25 +15,25 @@ use std::{
 
 pub const STENCIL_SIZE: usize = 7;
 
-pub const COEFFS_FILE: &str = match (STENCIL_SIZE, MAX_DEPTH, TIME_LIMIT.as_millis()) {
-    (6, 2, 8..) => "./coeffs/incdec_stencil6_depth2.rs",
-    (6, 10, 512) => "./coeffs/incdec_stencil6_512ms.rs",
-    (7, 2, 8..) => "./coeffs/incdec_stencil7_depth2.rs",
-    (7, 10, 32) => "./coeffs/incdec_stencil7_32ms.rs",
-    (7, 10, 128) => "./coeffs/incdec_stencil7_128ms.rs",
-    (7, 10, 512) => "./coeffs/incdec_stencil7_512ms.rs",
+pub const COEFFS_FILE: &str = match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
+    (6, 8) => "./coeffs/incdec_stencil6_008ms.rs",
+    (6, 512) => "./coeffs/incdec_stencil6_512ms.rs",
+    (7, 8) => "./coeffs/incdec_stencil7_008ms.rs",
+    (7, 32) => "./coeffs/incdec_stencil7_032ms.rs",
+    (7, 128) => "./coeffs/incdec_stencil7_128ms.rs",
+    (7, 512) => "./coeffs/incdec_stencil7_512ms.rs",
     _ => unreachable!(),
 };
 
 // include! needs a literal, so we can't give it COEFFS_FILE
 pub static INITIAL_COEFFS: LazyLock<Coeffs> =
-    LazyLock::new(|| match (STENCIL_SIZE, MAX_DEPTH, TIME_LIMIT.as_millis()) {
-        (6, 2, 8..) => include!("../../coeffs/incdec_stencil6_depth2.rs"),
-        (6, 10, 512) => include!("../../coeffs/incdec_stencil6_512ms.rs"),
-        (7, 2, 8..) => include!("../../coeffs/incdec_stencil7_depth2.rs"),
-        (7, 10, 32) => include!("../../coeffs/incdec_stencil7_32ms.rs"),
-        (7, 10, 128) => include!("../../coeffs/incdec_stencil7_128ms.rs"),
-        (7, 10, 512) => include!("../../coeffs/incdec_stencil7_512ms.rs"),
+    LazyLock::new(|| match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
+        (6, 8) => include!("../../coeffs/incdec_stencil6_008ms.rs"),
+        (6, 512) => include!("../../coeffs/incdec_stencil6_512ms.rs"),
+        (7, 8) => include!("../../coeffs/incdec_stencil7_008ms.rs"),
+        (7, 32) => include!("../../coeffs/incdec_stencil7_032ms.rs"),
+        (7, 128) => include!("../../coeffs/incdec_stencil7_128ms.rs"),
+        (7, 512) => include!("../../coeffs/incdec_stencil7_512ms.rs"),
         _ => unreachable!(),
     });
 

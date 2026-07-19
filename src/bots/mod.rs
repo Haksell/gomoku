@@ -9,7 +9,6 @@ use crate::{
     heuristics::Heuristic,
     player::PlayerColor,
 };
-use std::time::Duration;
 
 pub type Bot = fn(&Game, &Heuristic) -> Position;
 
@@ -23,10 +22,6 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
         _ => Err(format!("Invalid bot: `{s}`")),
     }
 }
-
-// TODO: different max_dist and number of best moves to check depending on depth
-pub const MAX_DEPTH: usize = 10; // TODO: flag with default value of 10
-pub const TIME_LIMIT: Duration = Duration::from_millis(32); // TODO: flag with default value of 500ms
 
 /// Maximizes for the current player, not necessarily black.
 fn leaf_value(game: &Game, heuristic: &Heuristic, depth: usize, max_depth: usize) -> Option<i64> {
