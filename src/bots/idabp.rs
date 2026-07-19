@@ -26,14 +26,14 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     let mut game = game.clone();
 
     let mut best_move = (usize::MAX, usize::MAX);
-    // let mut explored_depth = -1;
-    for max_depth in 0..=MAX_DEPTH {
+    let mut searched_depth = -1;
+    for depth in 0..=MAX_DEPTH {
         let mut best_move_at_depth = (usize::MAX, usize::MAX);
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
             0,
-            max_depth,
+            depth,
             -i64::MAX,
             i64::MAX,
             &mut best_move_at_depth,
@@ -46,10 +46,14 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
             // TODO: try using best_move_at_depth if possible
             break;
         }
-        // explored_depth = max_depth as i32;
+        searched_depth = depth as i32;
         best_move = best_move_at_depth;
     }
-    // println!("{explored_depth}");
+
+    if game.black_player.is_human() || game.white_player.is_human() {
+        println!("IDABP search depth: {searched_depth}");
+    }
+
     best_move
 }
 

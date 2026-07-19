@@ -86,6 +86,7 @@ fn update(app: &App, model: &mut Model, _: Update) {
             "Captures: black={}, white={}",
             model.game.black_captures, model.game.white_captures
         );
+        println!();
     }
 
     if !model.game.state.is_playing() && model.finished_time.is_none() {
