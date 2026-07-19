@@ -11,6 +11,7 @@ all:
 
 clean:
 	cargo clean
+	rm -rf .venv
 	rm -f perf.data*
 	rm -f *.svg
 
