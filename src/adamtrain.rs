@@ -22,7 +22,7 @@ use std::{
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const PAIRS_BY_EPOCH: usize = 8;
 
-const LEARNING_RATE: f64 = 1.;
+const LEARNING_RATE: f64 = 0.2;
 const BETA_M: f64 = 0.9;
 const BETA_V: f64 = 0.999;
 const EPS: f64 = 1e-8;
