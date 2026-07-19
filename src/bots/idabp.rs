@@ -70,7 +70,7 @@ fn alpha_beta_pruning_helper(
     cache_key: CacheKey,
     t0: Instant,
 ) -> i64 {
-    if t0.elapsed() > TIME_LIMIT {
+    if depth <= 3 && t0.elapsed() > TIME_LIMIT {
         return min_h;
     }
 
