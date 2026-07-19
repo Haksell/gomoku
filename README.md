@@ -4,6 +4,7 @@
 
 ### misc
 
+- improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
 - incdec -> adam optimizer
 - dynamic stencil indices and coeff files based on stencil size, depth and thinking time
 - update double threes in `do_move` and `undo_move`
