@@ -82,14 +82,14 @@ fn alpha_beta_pruning_helper(
     let mut close_moves = game.get_legal_moves(Some(2), depth == 0);
     debug_assert!(!close_moves.is_empty());
 
-    let mut best_h = i64::MIN;
-
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
             cache.get(&update_cache_key(cache_key, pos)).unwrap_or(&default_h)
         });
     }
+
+    let mut best_h = i64::MIN;
 
     for pos in close_moves {
         game.do_move(pos);
