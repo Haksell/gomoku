@@ -14,7 +14,7 @@ pub fn negamax(game: &Game, heuristic: &Heuristic) -> Position {
     }
 
     let mut game = game.clone();
-    game.get_legal_moves(Some(2), true)
+    game.get_legal_moves(Some(2))
         .into_iter()
         .max_by_key(|&pos| {
             game.do_move(pos);
@@ -30,7 +30,7 @@ fn negamax_helper(game: &mut Game, heuristic: &Heuristic, depth: usize) -> i64 {
         return leaf_value;
     }
 
-    game.get_legal_moves(Some(2), false).into_iter().fold(i64::MIN, |best_h, pos| {
+    game.get_legal_moves(Some(2)).into_iter().fold(i64::MIN, |best_h, pos| {
         game.do_move(pos);
         let h = -negamax_helper(game, heuristic, depth + 1);
         game.undo_last_move();

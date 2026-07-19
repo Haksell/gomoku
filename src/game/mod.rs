@@ -13,7 +13,7 @@ use crate::{
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
-use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
+use nannou::rand::{Rng as _, thread_rng};
 
 const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
@@ -165,7 +165,7 @@ impl Game {
         }
     }
 
-    pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
+    pub fn get_legal_moves(&self, max_dist: Option<usize>) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
         if let GameState::Playing(forced_moves) = &self.state
@@ -185,11 +185,6 @@ impl Game {
                     legal_moves.push((x, y));
                 }
             }
-        }
-
-        if shuffle {
-            let mut rng = thread_rng();
-            legal_moves.shuffle(&mut rng);
         }
 
         legal_moves

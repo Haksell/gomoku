@@ -31,7 +31,7 @@ fn alpha_beta_pruning_helper(
         return leaf_value;
     }
 
-    let close_moves = game.get_legal_moves(Some(2), depth == 0);
+    let close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
 
     let mut best_h = i64::MIN;

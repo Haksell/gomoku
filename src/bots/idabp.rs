@@ -1,5 +1,5 @@
 use crate::{
-    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value},
+    bots::{MAX_DEPTH, TIME_LIMIT, leaf_value, random_mover::random_mover},
     game::{
         Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
@@ -22,13 +22,14 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
     }
 
     let t0 = Instant::now();
-    let mut cache = Cache::default();
+    let random_move = random_mover(game, heuristic);
     let mut game = game.clone();
-
-    let mut best_move = (usize::MAX, usize::MAX);
+    let mut cache = Cache::default();
     let mut searched_depth = -1;
+    let mut best_move = random_move;
+
     for depth in 0..=MAX_DEPTH {
-        let mut best_move_at_depth = (usize::MAX, usize::MAX);
+        let mut best_move_at_depth = random_move;
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
@@ -41,11 +42,13 @@ pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
             0,
             t0,
         );
+
         // TODO: break if close to time limit (predict time for next depth)
         if t0.elapsed() > TIME_LIMIT {
             // TODO: try using best_move_at_depth if possible
             break;
         }
+
         searched_depth = depth as i32;
         best_move = best_move_at_depth;
     }
@@ -70,6 +73,7 @@ fn alpha_beta_pruning_helper(
     cache_key: CacheKey,
     t0: Instant,
 ) -> i64 {
+    // Only check time limit at low depth to avoid useless syscalls
     if depth <= 3 && t0.elapsed() > TIME_LIMIT {
         return min_h;
     }
@@ -79,7 +83,7 @@ fn alpha_beta_pruning_helper(
         return leaf_value;
     }
 
-    let mut close_moves = game.get_legal_moves(Some(2), depth == 0);
+    let mut close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
 
     if depth + 1 < max_depth {
