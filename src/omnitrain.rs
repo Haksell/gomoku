@@ -14,10 +14,9 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use nannou::rand::{Rng as _, thread_rng};
-use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
+use rayon::iter::ParallelIterator as _;
 use std::{
     array,
-    iter::repeat_with,
     sync::{
         Arc, Mutex,
         atomic::{AtomicU32, Ordering},
@@ -25,39 +24,27 @@ use std::{
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
-const PAIRS_BY_EPOCH: usize = 5;
+const PAIRS_BY_EPOCH: u32 = 8;
+const MAX_MUTATION: i64 = 8;
 
 pub fn run() {
     let epoch = AtomicU32::default();
     let best_coeffs = Arc::new(Mutex::new(INITIAL_COEFFS.clone()));
 
     // TODO: find a cleaner rayon infinite loop
-    (0..u128::MAX).into_par_iter().for_each(|_| {
-        let should_inc2: [[bool; N_MUTATIONS]; PAIRS_BY_EPOCH] = {
-            let mut should_inc2 = [[false; N_MUTATIONS]; PAIRS_BY_EPOCH];
-            let mut rng = thread_rng();
-            for i in 0..N_MUTATIONS {
-                let mut remaining_increments = PAIRS_BY_EPOCH / 2;
-                for j in 0..PAIRS_BY_EPOCH {
-                    let inc2 =
-                        rng.gen_ratio(remaining_increments as u32, (PAIRS_BY_EPOCH - j) as u32);
-                    should_inc2[j][i] = inc2;
-                    remaining_increments -= inc2 as usize;
-                }
-            }
-            should_inc2
-        };
-
-        let wins2 = (0..PAIRS_BY_EPOCH)
-            .map(|i| {
+    rayon::iter::repeat(()).for_each(|()| {
+        let update_sums = (0..PAIRS_BY_EPOCH)
+            .map(|_| {
                 let mut coeffs1 = best_coeffs.lock().unwrap().clone();
                 let mut coeffs2 = coeffs1.clone();
+                let mut rng = thread_rng();
                 let updates1: [i64; N_MUTATIONS] =
-                    array::from_fn(|_| if thread_rng().gen_ratio(1, 2) { 1 } else { -1 });
+                    array::from_fn(|_| rng.gen_range(-MAX_MUTATION..=MAX_MUTATION));
                 for (i, &update1) in updates1.iter().enumerate() {
                     update_coeffs(&mut coeffs1, i, update1);
                     update_coeffs(&mut coeffs2, i, -update1);
                 }
+
                 let player1 = Player::Bot {
                     bot: idabp,
                     heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs1) },
@@ -66,18 +53,20 @@ pub fn run() {
                     bot: idabp,
                     heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs2) },
                 };
-                play_pair(&player1, &player2)
-            })
-            .sum::<u32>() as usize;
 
-        if wins2 != PAIRS_BY_EPOCH {
+                match play_pair(&player1, &player2) {
+                    0 => updates1,
+                    1 => [0; N_MUTATIONS],
+                    2 => updates1.map(|u| -u),
+                    _ => unreachable!(),
+                }
+            })
+            .fold([0; N_MUTATIONS], |acc, res| array::from_fn(|i| acc[i] + res[i]));
+
+        {
             let mut best_coeffs = best_coeffs.lock().unwrap();
-            for (i, &update1) in updates1.iter().enumerate() {
-                update_coeffs(
-                    &mut best_coeffs,
-                    i,
-                    if wins2 < PAIRS_BY_EPOCH { update1 } else { -update1 },
-                );
+            for (i, &update_sum) in update_sums.iter().enumerate() {
+                update_coeffs(&mut best_coeffs, i, update_sum.clamp(-1, 1));
             }
         }
 
@@ -85,14 +74,41 @@ pub fn run() {
         println!("Epoch {epoch} done.");
 
         if epoch.is_multiple_of(10) {
-            // clone to release the lock
             let best_coeffs = best_coeffs.lock().unwrap().clone();
             match write_coeffs(&best_coeffs) {
                 Ok(()) => eprintln!("Best coeffs written to file {COEFFS_FILE}"),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
         }
+
+        if epoch.is_multiple_of(100) {
+            let best_coeffs = best_coeffs.lock().unwrap().clone();
+            stats(best_coeffs, 50);
+        }
     });
+}
+
+fn stats(best_coeffs: Box<[i64]>, pair_of_games: u32) {
+    let new_player = Player::Bot {
+        bot: idabp,
+        heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs) },
+    };
+    let initial_player = Player::Bot {
+        bot: idabp,
+        heuristic: Heuristic { fun: coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) },
+    };
+
+    let wins_against_initial: u32 =
+        (0..pair_of_games).map(|_| play_pair(&initial_player, &new_player)).sum();
+    let wins_against_manual: u32 =
+        (0..pair_of_games).map(|_| play_pair(&Player::MANUAL, &new_player)).sum();
+
+    let total_games = 2 * pair_of_games;
+    let dividing_line = "=".repeat(80);
+    println!("{dividing_line}");
+    println!("Current won {wins_against_initial}/{total_games} games against initial bot");
+    println!("Current won {wins_against_manual}/{total_games} games against manual bot");
+    println!("{dividing_line}");
 }
 
 fn update_coeffs(coeffs: &mut [i64], i: usize, update: i64) {
