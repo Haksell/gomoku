@@ -225,10 +225,11 @@ static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
 };
 
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
+    let coeffs = coeffs.unwrap();
+
     let mut h = 0;
     let mut black_capture_threats = 0;
     let mut white_capture_threats = 0;
-    let coeffs = coeffs.unwrap();
 
     for line in LINES {
         h += evaluate_patterns(
@@ -247,11 +248,13 @@ pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
 }
 
 fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
-    let lookup_idx =
-        N_STENCIL_COEFFS + c as usize * (MAX_THREATS + 2) + (t as usize).min(MAX_THREATS);
-    let additional_idx = N_STENCIL_COEFFS + c as usize * (MAX_THREATS + 2) + MAX_THREATS + 1;
+    let capture_start_idx = N_STENCIL_COEFFS + c as usize * (MAX_THREATS + 2);
+    let lookup_idx = capture_start_idx + (t as usize).min(MAX_THREATS);
+    let additional_idx = capture_start_idx + MAX_THREATS + 1;
+
     let h_lookup = coeffs[lookup_idx];
     let h_additional = coeffs[additional_idx] * (t - MAX_THREATS as i64).max(0);
+
     h_lookup + h_additional
 }
 
