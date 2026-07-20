@@ -4,7 +4,9 @@
 
 ### misc
 
-- put unique coeffs before stencil coeffs to simplify indexing
+- simplify coeffistic and training:
+  - put unique coeffs before stencil coeffs to simplify indexing
+  - create proper `Coeffs` type instead of jumbled array
 - improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
 - dynamic stencil indices and coeff files based on stencil size, depth and thinking time
 - update double threes in `do_move` and `undo_move`

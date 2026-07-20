@@ -19,9 +19,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-// TODO: remove
-const CT_FACTOR: f64 = 4.;
-
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 const LEARNING_RATE: f64 = 1. / 128.;
@@ -50,10 +47,8 @@ pub fn run() {
 
                 let mut rng = thread_rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    let ct_factor = if i >= UNIQUE_STENCIL_INDICES { CT_FACTOR } else { 1. };
-                    let update_range =
-                        (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR * ct_factor)
-                            .max(MAX_ADDITIVE_FACTOR * ct_factor);
+                    let update_range = (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR)
+                        .max(MAX_ADDITIVE_FACTOR);
                     rng.gen_range(-update_range..=update_range)
                 });
 
@@ -76,8 +71,7 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                let ct_factor = if i >= UNIQUE_STENCIL_INDICES { CT_FACTOR } else { 1. };
-                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * ct_factor * grads[i]);
+                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
             }
             params.epoch
         };
