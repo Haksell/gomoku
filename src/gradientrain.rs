@@ -21,7 +21,7 @@ use std::{
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 128.;
+const LEARNING_RATE: f64 = 1. / 16.;
 const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
