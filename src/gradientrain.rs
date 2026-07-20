@@ -75,7 +75,8 @@ pub fn run() {
                 update_coeffs(
                     &mut params.coeffs,
                     i,
-                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 4. } else { 1. }),
+                    // TODO: remove if
+                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 16. } else { 1. }),
                 );
             }
             params.epoch
@@ -110,7 +111,10 @@ fn get_coeff(coeffs: &[f64], i: usize) -> f64 {
 
 fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     if i >= UNIQUE_STENCIL_INDICES {
-        coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] += update;
+        // coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] += update;
+        // TODO: remove .max
+        coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] =
+            (coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] + update).max(0.);
     } else {
         coeffs[STENCIL_INDICES[i]] += update;
         coeffs[STENCIL_INDICES_OPP[i]] -= update;
