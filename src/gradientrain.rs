@@ -22,7 +22,7 @@ use std::{
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 32.;
+const LEARNING_RATE: f64 = 1. / 64.;
 const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
@@ -78,7 +78,7 @@ pub fn run() {
                 let grad_factor = wins1 as f64 - 2.;
                 updates1.map(|u1| u1 * grad_factor)
             })
-            .reduce(|acc, new| array::from_fn(|i| acc[i] + new[i]))
+            .reduce(|acc, res| array::from_fn(|i| acc[i] + res[i]))
             .unwrap();
 
         let epoch = {
