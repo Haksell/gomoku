@@ -59,20 +59,8 @@ pub fn run() {
                     update_coeffs(&mut coeffs2, i, -update1);
                 }
 
-                let player1 = Player::Bot {
-                    bot: idabp,
-                    heuristic: Heuristic {
-                        fun: coeffistic,
-                        coeffs: Some(round_coeffs(&coeffs1).into()),
-                    },
-                };
-                let player2 = Player::Bot {
-                    bot: idabp,
-                    heuristic: Heuristic {
-                        fun: coeffistic,
-                        coeffs: Some(round_coeffs(&coeffs2).into()),
-                    },
-                };
+                let player1 = player_from_coeffs(round_coeffs(&coeffs1).into());
+                let player2 = player_from_coeffs(round_coeffs(&coeffs2).into());
 
                 let wins1 = play_four_games(&player1, &player2);
                 let grad_factor = wins1 as f64 - 2.;
@@ -96,6 +84,11 @@ pub fn run() {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
+        }
+
+        if epoch.is_multiple_of(100) {
+            let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into();
+            stats(rounded_coeffs, 100);
         }
     });
 }
@@ -143,4 +136,22 @@ fn play_four_games(player1: &Player, player2: &Player) -> u32 {
     }
 
     wins1
+}
+
+fn stats(best_coeffs: Box<[i64]>, games: u32) {
+    assert!(games.is_multiple_of(4));
+
+    let new_player = player_from_coeffs(best_coeffs);
+    let initial_player = player_from_coeffs(INITIAL_COEFFS.clone());
+
+    let new_wins: u32 = (0..games / 4).map(|_| play_four_games(&new_player, &initial_player)).sum();
+
+    let dividing_line = "=".repeat(80);
+    println!("{dividing_line}");
+    println!("Current won {new_wins}/{games} games against initial bot");
+    println!("{dividing_line}");
+}
+
+fn player_from_coeffs(coeffs: Box<[i64]>) -> Player {
+    Player::Bot { bot: idabp, heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs) } }
 }

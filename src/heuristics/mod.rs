@@ -5,7 +5,7 @@ pub mod zero;
 
 use crate::{
     game::Game,
-    heuristics::coeffistic::{Coeffs, INITIAL_COEFFS},
+    heuristics::coeffistic::{Coeffs, INITIAL_COEFFS, OLD_COEFFS},
 };
 
 /// A [`Heuristic`] returns a positive value if black has a good position,
@@ -21,8 +21,12 @@ impl Heuristic {
     pub const CAPTUROPHILE: Self = Self { fun: capturophile::capturophile, coeffs: None };
     pub const MANUAL: Self = Self { fun: manual::manual, coeffs: None };
 
-    pub fn coeffistic() -> Self {
+    pub fn new() -> Self {
         Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) }
+    }
+
+    pub fn old() -> Self {
+        Self { fun: coeffistic::coeffistic, coeffs: Some(OLD_COEFFS.clone()) }
     }
 }
 
@@ -31,7 +35,7 @@ pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
         "zero" => Ok(Heuristic::ZERO),
         "capturophile" => Ok(Heuristic::CAPTUROPHILE),
         "manual" => Ok(Heuristic::MANUAL),
-        "coeffistic" => Ok(Heuristic::coeffistic()),
+        "coeffistic" => Ok(Heuristic::new()),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }

@@ -2,7 +2,11 @@
 
 # Activate with the following command: make setup_git_hooks
 
+set -e
+
 make test
+
+diff coeffs/new.rs coeffs/old.rs
 
 # sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > /tmp/old.rs
 # diff /tmp/old.rs src/heuristics/old.rs

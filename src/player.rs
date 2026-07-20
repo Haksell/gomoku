@@ -15,8 +15,12 @@ impl Player {
     pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: Heuristic::ZERO };
     pub const MANUAL: Self = Self::Bot { bot: idabp, heuristic: Heuristic::MANUAL };
 
-    fn coeffistic() -> Self {
-        Self::Bot { bot: idabp, heuristic: Heuristic::coeffistic() }
+    fn new() -> Self {
+        Self::Bot { bot: idabp, heuristic: Heuristic::new() }
+    }
+
+    fn old() -> Self {
+        Self::Bot { bot: idabp, heuristic: Heuristic::old() }
     }
 
     pub const fn is_human(&self) -> bool {
@@ -57,7 +61,8 @@ impl From<&str> for Player {
             "human" => Self::Human,
             "random" => Self::RANDOM,
             "manual" => Self::MANUAL,
-            "coeffistic" => Self::coeffistic(),
+            "old" => Self::old(),
+            "new" => Self::new(),
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

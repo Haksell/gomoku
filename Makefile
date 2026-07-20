@@ -34,8 +34,9 @@ loc:
 	@find src -name '*.rs' | sort | xargs wc -l
 
 new_to_old:
-	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
-	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
+	cp coeffs/new.rs coeffs/old.rs
+# 	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
+# 	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
 
 setup_git_hooks:
 	@rm -rf .git/hooks
