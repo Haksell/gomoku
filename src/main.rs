@@ -1,16 +1,11 @@
-mod adamtrain;
 mod arena;
 mod bots;
-mod dueltrain;
 mod game;
-mod genetrain;
+mod genetrain; // TODO: remove?
 mod gradientrain;
-mod gridtrain;
 mod gui;
 mod heuristics;
 mod incdectrain;
-mod momentrain;
-mod omnitrain;
 mod player;
 
 use crate::player::Player;
@@ -21,7 +16,6 @@ use std::{thread::available_parallelism, time::Duration};
 // TODO: flag with default value of 500ms
 const TIME_LIMIT: Duration = Duration::from_millis(8);
 
-#[expect(clippy::struct_excessive_bools)] // TODO: fix with Training enum
 #[derive(Debug, Parser)]
 struct Args {
     black_player: Player,
@@ -33,17 +27,7 @@ struct Args {
     #[arg(long)]
     genetrain: bool,
     #[arg(long)]
-    dueltrain: bool,
-    #[arg(long)]
-    gridtrain: bool,
-    #[arg(long)]
-    omnitrain: bool,
-    #[arg(long)]
     incdectrain: bool,
-    #[arg(long)]
-    adamtrain: bool,
-    #[arg(long)]
-    momentrain: bool,
     #[arg(long)]
     gradientrain: bool,
 }
@@ -57,28 +41,8 @@ fn main() {
         gradientrain::run();
         return;
     }
-    if args.momentrain {
-        momentrain::run();
-        return;
-    }
-    if args.adamtrain {
-        adamtrain::run();
-        return;
-    }
     if args.incdectrain {
         incdectrain::run();
-        return;
-    }
-    if args.omnitrain {
-        omnitrain::run();
-        return;
-    }
-    if args.gridtrain {
-        gridtrain::run();
-        return;
-    }
-    if args.dueltrain {
-        dueltrain::run();
         return;
     }
     if args.genetrain {
