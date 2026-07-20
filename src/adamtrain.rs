@@ -4,7 +4,7 @@ use crate::{
     heuristics::{
         Heuristic,
         coeffistic::{
-            COEFFS_FILE, INITIAL_COEFFS, N_COEFFS, N_STENCIL_COEFFS, STENCIL_INDICES,
+            COEFFS_FILE, INITIAL_COEFFS, N_COEFFS, N_MUTATIONS, N_STENCIL_COEFFS, STENCIL_INDICES,
             STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
             UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
@@ -18,8 +18,6 @@ use std::{
     array,
     sync::{Arc, Mutex},
 };
-
-const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const UPDATE_RANGE: f64 = 32.;
 const LEARNING_RATE: f64 = 1.;

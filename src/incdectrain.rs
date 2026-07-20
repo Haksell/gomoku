@@ -4,9 +4,9 @@ use crate::{
     heuristics::{
         Heuristic,
         coeffistic::{
-            COEFFS_FILE, INITIAL_COEFFS, N_STENCIL_COEFFS, STENCIL_INDICES, STENCIL_INDICES_OPP,
-            STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP, UNIQUE_STENCIL_INDICES, coeffistic,
-            write_coeffs,
+            COEFFS_FILE, INITIAL_COEFFS, N_MUTATIONS, N_STENCIL_COEFFS, STENCIL_INDICES,
+            STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
+            UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
     },
     player::{Player, PlayerColor},
@@ -21,7 +21,6 @@ use std::{
     },
 };
 
-const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const LEARNING_RATE_EXP: f64 = 0.5;
 
 pub fn run() {

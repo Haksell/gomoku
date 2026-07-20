@@ -4,9 +4,9 @@ use crate::{
     heuristics::{
         Heuristic,
         coeffistic::{
-            COEFFS_FILE, INITIAL_COEFFS, N_STENCIL_COEFFS, STENCIL_INDICES, STENCIL_INDICES_OPP,
-            STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP, UNIQUE_STENCIL_INDICES, coeffistic,
-            write_coeffs,
+            COEFFS_FILE, INITIAL_COEFFS, N_MUTATIONS, N_STENCIL_COEFFS, STENCIL_INDICES,
+            STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
+            UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
     },
     player::{Player, PlayerColor},
@@ -19,7 +19,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 const LEARNING_RATE: f64 = 1. / 128.;
@@ -73,7 +72,11 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
+                update_coeffs(
+                    &mut params.coeffs,
+                    i,
+                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 16. } else { 1. }),
+                );
             }
             params.epoch
         };

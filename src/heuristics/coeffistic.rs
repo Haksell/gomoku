@@ -1,19 +1,26 @@
 use crate::{
-    // TIME_LIMIT,
     game::{
         Game,
         board::{Board, Position},
         lines::LINES,
+        state::REQUIRED_CAPTURES,
     },
     player::PlayerColor,
 };
 use std::{
     fs::File,
-    io::{self, Write as _},
+    io::{self, BufWriter, Write as _},
     sync::LazyLock,
 };
 
+pub type Coeffs = Box<[i64]>;
+
 pub const STENCIL_SIZE: usize = 7;
+pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
+pub const MAX_THREATS: usize = 4;
+pub const N_CAPTURE_COEFFS: usize = REQUIRED_CAPTURES * (MAX_THREATS + 2);
+pub const N_COEFFS: usize = N_STENCIL_COEFFS + N_CAPTURE_COEFFS;
+pub const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + N_CAPTURE_COEFFS;
 
 // pub const COEFFS_FILE: &str = match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
 //     (6, 8) => "./coeffs/coeffs_stencil6_008ms.rs",
@@ -193,10 +200,6 @@ pub static STENCIL_INDICES_SYM_OPP: [usize; UNIQUE_STENCIL_INDICES] = [
     1796, 1445, 1850, 1823,
 ];
 
-pub const N_STENCIL_COEFFS: usize = 3usize.pow(STENCIL_SIZE as u32);
-pub const N_COEFFS: usize = N_STENCIL_COEFFS + 9;
-pub type Coeffs = Box<[i64]>;
-
 static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
     let mut res = [usize::MAX; 1 << (2 * STENCIL_SIZE)];
     let mut base4 = 0;
@@ -243,12 +246,13 @@ pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     h
 }
 
-const fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
-    let i = N_STENCIL_COEFFS;
-    let h_captures = coeffs[i] * c * c * c + coeffs[i + 1] * c * c + coeffs[i + 2] * c;
-    let h_threats = coeffs[i + 3] * t * t * t + coeffs[i + 4] * t * t + coeffs[i + 5] * t;
-    let cross_terms = c * t * (coeffs[i + 6] + coeffs[i + 7] * c + coeffs[i + 8] * t);
-    h_captures + h_threats + cross_terms
+fn capture_heuristic(coeffs: &Coeffs, c: i64, t: i64) -> i64 {
+    let lookup_idx =
+        N_STENCIL_COEFFS + c as usize * (MAX_THREATS + 2) + (t as usize).min(MAX_THREATS);
+    let additional_idx = N_STENCIL_COEFFS + c as usize * (MAX_THREATS + 2) + MAX_THREATS + 1;
+    let h_lookup = coeffs[lookup_idx];
+    let h_additional = coeffs[additional_idx] * (t - MAX_THREATS as i64).max(0);
+    h_lookup + h_additional
 }
 
 fn evaluate_patterns(
@@ -287,30 +291,36 @@ fn evaluate_patterns(
 }
 
 pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
+    fn write_coeff(buf: &mut BufWriter<Vec<u8>>, coeff: i64, comment: &str) -> io::Result<()> {
+        let num = format!("{coeff},");
+        writeln!(buf, "    {num:7}// {comment}")
+    }
+
     const CAPACITY: usize = match STENCIL_SIZE {
         6 => 1 << 15,
         7 => 1 << 17,
         _ => unreachable!(),
     };
 
-    let mut buf = io::BufWriter::with_capacity(CAPACITY, Vec::new());
+    let mut buf = BufWriter::with_capacity(CAPACITY, Vec::new());
     writeln!(buf, "vec![")?;
 
     for i in 0..N_STENCIL_COEFFS {
-        let c = coeffs[i];
         // TODO: check correct direction (might be symmetric)
         let pat: String =
             (0..STENCIL_SIZE).map(|j| ['.', 'b', 'w'][i / 3usize.pow(j as u32) % 3]).collect();
-        let num = format!("{c},");
-        writeln!(buf, "    {num:7}// {pat}")?;
+        write_coeff(&mut buf, coeffs[i], &pat)?;
     }
 
-    for (i, poly_coeff) in
-        ["ccc", "cc", "c", "ttt", "tt", "t", "ct", "cct", "ctt"].iter().enumerate()
-    {
-        let c = coeffs[N_STENCIL_COEFFS + i];
-        let num = format!("{c},");
-        writeln!(buf, "    {num:7}// {poly_coeff}")?;
+    for captures in 0..REQUIRED_CAPTURES {
+        for threats in 0..=MAX_THREATS {
+            let i = N_STENCIL_COEFFS + captures * (MAX_THREATS + 2) + threats;
+            let comment = format!("captures={captures} threats={threats}");
+            write_coeff(&mut buf, coeffs[i], &comment)?;
+        }
+        let i = N_STENCIL_COEFFS + captures * (MAX_THREATS + 2) + MAX_THREATS + 1;
+        let comment = format!("captures={captures} additional threats");
+        write_coeff(&mut buf, coeffs[i], &comment)?;
     }
 
     writeln!(buf, "].into_boxed_slice()")?;

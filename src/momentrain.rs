@@ -4,9 +4,9 @@ use crate::{
     heuristics::{
         Heuristic,
         coeffistic::{
-            COEFFS_FILE, INITIAL_COEFFS, N_STENCIL_COEFFS, STENCIL_INDICES, STENCIL_INDICES_OPP,
-            STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP, UNIQUE_STENCIL_INDICES, coeffistic,
-            write_coeffs,
+            COEFFS_FILE, INITIAL_COEFFS, N_MUTATIONS, N_STENCIL_COEFFS, STENCIL_INDICES,
+            STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
+            UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
     },
     player::{Player, PlayerColor},
@@ -18,8 +18,6 @@ use std::{
     array,
     sync::{Arc, Mutex},
 };
-
-const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 16.;
