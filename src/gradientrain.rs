@@ -19,9 +19,10 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+const CT_FACTOR: f64 = 3.; // TODO: remove
+
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
-const MAX_ADDITIVE_FACTOR_STENCIL: f64 = 10.;
-const MAX_ADDITIVE_FACTOR_CT_LOOKUP: f64 = 40.; // TODO: remove?
+const MAX_ADDITIVE_FACTOR: f64 = 10.;
 const LEARNING_RATE: f64 = 1. / 128.;
 const GAMES_PER_EPOCH: usize = 20;
 
@@ -50,9 +51,9 @@ pub fn run() {
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
                     let old_coeff = get_coeff(&coeffs1, i);
                     let max_additive_factor = if i < UNIQUE_STENCIL_INDICES {
-                        MAX_ADDITIVE_FACTOR_STENCIL
+                        MAX_ADDITIVE_FACTOR
                     } else {
-                        MAX_ADDITIVE_FACTOR_CT_LOOKUP
+                        MAX_ADDITIVE_FACTOR * CT_FACTOR
                     };
                     let update_range =
                         (old_coeff.abs() * MAX_MULTIPLICATIVE_FACTOR).max(max_additive_factor);
@@ -78,7 +79,12 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
+                let learning_rate = if i < UNIQUE_STENCIL_INDICES {
+                    LEARNING_RATE
+                } else {
+                    LEARNING_RATE * CT_FACTOR
+                };
+                update_coeffs(&mut params.coeffs, i, learning_rate * grads[i]);
             }
             params.epoch
         };
