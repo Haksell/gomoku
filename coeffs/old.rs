@@ -2204,16 +2204,16 @@ vec![
     9,     // captures=2 threats=3
     118,   // captures=2 threats=4
     77,    // captures=2 additional threats
-    -26,   // captures=3 threats=0
-    -2,    // captures=3 threats=1
-    52,    // captures=3 threats=2
-    76,    // captures=3 threats=3
-    52,    // captures=3 threats=4
+    300,   // captures=3 threats=0
+    400,    // captures=3 threats=1
+    500,    // captures=3 threats=2
+    600,    // captures=3 threats=3
+    700,    // captures=3 threats=4
     88,    // captures=3 additional threats
-    64,    // captures=4 threats=0
-    206,   // captures=4 threats=1
-    211,   // captures=4 threats=2
-    60,    // captures=4 threats=3
-    141,   // captures=4 threats=4
+    500,    // captures=4 threats=0
+    600,   // captures=4 threats=1
+    700,   // captures=4 threats=2
+    800,    // captures=4 threats=3
+    900,   // captures=4 threats=4
     61,    // captures=4 additional threats
 ].into_boxed_slice()
