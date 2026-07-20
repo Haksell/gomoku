@@ -2188,32 +2188,32 @@ vec![
     35,    // wwwwwww
     0,     // captures=0 threats=0
     50,    // captures=0 threats=1
-    27,    // captures=0 threats=2
-    47,    // captures=0 threats=3
-    0,   // captures=0 threats=4
+    50,    // captures=0 threats=2
+    50,    // captures=0 threats=3
+    50,    // captures=0 threats=4
     143,   // captures=0 additional threats
     50,    // captures=1 threats=0
     148,   // captures=1 threats=1
-    77,    // captures=1 threats=2
-    92,    // captures=1 threats=3
-    0,   // captures=1 threats=4
-    0,   // captures=1 additional threats
-    0,   // captures=2 threats=0
+    148,   // captures=1 threats=2
+    148,   // captures=1 threats=3
+    148,   // captures=1 threats=4
+    0,     // captures=1 additional threats
+    50,    // captures=2 threats=0
     158,   // captures=2 threats=1
-    106,   // captures=2 threats=2
-    58,    // captures=2 threats=3
-    71,    // captures=2 threats=4
+    158,   // captures=2 threats=2
+    158,   // captures=2 threats=3
+    158,   // captures=2 threats=4
     72,    // captures=2 additional threats
     60,    // captures=3 threats=0
     308,   // captures=3 threats=1
     664,   // captures=3 threats=2
     820,   // captures=3 threats=3
-    687,   // captures=3 threats=4
+    820,   // captures=3 threats=4
     108,   // captures=3 additional threats
     230,   // captures=4 threats=0
     1489,  // captures=4 threats=1
-    1424,  // captures=4 threats=2
-    984,   // captures=4 threats=3
-    340,   // captures=4 threats=4
+    1489,  // captures=4 threats=2
+    1489,  // captures=4 threats=3
+    1489,  // captures=4 threats=4
     36,    // captures=4 additional threats
 ].into_boxed_slice()
