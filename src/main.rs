@@ -4,6 +4,7 @@ mod bots;
 mod dueltrain;
 mod game;
 mod genetrain;
+mod gradientrain;
 mod gridtrain;
 mod gui;
 mod heuristics;
@@ -43,6 +44,8 @@ struct Args {
     adamtrain: bool,
     #[arg(long)]
     momentrain: bool,
+    #[arg(long)]
+    gradientrain: bool,
 }
 
 fn main() {
@@ -50,6 +53,10 @@ fn main() {
     init_thread_pool(args.num_threads);
 
     // TODO: --train flag or put them in a bin
+    if args.gradientrain {
+        gradientrain::run();
+        return;
+    }
     if args.momentrain {
         momentrain::run();
         return;
