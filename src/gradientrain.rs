@@ -19,8 +19,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-const CT_FACTOR: f64 = 2.; // TODO: remove
-
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 const LEARNING_RATE: f64 = 1. / 128.;
@@ -49,18 +47,8 @@ pub fn run() {
 
                 let mut rng = thread_rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    let max_multiplicative_factor = if i < UNIQUE_STENCIL_INDICES {
-                        MAX_MULTIPLICATIVE_FACTOR
-                    } else {
-                        MAX_MULTIPLICATIVE_FACTOR * CT_FACTOR
-                    };
-                    let max_additive_factor = if i < UNIQUE_STENCIL_INDICES {
-                        MAX_ADDITIVE_FACTOR
-                    } else {
-                        MAX_ADDITIVE_FACTOR * CT_FACTOR
-                    };
-                    let update_range = (get_coeff(&coeffs1, i).abs() * max_multiplicative_factor)
-                        .max(max_additive_factor);
+                    let update_range = (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR)
+                        .max(MAX_ADDITIVE_FACTOR);
                     rng.gen_range(-update_range..=update_range)
                 });
 
@@ -83,12 +71,7 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                let learning_rate = if i < UNIQUE_STENCIL_INDICES {
-                    LEARNING_RATE
-                } else {
-                    LEARNING_RATE * CT_FACTOR
-                };
-                update_coeffs(&mut params.coeffs, i, learning_rate * grads[i]);
+                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
             }
             params.epoch
         };
@@ -123,7 +106,8 @@ fn get_coeff(coeffs: &[f64], i: usize) -> f64 {
 fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     if i >= UNIQUE_STENCIL_INDICES {
         let coeffs_idx = i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS;
-        let new_coeff = if i == UNIQUE_STENCIL_INDICES { 0. } else { coeffs[coeffs_idx] + update };
+        let new_coeff =
+            if i == UNIQUE_STENCIL_INDICES { 0. } else { (coeffs[coeffs_idx] + update).max(0.) };
         coeffs[coeffs_idx] = new_coeff;
     } else {
         coeffs[STENCIL_INDICES[i]] += update;
