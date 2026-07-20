@@ -76,7 +76,7 @@ pub fn run() {
             params.epoch
         };
 
-        if epoch.is_multiple_of(50) {
+        if epoch.is_multiple_of(10) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
@@ -84,7 +84,7 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(500) {
+        if epoch.is_multiple_of(100) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into();
             stats(rounded_coeffs, 100);
         }
