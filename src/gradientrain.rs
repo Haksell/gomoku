@@ -22,7 +22,7 @@ use std::{
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 32.;
+const LEARNING_RATE: f64 = 1. / 64.;
 const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
