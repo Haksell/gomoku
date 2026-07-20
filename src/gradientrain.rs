@@ -21,7 +21,7 @@ use std::{
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 64.;
+const LEARNING_RATE: f64 = 1. / 128.;
 const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
@@ -76,7 +76,7 @@ pub fn run() {
             params.epoch
         };
 
-        if epoch.is_multiple_of(10) {
+        if epoch.is_multiple_of(50) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
@@ -84,7 +84,7 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(500) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into();
             stats(rounded_coeffs, 100);
         }
