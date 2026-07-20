@@ -75,7 +75,7 @@ pub fn run() {
                 update_coeffs(
                     &mut params.coeffs,
                     i,
-                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 16. } else { 1. }),
+                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 4. } else { 1. }),
                 );
             }
             params.epoch
