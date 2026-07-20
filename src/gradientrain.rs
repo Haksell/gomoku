@@ -76,7 +76,7 @@ pub fn run() {
                     &mut params.coeffs,
                     i,
                     // TODO: remove if
-                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 16. } else { 1. }),
+                    LEARNING_RATE * grads[i] * (if i > UNIQUE_STENCIL_INDICES { 8. } else { 1. }),
                 );
             }
             params.epoch
