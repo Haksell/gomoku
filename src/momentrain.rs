@@ -21,7 +21,8 @@ use std::{
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 
-const UPDATE_RANGE: f64 = 32.;
+const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
+const MAX_ADDITIVE_FACTOR: f64 = 16.;
 const LEARNING_RATE: f64 = 0.005;
 const GAMMA: f64 = 0.9;
 
@@ -39,12 +40,17 @@ pub fn run() {
     }));
 
     rayon::iter::repeat(()).for_each(|()| {
-        let mut rng = thread_rng();
-        let updates1: [f64; N_MUTATIONS] =
-            array::from_fn(|_| rng.gen_range(-UPDATE_RANGE..=UPDATE_RANGE));
-
         let mut coeffs1 = params.lock().unwrap().coeffs.clone();
         let mut coeffs2 = coeffs1.clone();
+
+        let mut rng = thread_rng();
+        let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
+            let old_coeff = get_coeff(&coeffs1, i);
+            let update_range =
+                (old_coeff.abs() * MAX_MULTIPLICATIVE_FACTOR).max(MAX_ADDITIVE_FACTOR);
+            rng.gen_range(-update_range..=update_range)
+        });
+
         for (i, &update1) in updates1.iter().enumerate() {
             update_coeffs(&mut coeffs1, i, update1);
             update_coeffs(&mut coeffs2, i, -update1);
@@ -78,7 +84,6 @@ pub fn run() {
         };
 
         if epoch.is_multiple_of(100) {
-            println!("{:?}", &params.lock().unwrap().velocity[0..16]);
             let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&best_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
@@ -86,15 +91,23 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(500) {
-            let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into_boxed_slice();
-            stats(best_coeffs, 50);
-        }
+        // if epoch.is_multiple_of(500) {
+        //     let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into_boxed_slice();
+        //     stats(best_coeffs, 50);
+        // }
     });
 }
 
 fn round_coeffs(coeffs: &[f64]) -> Vec<i64> {
     coeffs.iter().map(|c| c.round() as i64).collect()
+}
+
+fn get_coeff(coeffs: &[f64], i: usize) -> f64 {
+    if i >= UNIQUE_STENCIL_INDICES {
+        coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS]
+    } else {
+        coeffs[STENCIL_INDICES[i]]
+    }
 }
 
 fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
