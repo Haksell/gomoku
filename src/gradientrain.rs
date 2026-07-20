@@ -111,10 +111,8 @@ fn get_coeff(coeffs: &[f64], i: usize) -> f64 {
 
 fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     if i >= UNIQUE_STENCIL_INDICES {
-        // coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] += update;
-        // TODO: remove .max
-        coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] =
-            (coeffs[i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS] + update).max(0.);
+        let coeffs_idx = i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS;
+        coeffs[coeffs_idx] = (coeffs[coeffs_idx] + update).max(0.);
     } else {
         coeffs[STENCIL_INDICES[i]] += update;
         coeffs[STENCIL_INDICES_OPP[i]] -= update;
