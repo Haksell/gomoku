@@ -19,7 +19,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-const CT_FACTOR: f64 = 2.; // TODO: remove
+const CT_FACTOR: f64 = 3.; // TODO: remove
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
