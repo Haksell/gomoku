@@ -21,8 +21,12 @@ use std::{
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 128.;
-const GAMES_PER_EPOCH: usize = 20;
+
+const LEARNING_RATE: f64 = 1. / 32.;
+
+const GAMES_PER_EPOCH: usize = 8;
+const EPOCHS_PER_SAVE: u32 = 5;
+const EPOCHS_PER_STATS: u32 = 50;
 
 struct Params {
     coeffs: Vec<f64>,
@@ -76,7 +80,7 @@ pub fn run() {
             params.epoch
         };
 
-        if epoch.is_multiple_of(10) {
+        if epoch.is_multiple_of(EPOCHS_PER_SAVE) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
@@ -84,7 +88,7 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(EPOCHS_PER_STATS) {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into();
             stats(rounded_coeffs, 100);
         }
