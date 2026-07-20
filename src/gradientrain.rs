@@ -21,9 +21,9 @@ use std::{
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
-const MAX_ADDITIVE_FACTOR: f64 = 16.;
-const LEARNING_RATE: f64 = 0.1;
-const PAIRS_PER_EPOCH: usize = 10;
+const MAX_ADDITIVE_FACTOR: f64 = 10.;
+const LEARNING_RATE: f64 = 1. / 32.;
+const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
     coeffs: Vec<f64>,
@@ -31,40 +31,55 @@ struct Params {
 }
 
 pub fn run() {
+    assert!(GAMES_PER_EPOCH.is_multiple_of(4)); // TODO: test
+
     let params = Arc::new(Mutex::new(Params {
         coeffs: INITIAL_COEFFS.iter().map(|c| *c as f64).collect_vec(),
         epoch: 0,
     }));
 
     rayon::iter::repeat(()).for_each(|()| {
-        let mut coeffs1 = params.lock().unwrap().coeffs.clone();
-        let mut coeffs2 = coeffs1.clone();
+        let best_coeffs = params.lock().unwrap().coeffs.clone();
 
-        let mut rng = thread_rng();
-        let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-            let old_coeff = get_coeff(&coeffs1, i);
-            let update_range =
-                (old_coeff.abs() * MAX_MULTIPLICATIVE_FACTOR).max(MAX_ADDITIVE_FACTOR);
-            -rng.gen_range(-update_range..=update_range)
-        });
+        let grads = (0..GAMES_PER_EPOCH / 4)
+            .map(|_| {
+                let mut coeffs1 = best_coeffs.clone();
+                let mut coeffs2 = best_coeffs.clone();
 
-        for (i, &update1) in updates1.iter().enumerate() {
-            update_coeffs(&mut coeffs1, i, update1);
-            update_coeffs(&mut coeffs2, i, -update1);
-        }
+                let mut rng = thread_rng();
+                let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
+                    let old_coeff = get_coeff(&coeffs1, i);
+                    let update_range =
+                        (old_coeff.abs() * MAX_MULTIPLICATIVE_FACTOR).max(MAX_ADDITIVE_FACTOR);
+                    rng.gen_range(-update_range..=update_range)
+                });
 
-        let player1 = Player::Bot {
-            bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(round_coeffs(&coeffs1).into()) },
-        };
-        let player2 = Player::Bot {
-            bot: idabp,
-            heuristic: Heuristic { fun: coeffistic, coeffs: Some(round_coeffs(&coeffs2).into()) },
-        };
+                for (i, &update1) in updates1.iter().enumerate() {
+                    update_coeffs(&mut coeffs1, i, update1);
+                    update_coeffs(&mut coeffs2, i, -update1);
+                }
 
-        let wins2: u32 = (0..PAIRS_PER_EPOCH).map(|_| play_pair(&player1, &player2)).sum();
-        let grad_factor = -(wins2 as f64 / PAIRS_PER_EPOCH as f64 - 1.);
-        let grads = updates1.map(|u1| u1 * grad_factor);
+                let player1 = Player::Bot {
+                    bot: idabp,
+                    heuristic: Heuristic {
+                        fun: coeffistic,
+                        coeffs: Some(round_coeffs(&coeffs1).into()),
+                    },
+                };
+                let player2 = Player::Bot {
+                    bot: idabp,
+                    heuristic: Heuristic {
+                        fun: coeffistic,
+                        coeffs: Some(round_coeffs(&coeffs2).into()),
+                    },
+                };
+
+                let wins1 = play_four(&player1, &player2);
+                let grad_factor = wins1 as f64 - 2.;
+                updates1.map(|u1| u1 * grad_factor)
+            })
+            .reduce(|acc, new| array::from_fn(|i| acc[i] + new[i]))
+            .unwrap();
 
         let epoch = {
             let mut params = params.lock().unwrap();
@@ -76,16 +91,11 @@ pub fn run() {
         };
 
         if epoch.is_multiple_of(10) {
-            let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
-            match write_coeffs(&best_coeffs) {
+            let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
+            match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
             }
-        }
-
-        if epoch.is_multiple_of(100) {
-            let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into_boxed_slice();
-            stats(best_coeffs, 50);
         }
     });
 }
@@ -115,41 +125,22 @@ fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     }
 }
 
-// TODO: play_four
-fn play_pair(old_player: &Player, new_player: &Player) -> u32 {
-    let mut old_new = Game::new(old_player, new_player);
-    let random_moves = thread_rng().gen_range(3..=4);
-    old_new.play_random_moves(random_moves, 5);
+fn play_four(player1: &Player, player2: &Player) -> u32 {
+    let mut wins1 = 0;
 
-    let mut new_old = old_new.clone();
-    (new_old.black_player, new_old.white_player) = (new_old.white_player, new_old.black_player);
+    for random_moves in [3, 4] {
+        let mut game_12 = Game::new(player1, player2);
+        game_12.play_random_moves(random_moves, 5);
 
-    old_new.play_game();
-    new_old.play_game();
+        let mut game_21 = game_12.clone();
+        (game_21.black_player, game_21.white_player) = (game_21.white_player, game_21.black_player);
 
-    matches!(old_new.state, GameState::Won(PlayerColor::White, _)) as u32
-        + matches!(new_old.state, GameState::Won(PlayerColor::Black, _)) as u32
-}
+        game_12.play_game();
+        game_21.play_game();
 
-fn stats(best_coeffs: Box<[i64]>, pair_of_games: u32) {
-    let new_player = Player::Bot {
-        bot: idabp,
-        heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs) },
-    };
-    let initial_player = Player::Bot {
-        bot: idabp,
-        heuristic: Heuristic { fun: coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) },
-    };
+        wins1 += matches!(game_12.state, GameState::Won(PlayerColor::Black, _)) as u32;
+        wins1 += matches!(game_21.state, GameState::Won(PlayerColor::White, _)) as u32;
+    }
 
-    let wins_against_initial: u32 =
-        (0..pair_of_games).map(|_| play_pair(&initial_player, &new_player)).sum();
-    let wins_against_manual: u32 =
-        (0..pair_of_games).map(|_| play_pair(&Player::MANUAL, &new_player)).sum();
-
-    let total_games = 2 * pair_of_games;
-    let dividing_line = "=".repeat(80);
-    println!("{dividing_line}");
-    println!("Current won {wins_against_initial}/{total_games} games against initial bot");
-    println!("Current won {wins_against_manual}/{total_games} games against manual bot");
-    println!("{dividing_line}");
+    wins1
 }
