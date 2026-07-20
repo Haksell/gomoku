@@ -4,8 +4,8 @@ use crate::{
     heuristics::{
         Heuristic,
         coeffistic::{
-            COEFFS_FILE, INITIAL_COEFFS, N_MUTATIONS, N_STENCIL_COEFFS, STENCIL_INDICES,
-            STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
+            COEFFS_FILE, INITIAL_COEFFS, MAX_THREATS, N_MUTATIONS, N_STENCIL_COEFFS,
+            STENCIL_INDICES, STENCIL_INDICES_OPP, STENCIL_INDICES_SYM, STENCIL_INDICES_SYM_OPP,
             UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
     },
@@ -18,6 +18,9 @@ use std::{
     array,
     sync::{Arc, Mutex},
 };
+
+// TODO: remove
+const CT_FACTOR: f64 = 4.;
 
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
@@ -47,8 +50,10 @@ pub fn run() {
 
                 let mut rng = thread_rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    let update_range = (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR)
-                        .max(MAX_ADDITIVE_FACTOR);
+                    let ct_factor = if i >= UNIQUE_STENCIL_INDICES { CT_FACTOR } else { 1. };
+                    let update_range =
+                        (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR * ct_factor)
+                            .max(MAX_ADDITIVE_FACTOR * ct_factor);
                     rng.gen_range(-update_range..=update_range)
                 });
 
@@ -71,7 +76,8 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
+                let ct_factor = if i >= UNIQUE_STENCIL_INDICES { CT_FACTOR } else { 1. };
+                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * ct_factor * grads[i]);
             }
             params.epoch
         };
@@ -105,9 +111,27 @@ fn get_coeff(coeffs: &[f64], i: usize) -> f64 {
 
 fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     if i >= UNIQUE_STENCIL_INDICES {
-        let coeffs_idx = i - UNIQUE_STENCIL_INDICES + N_STENCIL_COEFFS;
-        let new_coeff =
-            if i == UNIQUE_STENCIL_INDICES { 0. } else { (coeffs[coeffs_idx] + update).max(0.) };
+        let ct_idx = i - UNIQUE_STENCIL_INDICES;
+        let coeffs_idx = ct_idx + N_STENCIL_COEFFS;
+
+        let is_additional = (ct_idx + 1).is_multiple_of(MAX_THREATS + 2);
+        let is_nonzero_threat = !is_additional && !ct_idx.is_multiple_of(MAX_THREATS + 2);
+        let is_nonzero_capture = ct_idx >= MAX_THREATS + 2;
+
+        let mut new_coeff = coeffs[coeffs_idx] + update;
+        if new_coeff < 0. {
+            new_coeff = 0.;
+        }
+        if ct_idx == 0 {
+            new_coeff = 0.;
+        }
+        if is_nonzero_threat {
+            new_coeff = new_coeff.max(coeffs[coeffs_idx - 1]);
+        }
+        if is_nonzero_capture && !is_additional {
+            new_coeff = new_coeff.max(coeffs[coeffs_idx - (MAX_THREATS + 2)]);
+        }
+
         coeffs[coeffs_idx] = new_coeff;
     } else {
         coeffs[STENCIL_INDICES[i]] += update;
