@@ -22,7 +22,7 @@ use std::{
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
-const LEARNING_RATE: f64 = 1. / 64.;
+const LEARNING_RATE: f64 = 1. / 32.;
 const GAMES_PER_EPOCH: usize = 20;
 
 struct Params {
@@ -146,10 +146,11 @@ fn stats(best_coeffs: Box<[i64]>, games: u32) {
 
     let new_wins: u32 = (0..games / 4).map(|_| play_four_games(&new_player, &initial_player)).sum();
 
-    let dividing_line = "=".repeat(80);
-    println!("{dividing_line}");
-    println!("Current won {new_wins}/{games} games against initial bot");
-    println!("{dividing_line}");
+    let infooooo = format!("Current won {new_wins}/{games} games against initial bot.");
+    let horizontal = "═".repeat(infooooo.len() + 2);
+    println!("╔{horizontal}╗");
+    println!("║ {infooooo} ║");
+    println!("╚{horizontal}╝");
 }
 
 fn player_from_coeffs(coeffs: Box<[i64]>) -> Player {
