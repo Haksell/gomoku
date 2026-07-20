@@ -20,10 +20,10 @@ use std::{
 };
 
 const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + 9;
-
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 16.;
-const LEARNING_RATE: f64 = 0.05;
+const LEARNING_RATE: f64 = 0.1;
+const PAIRS_PER_EPOCH: usize = 10;
 
 struct Params {
     coeffs: Vec<f64>,
@@ -62,12 +62,9 @@ pub fn run() {
             heuristic: Heuristic { fun: coeffistic, coeffs: Some(round_coeffs(&coeffs2).into()) },
         };
 
-        let grads = match play_pair(&player1, &player2) {
-            0 => updates1,
-            1 => [0.; N_MUTATIONS],
-            2 => updates1.map(|u1| -u1),
-            _ => unreachable!(),
-        };
+        let wins2: u32 = (0..PAIRS_PER_EPOCH).map(|_| play_pair(&player1, &player2)).sum();
+        let grad_factor = -(wins2 as f64 / PAIRS_PER_EPOCH as f64 - 1.);
+        let grads = updates1.map(|u1| u1 * grad_factor);
 
         let epoch = {
             let mut params = params.lock().unwrap();
@@ -78,7 +75,7 @@ pub fn run() {
             params.epoch
         };
 
-        if epoch.is_multiple_of(100) {
+        if epoch.is_multiple_of(10) {
             let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
             match write_coeffs(&best_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
@@ -86,7 +83,7 @@ pub fn run() {
             }
         }
 
-        if epoch.is_multiple_of(500) {
+        if epoch.is_multiple_of(100) {
             let best_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into_boxed_slice();
             stats(best_coeffs, 50);
         }
@@ -118,6 +115,7 @@ fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     }
 }
 
+// TODO: play_four
 fn play_pair(old_player: &Player, new_player: &Player) -> u32 {
     let mut old_new = Game::new(old_player, new_player);
     let random_moves = thread_rng().gen_range(3..=4);
