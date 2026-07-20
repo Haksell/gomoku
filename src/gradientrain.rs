@@ -74,7 +74,7 @@ pub fn run() {
                     },
                 };
 
-                let wins1 = play_four(&player1, &player2);
+                let wins1 = play_four_games(&player1, &player2);
                 let grad_factor = wins1 as f64 - 2.;
                 updates1.map(|u1| u1 * grad_factor)
             })
@@ -125,7 +125,7 @@ fn update_coeffs(coeffs: &mut [f64], i: usize, update: f64) {
     }
 }
 
-fn play_four(player1: &Player, player2: &Player) -> u32 {
+fn play_four_games(player1: &Player, player2: &Player) -> u32 {
     let mut wins1 = 0;
 
     for random_moves in [3, 4] {
