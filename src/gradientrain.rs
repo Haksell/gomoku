@@ -49,14 +49,18 @@ pub fn run() {
 
                 let mut rng = thread_rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    let old_coeff = get_coeff(&coeffs1, i);
+                    let max_multiplicative_factor = if i < UNIQUE_STENCIL_INDICES {
+                        MAX_MULTIPLICATIVE_FACTOR
+                    } else {
+                        MAX_MULTIPLICATIVE_FACTOR * CT_FACTOR
+                    };
                     let max_additive_factor = if i < UNIQUE_STENCIL_INDICES {
                         MAX_ADDITIVE_FACTOR
                     } else {
                         MAX_ADDITIVE_FACTOR * CT_FACTOR
                     };
-                    let update_range =
-                        (old_coeff.abs() * MAX_MULTIPLICATIVE_FACTOR).max(max_additive_factor);
+                    let update_range = (get_coeff(&coeffs1, i).abs() * max_multiplicative_factor)
+                        .max(max_additive_factor);
                     rng.gen_range(-update_range..=update_range)
                 });
 
