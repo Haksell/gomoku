@@ -2187,7 +2187,7 @@ vec![
     19,    // bwwwwww
     49,    // wwwwwww
     0,     // ccc
-    -58,   // cc
+    128,   // cc
     62,    // c
     -5,    // ttt
     59,    // tt
