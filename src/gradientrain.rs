@@ -34,8 +34,6 @@ struct Params {
 }
 
 pub fn run() {
-    assert!(GAMES_PER_EPOCH.is_multiple_of(4)); // TODO: test
-
     let params = Arc::new(Mutex::new(Params {
         coeffs: INITIAL_COEFFS.iter().map(|c| *c as f64).collect_vec(),
         epoch: 0,
@@ -178,4 +176,14 @@ fn stats(best_coeffs: Box<[i64]>, games: u32) {
 
 fn player_from_coeffs(coeffs: Box<[i64]>) -> Player {
     Player::Bot { bot: idabp, heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs) } }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn games_per_epoch() {
+        assert!(GAMES_PER_EPOCH.is_multiple_of(4));
+    }
 }
