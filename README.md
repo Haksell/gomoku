@@ -8,9 +8,8 @@
   - put unique coeffs before stencil coeffs to simplify indexing
   - create proper `Coeffs` type instead of jumbled array
 - improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
-- dynamic stencil indices and coeff files based on stencil size, depth and thinking time
 - update double threes in `do_move` and `undo_move`
-- dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
+- dynamic heuristic update on `do_move` (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
 - compute during human time (flag)
@@ -39,6 +38,7 @@
 ### patterns with forbidden moves
 
 Il faudrait 6 types de cases :
+
 - noir
 - blanc
 - vide jouable par les deux
@@ -70,11 +70,6 @@ Il faudrait 6 types de cases :
   - try distance to edges?
   - try distance to corners?
 
-### flopped heuristics
-
-- locked 3: `wbbbw`
-- locked 3 of 4: `wbbb.w` | `wbb.bw` | `wb.bbw` | `w.bbbw`
-
 ### algorithms
 
 - [x] Random
@@ -101,11 +96,12 @@ Il faudrait 6 types de cases :
 - [ ] alternate start rules (swap, swap2...)
 - [ ] variable board size (clap arg?)
 - [ ] gomoku vs renju rules
-- [ ] cancel move
+- [ ] cancel move:
+  - [ ] left-right keys to rewind the game like on lichess
+  - [ ] backspace to reset the game to last human move
 - [ ] ratatui version
 - [ ] mobile version
 - [ ] web version
-- [ ] board size
 
 ## subject
 
@@ -126,10 +122,10 @@ Il faudrait 6 types de cases :
 - [x] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [x] You have to provide a Makefile which must produce your program. It must not relink.
 - [x] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
-- [ ] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
+- [x] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
 - [ ] You will not get all the points if your implementation wins too slowly (in too many moves).
 - [ ] You will not get all the points if your implementation has low search depth.
-- [ ] You will not get all the points if your implementation has a naive implementation.
+- [x] You will not get all the points if your implementation has a naive implementation.
 
 ### mandatory part
 
@@ -137,7 +133,7 @@ Il faudrait 6 types de cases :
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player's moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [x] You have to use a Minimax algorithm, or a variant.
-- [ ] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
+- [x] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
 - [x] You must also provide a usable graphical interface to allow one to actually play Gomoku.
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it's running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
@@ -146,10 +142,9 @@ Il faudrait 6 types de cases :
 
 - ctrl+f `todo`
 - ctrl+f `unimplemented`
-- `rm acoph`
-- src/heuristics/old.rs + src/heuristics/new.rs -> src/heuristics/heuristic.rs
-- if some lib is not used seriously (e.g. itertools), remove the dependency
-- avoid panics and asserts (eprintln + exit(1 | 2))
+- remove old/new files
+- if some lib is not used seriously (e.g. `itertools` or `indicatif`), remove the dependency
+- avoid `panic`s and `assert`s (`eprintln` + `exit(1 | 2)`)
 
 ## after push
 
