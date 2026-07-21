@@ -19,6 +19,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+// These too values should never be manually updated once training has started.
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 
