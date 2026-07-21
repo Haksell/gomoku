@@ -23,7 +23,8 @@ use std::{
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 
-const LEARNING_RATE: f64 = 1. / 128.;
+const LEARNING_RATE: f64 = 1. / 32.;
+const MUTATION_PROBABILITY: f64 = 0.041; // not const: 1. / (N_MUTATIONS as f64).sqrt();
 
 const GAMES_PER_EPOCH: usize = 8;
 const EPOCHS_PER_SAVE: u32 = 25;
@@ -50,9 +51,14 @@ pub fn run() {
 
                 let mut rng = thread_rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    let update_range = (get_coeff(&coeffs1, i).abs() * MAX_MULTIPLICATIVE_FACTOR)
-                        .max(MAX_ADDITIVE_FACTOR);
-                    rng.gen_range(-update_range..=update_range)
+                    if rng.gen_bool(MUTATION_PROBABILITY) {
+                        let update_range = (get_coeff(&coeffs1, i).abs()
+                            * MAX_MULTIPLICATIVE_FACTOR)
+                            .max(MAX_ADDITIVE_FACTOR);
+                        rng.gen_range(-update_range..=update_range)
+                    } else {
+                        0.
+                    }
                 });
 
                 for (i, &update1) in updates1.iter().enumerate() {
