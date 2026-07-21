@@ -71,7 +71,7 @@ fn alpha_beta_pruning_helper(
 ) -> i64 {
     // Only check time limit at low depth to avoid useless syscalls
     if depth <= 3 && t0.elapsed() >= TIME_LIMIT {
-        return min_h;
+        return 0;
     }
 
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
