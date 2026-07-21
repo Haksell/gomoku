@@ -32,13 +32,13 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
     let mut searched_depth = -1;
     let mut best_move = random_move;
 
-    for depth in 0.. {
+    for max_depth in 0.. {
         let mut best_move_at_depth = random_move;
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
             0,
-            depth,
+            max_depth,
             -i64::MAX,
             i64::MAX,
             &mut best_move_at_depth,
@@ -53,7 +53,7 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
             break;
         }
 
-        searched_depth = depth as i32;
+        searched_depth = max_depth as i32;
         best_move = best_move_at_depth;
     }
 
