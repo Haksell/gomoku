@@ -34,7 +34,9 @@ loc:
 	@find src -name '*.rs' | sort | xargs wc -l
 
 new_to_old:
-	cp coeffs/new.rs coeffs/old.rs
+	cp coeffs/coeffs_002ms_new.rs coeffs/coeffs_002ms_old.rs
+	cp coeffs/coeffs_008ms_new.rs coeffs/coeffs_008ms_old.rs
+	cp coeffs/coeffs_032ms_new.rs coeffs/coeffs_032ms_old.rs
 # 	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
 # 	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
 

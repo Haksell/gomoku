@@ -1,4 +1,5 @@
 use crate::{
+    TIME_LIMIT,
     game::{
         Game,
         board::{Board, Position},
@@ -23,31 +24,24 @@ pub const N_CAPTURE_COEFFS: usize = REQUIRED_CAPTURES * (MAX_THREATS + 2);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + N_CAPTURE_COEFFS;
 pub const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + N_CAPTURE_COEFFS;
 
-pub const COEFFS_FILE: &str = "./coeffs/new.rs";
-pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| include!("../../coeffs/new.rs"));
-pub static OLD_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| include!("../../coeffs/old.rs"));
-
-// pub const COEFFS_FILE: &str = match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
-//     (6, 8) => "./coeffs/coeffs_stencil6_008ms.rs",
-//     (6, 512) => "./coeffs/coeffs_stencil6_512ms.rs",
-//     (7, 8) => "./coeffs/wip.rs",
-//     (7, 32) => "./coeffs/coeffs_stencil7_032ms.rs",
-//     (7, 128) => "./coeffs/coeffs_stencil7_128ms.rs",
-//     (7, 512) => "./coeffs/coeffs_stencil7_512ms.rs",
-//     _ => unreachable!(),
-// };
-
-// // include! needs a literal, so we can't give it COEFFS_FILE
-// pub static INITIAL_COEFFS: LazyLock<Coeffs> =
-//     LazyLock::new(|| match (STENCIL_SIZE, TIME_LIMIT.as_millis()) {
-//         (6, 8) => include!("../../coeffs/coeffs_stencil6_008ms.rs"),
-//         (6, 512) => include!("../../coeffs/coeffs_stencil6_512ms.rs"),
-//         (7, 8) => include!("../../coeffs/wip.rs"),
-//         (7, 32) => include!("../../coeffs/coeffs_stencil7_032ms.rs"),
-//         (7, 128) => include!("../../coeffs/coeffs_stencil7_128ms.rs"),
-//         (7, 512) => include!("../../coeffs/coeffs_stencil7_512ms.rs"),
-//         _ => unreachable!(),
-//     });
+pub const COEFFS_FILE: &str = match TIME_LIMIT.as_millis() {
+    2 => "./coeffs/coeffs_002ms_new.rs",
+    8 => "./coeffs/coeffs_008ms_new.rs",
+    32 => "./coeffs/coeffs_032ms_new.rs",
+    _ => unreachable!(),
+};
+pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
+    2 => include!("../../coeffs/coeffs_002ms_new.rs"),
+    8 => include!("../../coeffs/coeffs_008ms_new.rs"),
+    32 => include!("../../coeffs/coeffs_032ms_new.rs"),
+    _ => unreachable!(),
+});
+pub static OLD_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
+    2 => include!("../../coeffs/coeffs_002ms_old.rs"),
+    8 => include!("../../coeffs/coeffs_008ms_old.rs"),
+    32 => include!("../../coeffs/coeffs_032ms_old.rs"),
+    _ => unreachable!(),
+});
 
 static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
     let mut res = [usize::MAX; 1 << (2 * STENCIL_SIZE)];
