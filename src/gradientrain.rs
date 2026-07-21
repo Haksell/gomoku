@@ -25,7 +25,7 @@ const CT_FACTOR: f64 = 2.; // TODO: remove
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 
-const LEARNING_RATE: f64 = 1. / 32.;
+const LEARNING_RATE: f64 = 1. / 64.;
 
 const GAMES_PER_EPOCH: usize = 8;
 const EPOCHS_PER_SAVE: u32 = 5;
