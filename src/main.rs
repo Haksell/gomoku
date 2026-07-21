@@ -14,7 +14,7 @@ use rayon::ThreadPoolBuilder;
 use std::{thread::available_parallelism, time::Duration};
 
 // TODO: flag with default value of 500ms
-const TIME_LIMIT: Duration = Duration::from_millis(8);
+const TIME_LIMIT: Duration = Duration::from_millis(32);
 
 #[derive(Debug, Parser)]
 struct Args {

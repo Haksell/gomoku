@@ -115,7 +115,7 @@ fn alpha_beta_pruning_helper(
         game.undo_last_move();
 
         best_h = max(best_h, h);
-        if depth == 0 && h == best_h {
+        if depth == 0 && h == best_h && t0.elapsed() < TIME_LIMIT {
             *best_move = pos;
         }
         if best_h > max_h {
