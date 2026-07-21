@@ -1,5 +1,5 @@
 use crate::{
-    bots::idabp::idabp,
+    bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
@@ -45,11 +45,11 @@ pub fn run() {
                 }
 
                 let player1 = Player::Bot {
-                    bot: idabp,
+                    bot: idabp_new,
                     heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs1) },
                 };
                 let player2 = Player::Bot {
-                    bot: idabp,
+                    bot: idabp_new,
                     heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs2) },
                 };
 
@@ -118,11 +118,11 @@ fn play_pair(old_player: &Player, new_player: &Player) -> u32 {
 
 fn stats(best_coeffs: Box<[i64]>, pair_of_games: u32) {
     let new_player = Player::Bot {
-        bot: idabp,
+        bot: idabp_new,
         heuristic: Heuristic { fun: coeffistic, coeffs: Some(best_coeffs) },
     };
     let initial_player = Player::Bot {
-        bot: idabp,
+        bot: idabp_new,
         heuristic: Heuristic { fun: coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) },
     };
 

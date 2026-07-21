@@ -1,5 +1,5 @@
 use crate::{
-    bots::idabp::idabp,
+    bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
@@ -32,7 +32,7 @@ impl Genome {
 
     fn as_player(&self) -> Player {
         Player::Bot {
-            bot: idabp,
+            bot: idabp_new,
             heuristic: Heuristic {
                 fun: coeffistic,
                 coeffs: Some(Box::new(self.genes.map(|x| x as i64))),

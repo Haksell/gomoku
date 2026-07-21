@@ -1,5 +1,6 @@
 pub mod alpha_beta_pruning;
-pub mod idabp;
+pub mod idabp_new;
+pub mod idabp_old;
 pub mod minimax;
 pub mod negamax;
 pub mod random_mover;
@@ -18,7 +19,8 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
         "minimax" => Ok(minimax::minimax),
         "negamax" => Ok(negamax::negamax),
         "abp" | "alpha_beta_pruning" => Ok(alpha_beta_pruning::alpha_beta_pruning),
-        "idabp" => Ok(idabp::idabp),
+        "old" => Ok(idabp_old::idabp_old),
+        "new" => Ok(idabp_new::idabp_new),
         _ => Err(format!("Invalid bot: `{s}`")),
     }
 }

@@ -1,5 +1,5 @@
 use crate::{
-    bots::idabp::idabp,
+    bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
@@ -176,7 +176,7 @@ fn stats(best_coeffs: Box<[i64]>, games: u32) {
 }
 
 fn player_from_coeffs(coeffs: Box<[i64]>) -> Player {
-    Player::Bot { bot: idabp, heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs) } }
+    Player::Bot { bot: idabp_new, heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs) } }
 }
 
 #[cfg(test)]

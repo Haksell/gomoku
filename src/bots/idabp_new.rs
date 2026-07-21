@@ -20,7 +20,7 @@ type CacheKey = u128;
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
 type Cache = fxhash::FxHashMap<CacheKey, i64>;
 
-pub fn idabp(game: &Game, heuristic: &Heuristic) -> Position {
+pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
