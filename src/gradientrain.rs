@@ -26,7 +26,7 @@ const MAX_ADDITIVE_FACTOR: f64 = 10.;
 const LEARNING_RATE: f64 = 1. / 128.;
 
 const GAMES_PER_EPOCH: usize = 8;
-const EPOCHS_PER_SAVE: u32 = 10;
+const EPOCHS_PER_SAVE: u32 = 25;
 const EPOCHS_PER_STATS: u32 = 250;
 
 struct Params {
