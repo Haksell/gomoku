@@ -1,5 +1,4 @@
 use crate::{
-    bots::MAX_DEPTH,
     game::{
         Game,
         board::{BOARD_CENTER, Position},
@@ -10,14 +9,16 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
+const MAX_DEPTH: usize = 4;
+
+pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
 
     let maximizing_player = game.current_color;
     let mut game = game.clone();
-    game.get_legal_moves(Some(2), true)
+    game.get_legal_moves(Some(2))
         .into_iter()
         .max_by_key(|&pos| {
             game.do_move(pos);
@@ -30,7 +31,7 @@ pub fn minimax(game: &Game, heuristic: Heuristic) -> Position {
 
 fn minimax_helper(
     game: &mut Game,
-    heuristic: Heuristic,
+    heuristic: &Heuristic,
     maximizing_player: PlayerColor,
     depth: usize,
 ) -> i64 {
@@ -38,8 +39,8 @@ fn minimax_helper(
         GameState::Playing(_) => {
             if depth == MAX_DEPTH {
                 return match maximizing_player {
-                    PlayerColor::Black => heuristic(game),
-                    PlayerColor::White => -heuristic(game),
+                    PlayerColor::Black => (heuristic.fun)(game, heuristic.coeffs.as_ref()),
+                    PlayerColor::White => -(heuristic.fun)(game, heuristic.coeffs.as_ref()),
                 };
             }
         }
@@ -53,13 +54,13 @@ fn minimax_helper(
         }
     }
 
-    let close_moves = game.get_legal_moves(Some(2), false);
+    let close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
 
     let is_maximizing_player = game.current_color == maximizing_player;
     let initial_h = if is_maximizing_player { i64::MIN } else { i64::MAX };
 
-    game.get_legal_moves(Some(2), false).into_iter().fold(initial_h, |best_h, pos| {
+    close_moves.into_iter().fold(initial_h, |best_h, pos| {
         game.do_move(pos);
         let h = minimax_helper(game, heuristic, maximizing_player, depth + 1);
         game.undo_last_move();

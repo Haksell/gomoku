@@ -1,22 +1,27 @@
 use crate::{
-    bots::{
-        Bot, idabp_new::idabp_new, idabp_old::idabp_old, parse_bot, random_mover::random_mover,
-    },
-    heuristics::{Heuristic, new::new, old::old, parse_heuristic, zero::zero},
+    bots::{Bot, idabp::idabp, parse_bot, random_mover::random_mover},
+    heuristics::{Heuristic, parse_heuristic},
 };
 use itertools::Itertools as _;
 use std::{ops::Not, ptr::fn_addr_eq};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum Player {
     Human,
     Bot { bot: Bot, heuristic: Heuristic },
 }
 
 impl Player {
-    pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: zero };
-    pub const OLD: Self = Self::Bot { bot: idabp_old, heuristic: old };
-    pub const NEW: Self = Self::Bot { bot: idabp_new, heuristic: new };
+    pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: Heuristic::ZERO };
+    pub const MANUAL: Self = Self::Bot { bot: idabp, heuristic: Heuristic::MANUAL };
+
+    fn new() -> Self {
+        Self::Bot { bot: idabp, heuristic: Heuristic::new() }
+    }
+
+    fn old() -> Self {
+        Self::Bot { bot: idabp, heuristic: Heuristic::old() }
+    }
 
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
@@ -31,9 +36,19 @@ impl PartialEq for Player {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (
-                Self::Bot { bot: l_bot, heuristic: l_heuristic },
-                Self::Bot { bot: r_bot, heuristic: r_heuristic },
-            ) => fn_addr_eq(*l_bot, *r_bot) && fn_addr_eq(*l_heuristic, *r_heuristic),
+                Self::Bot {
+                    bot: l_bot,
+                    heuristic: Heuristic { fun: l_heuristic, coeffs: l_coeffs },
+                },
+                Self::Bot {
+                    bot: r_bot,
+                    heuristic: Heuristic { fun: r_heuristic, coeffs: r_coeffs },
+                },
+            ) => {
+                fn_addr_eq(*l_bot, *r_bot)
+                    && fn_addr_eq(*l_heuristic, *r_heuristic)
+                    && l_coeffs == r_coeffs
+            }
             _ => core::mem::discriminant(self) == core::mem::discriminant(other),
         }
     }
@@ -44,9 +59,10 @@ impl From<&str> for Player {
     fn from(v: &str) -> Self {
         match v {
             "human" => Self::Human,
-            "old" => Self::OLD,
-            "new" => Self::NEW,
             "random" => Self::RANDOM,
+            "manual" => Self::MANUAL,
+            "old" => Self::old(),
+            "new" => Self::new(),
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

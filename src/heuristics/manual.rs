@@ -4,12 +4,13 @@ use crate::{
     game::{
         Game,
         board::{Board, Position},
-        lines::{COLUMNS, DOWNWARD_DIAGONALS, ROWS, UPWARD_DIAGONALS},
+        lines::LINES,
     },
+    heuristics::Coeffs,
     player::PlayerColor,
 };
 
-pub fn old(game: &Game) -> i64 {
+pub fn manual(game: &Game, _: Option<&Coeffs>) -> i64 {
     let mut black_combos = [[0; 3]; 10];
     let mut white_combos = [[0; 3]; 10];
     let mut black_open_xx_x = 0;
@@ -29,56 +30,28 @@ pub fn old(game: &Game) -> i64 {
     let mut black_locked_4 = 0;
     let mut white_locked_4 = 0;
 
-    for lines in [ROWS, COLUMNS] {
-        for line in &lines {
-            fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
-            fill_patterns(
-                &game.board,
-                line,
-                &mut black_open_xx_x,
-                &mut white_open_xx_x,
-                &mut black_xx_xx,
-                &mut white_xx_xx,
-                &mut black_x_x_x,
-                &mut white_x_x_x,
-                &mut black_xxx_x,
-                &mut white_xxx_x,
-                &mut black_x__x,
-                &mut white_x__x,
-                &mut black_x_x,
-                &mut white_x_x,
-                &mut black_capture_threats,
-                &mut white_capture_threats,
-                &mut black_locked_4,
-                &mut white_locked_4,
-            );
-        }
-    }
-
-    for lines in [UPWARD_DIAGONALS, DOWNWARD_DIAGONALS] {
-        for line in lines {
-            fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
-            fill_patterns(
-                &game.board,
-                line,
-                &mut black_open_xx_x,
-                &mut white_open_xx_x,
-                &mut black_xx_xx,
-                &mut white_xx_xx,
-                &mut black_x_x_x,
-                &mut white_x_x_x,
-                &mut black_xxx_x,
-                &mut white_xxx_x,
-                &mut black_x__x,
-                &mut white_x__x,
-                &mut black_x_x,
-                &mut white_x_x,
-                &mut black_capture_threats,
-                &mut white_capture_threats,
-                &mut black_locked_4,
-                &mut white_locked_4,
-            );
-        }
+    for line in LINES {
+        fill_combos(&game.board, line, &mut black_combos, &mut white_combos);
+        fill_patterns(
+            &game.board,
+            line,
+            &mut black_open_xx_x,
+            &mut white_open_xx_x,
+            &mut black_xx_xx,
+            &mut white_xx_xx,
+            &mut black_x_x_x,
+            &mut white_x_x_x,
+            &mut black_xxx_x,
+            &mut white_xxx_x,
+            &mut black_x__x,
+            &mut white_x__x,
+            &mut black_x_x,
+            &mut white_x_x,
+            &mut black_capture_threats,
+            &mut white_capture_threats,
+            &mut black_locked_4,
+            &mut white_locked_4,
+        );
     }
 
     let mut h = 0;

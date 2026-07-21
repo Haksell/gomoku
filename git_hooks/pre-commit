@@ -2,10 +2,14 @@
 
 # Activate with the following command: make setup_git_hooks
 
+set -e
+
 make test
 
-sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > /tmp/old.rs
-diff /tmp/old.rs src/heuristics/old.rs
+diff coeffs/new.rs coeffs/old.rs
 
-sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > /tmp/idabp_old.rs
-diff /tmp/idabp_old.rs src/bots/idabp_old.rs
+# sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > /tmp/old.rs
+# diff /tmp/old.rs src/heuristics/old.rs
+
+# sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > /tmp/idabp_old.rs
+# diff /tmp/idabp_old.rs src/bots/idabp_old.rs

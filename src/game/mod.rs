@@ -7,13 +7,13 @@ pub mod state;
 use crate::{
     Player,
     game::{
-        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER, SPIRALLING_POSITIONS},
+        board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
-use nannou::rand::{Rng as _, seq::SliceRandom as _, thread_rng};
+use nannou::rand::{Rng as _, thread_rng};
 
 const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
@@ -38,7 +38,7 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(black_player: Player, white_player: Player) -> Self {
+    pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
@@ -46,8 +46,8 @@ impl Game {
             current_color: PlayerColor::Black,
             black_captures: 0,
             white_captures: 0,
-            black_player,
-            white_player,
+            black_player: black_player.clone(),
+            white_player: white_player.clone(),
             ply: 0,
             moves: Vec::with_capacity(MAX_POSSIBLE_MOVES),
             captures: Vec::with_capacity(MAX_POSSIBLE_CAPTURES),
@@ -131,7 +131,7 @@ impl Game {
 
         while self.state.is_playing() {
             let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
-            let pos = bot(self, *heuristic);
+            let pos = bot(self, heuristic);
             self.do_move(pos);
         }
     }
@@ -165,7 +165,7 @@ impl Game {
         }
     }
 
-    pub fn get_legal_moves(&self, max_dist: Option<usize>, shuffle: bool) -> Vec<Position> {
+    pub fn get_legal_moves(&self, max_dist: Option<usize>) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
         if let GameState::Playing(forced_moves) = &self.state
@@ -176,18 +176,15 @@ impl Game {
 
         // TODO: preallocate with number of close moves (or forced moves)
         let mut legal_moves = Vec::new();
-        for (x, y) in SPIRALLING_POSITIONS {
-            if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                && self.board[y][x].is_none()
-                && !self.creates_double_three((x, y))
-            {
-                legal_moves.push((x, y));
+        for y in 0..BOARD_SIZE {
+            for x in 0..BOARD_SIZE {
+                if (max_dist.is_none() || self.close_moves[y][x] > 0)
+                    && self.board[y][x].is_none()
+                    && !self.creates_double_three((x, y))
+                {
+                    legal_moves.push((x, y));
+                }
             }
-        }
-
-        if shuffle {
-            let mut rng = thread_rng();
-            legal_moves.shuffle(&mut rng);
         }
 
         legal_moves
@@ -227,7 +224,7 @@ mod tests {
 
     #[test]
     fn board_size() {
-        assert!(BOARD_SIZE % 2 == 1);
+        assert_eq!(BOARD_SIZE % 2, 1);
         assert!(BOARD_SIZE >= 3);
     }
 
@@ -235,13 +232,13 @@ mod tests {
     #[test]
     fn test_undo_last_move() {
         for _ in 0..10 {
-            let mut game = Game::new(Player::RANDOM, Player::RANDOM);
+            let mut game = Game::new(&Player::RANDOM, &Player::RANDOM);
             let mut game_states = Vec::new();
 
             while game.state.is_playing() {
                 game_states.push(game.clone());
                 let Player::Bot { bot, heuristic } = game.current_player() else { unreachable!() };
-                let pos = bot(&game, *heuristic);
+                let pos = bot(&game, heuristic);
                 game.do_move(pos);
             }
 

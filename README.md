@@ -6,14 +6,18 @@
 
 - dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - bitboard: min of 4 rotations, 2 flips, and white=-black
+- simplify coeffistic and training:
+  - put unique coeffs before stencil coeffs to simplify indexing
+  - create proper `Coeffs` type instead of jumbled array
+- improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
+- update double threes in `do_move` and `undo_move`
+- dynamic heuristic update on `do_move` (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
 - unit test of rules
 - compute during human time (flag)
-- iterative alpha-beta pruning to always return a move in less than 1s
-- arena with elo ranking
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
-- feature nannou: don't compile the lib if running headless arena
+- feature nannou: don't compile the lib if running headless
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
@@ -25,6 +29,27 @@
 - futility pruning
 - more depth -> smaller radius
 - better multithreading (rayon -> manual pool?)
+- include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
+- `mod bots` -> `mod search`
+- different heuristics at different depths?
+
+### self-improving heuristic
+
+- on calcule l'heuristique a depth 1/2
+- on fait l'alpha-beta pruning a depth 3/4 (il faut la meme parite qu'a la premiere etape pour que ca soit biaise pour le meme joueur)
+- on compare
+- si l'heuristique a depth 3/4 est plus grande on incremente la valeur des patterns a depth 1/2, sinon on decremente
+
+### patterns with forbidden moves
+
+Il faudrait 6 types de cases :
+
+- noir
+- blanc
+- vide jouable par les deux
+- vide jouable par les noirs
+- vide jouable par les blancs
+- vide jouable par personne
 
 ### design
 
@@ -51,11 +76,6 @@
   - try distance to edges?
   - try distance to corners?
 
-### flopped heuristics
-
-- locked 3: `wbbbw`
-- locked 3 of 4: `wbbb.w` | `wbb.bw` | `wb.bbw` | `w.bbbw`
-
 ### algorithms
 
 - [x] Random
@@ -70,7 +90,7 @@
 - [ ] Null Move Pruning
 - [ ] NegaScout
 - [ ] MTD(f)
-- [ ] SSS*
+- [ ] SSS\*
 - [ ] MCTS
 - [ ] MCTS solver for endgame (different concept than MCTS)
 - [ ] ƎUИИ
@@ -79,15 +99,15 @@
 ### bonus ideas
 
 - [x] bot vs bot
-- [ ] bot arena
 - [ ] alternate start rules (swap, swap2...)
 - [ ] variable board size (clap arg?)
 - [ ] gomoku vs renju rules
-- [ ] cancel move
+- [ ] cancel move:
+  - [ ] left-right keys to rewind the game like on lichess
+  - [ ] backspace to reset the game to last human move
 - [ ] ratatui version
 - [ ] mobile version
 - [ ] web version
-- [ ] board size
 
 ## subject
 
@@ -108,10 +128,10 @@
 - [x] Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly. (no `unwrap`...)
 - [x] You have to provide a Makefile which must produce your program. It must not relink.
 - [x] Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
-- [ ] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
+- [x] If your AI takes more than half a second (in average) to find a move, you will not validate the project.
 - [ ] You will not get all the points if your implementation wins too slowly (in too many moves).
 - [ ] You will not get all the points if your implementation has low search depth.
-- [ ] You will not get all the points if your implementation has a naive implementation.
+- [x] You will not get all the points if your implementation has a naive implementation.
 
 ### mandatory part
 
@@ -119,7 +139,7 @@
 - [ ] Human vs AI. The goal here is that the program wins the game, without you letting it win. It must be able to adapt its strategy to the player's moves.
 - [ ] Human vs Human, with a move suggestion feature.
 - [x] You have to use a Minimax algorithm, or a variant.
-- [ ] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
+- [x] You need an efficient heuristic function to evaluate the value of a terminal node in your tree.
 - [x] You must also provide a usable graphical interface to allow one to actually play Gomoku.
 - [ ] Implement some sort of debugging process that lets you examine the reasoning process of your AI while it's running.
 - [ ] You have to display somewhere in your user interface a timer that counts how much time your AI takes to find its next move.
@@ -128,10 +148,13 @@
 
 - ctrl+f `todo`
 - ctrl+f `unimplemented`
-- `rm acoph`
-- src/heuristics/old.rs + src/heuristics/new.rs -> src/heuristics/heuristic.rs
-- if some lib is not used seriously (e.g. itertools), remove the dependency
-- avoid panics and asserts (eprintln + exit(1 | 2))
+- remove old/new files
+- if some lib is not used seriously (e.g. `itertools` or `indicatif`), remove the dependency
+- avoid `panic`s and `assert`s (`eprintln` + `exit(1 | 2)`)
+
+## after push
+
+- remove useless Makefile rules
 
 ## evaluation
 

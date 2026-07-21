@@ -7,9 +7,9 @@ edition = "2024"
 clap = { version = "4.6", features = ["derive"] }
 fxhash = "0.2"
 itertools = "0.15"
-nannou = { version = "0.19", default-features = false }
-nannou_egui = { version = "0.19", default-features = false }
+nannou = { version = "0.19", default-features = false, features = ["notosans"] }
 rayon = "1.12"
+indicatif = { version = "0.18", features = ["rayon"] }
 
 [lints.clippy]
 # warn all lints by default
@@ -43,22 +43,28 @@ expect_used = "allow"
 float_arithmetic = "allow"
 implicit_return = "allow"
 indexing_slicing = "allow"
+inline_modules = "allow"
+inline_trait_bounds = "allow"
 integer_division = "allow"
 integer_division_remainder_used = "allow"
 iter_over_hash_type = "allow"
+map_with_unused_argument_over_ranges = "allow"
 min_ident_chars = "allow"
 missing_assert_message = "allow"
 missing_docs_in_private_items = "allow"
 missing_trait_methods = "allow"
 mod_module_files = "allow"
+modulo_arithmetic = "allow"
 module_name_repetitions = "allow"
 multiple_crate_versions = "allow"
+needless_range_loop = "allow"
 non_ascii_literal = "allow"
 option_if_let_else = "allow"
 panic = "allow"
 pattern_type_mismatch = "allow"
 print_stderr = "allow"
 print_stdout = "allow"
+question_mark_used = "allow"
 redundant_test_prefix = "allow"
 shadow_reuse = "allow"
 shadow_same = "allow"

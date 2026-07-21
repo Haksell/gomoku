@@ -1,5 +1,5 @@
 NAME := gomoku
-SYMLINK := Gomoku
+BIN := Gomoku
 
 .PHONY: all test fmt lint clean fclean re loc new_to_old setup_git_hooks flamegraph
 
@@ -7,15 +7,16 @@ SYMLINK := Gomoku
 
 all:
 	cargo build --release
-	ln -sf target/release/$(NAME) $(SYMLINK)
+	cp target/release/$(NAME) $(BIN)
 
 clean:
 	cargo clean
+	rm -rf .venv
 	rm -f perf.data*
 	rm -f *.svg
 
 fclean: clean
-	rm -f $(SYMLINK)
+	rm -f $(BIN)
 
 re: fclean all
 
@@ -33,8 +34,9 @@ loc:
 	@find src -name '*.rs' | sort | xargs wc -l
 
 new_to_old:
-	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
-	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
+	cp coeffs/new.rs coeffs/old.rs
+# 	sed -e 's/pub fn new/pub fn old/g' < src/heuristics/new.rs > src/heuristics/old.rs
+# 	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
 
 setup_git_hooks:
 	@rm -rf .git/hooks
@@ -43,4 +45,4 @@ setup_git_hooks:
 # TODO: with rayon
 flamegraph:
 	@CARGO_PROFILE_RELEASE_DEBUG=true RUSTFLAGS="-Clink-arg=-Wl,--no-rosegment" \
-		cargo flamegraph -- new new -g 12
+		cargo flamegraph -- coeffistic coeffistic -g 20
