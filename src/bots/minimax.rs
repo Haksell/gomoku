@@ -9,7 +9,7 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-const MAX_DEPTH: usize = 4;
+const MAX_DEPTH: u32 = 4;
 
 pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
@@ -33,7 +33,7 @@ fn minimax_helper(
     game: &mut Game,
     heuristic: &Heuristic,
     maximizing_player: PlayerColor,
-    depth: usize,
+    depth: u32,
 ) -> i64 {
     match game.state {
         GameState::Playing(_) => {

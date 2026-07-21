@@ -8,7 +8,7 @@ use crate::{
 };
 use std::cmp::max;
 
-const MAX_DEPTH: usize = 4;
+const MAX_DEPTH: u32 = 4;
 
 pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
@@ -24,7 +24,7 @@ pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic) -> Position {
 fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
-    depth: usize,
+    depth: u32,
     mut min_h: i64,
     max_h: i64,
     best_move: &mut Position,

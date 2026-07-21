@@ -12,9 +12,8 @@ use crate::{
 };
 use std::{cmp::max, time::Instant};
 
-const BITS_PER_MOVE: u64 = u64::BITS as u64 - (BOARD_SIZE * BOARD_SIZE + 1).leading_zeros() as u64;
+const BITS_PER_MOVE: u32 = u32::BITS - ((BOARD_SIZE as u32).pow(2) + 1).leading_zeros();
 
-// TODO: u128 -> u64 if possible: (MAX_DEPTH+1) & BITS_PER_MOVE <= 64
 type CacheKey = u128;
 
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
@@ -68,8 +67,8 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
 fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
-    depth: usize,
-    max_depth: usize,
+    depth: u32,
+    max_depth: u32,
     mut min_h: i64,
     max_h: i64,
     best_move: &mut Position,
@@ -93,7 +92,7 @@ fn alpha_beta_pruning_helper(
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
-            cache.get(&update_cache_key(cache_key, pos)).unwrap_or(&default_h)
+            cache.get(&update_cache_key(cache_key, depth, pos)).unwrap_or(&default_h)
         });
     }
 
@@ -110,7 +109,7 @@ fn alpha_beta_pruning_helper(
             -min_h,
             best_move,
             cache,
-            update_cache_key(cache_key, pos), // TODO: NO ALREADY DONE in sort
+            update_cache_key(cache_key, depth, pos), // TODO: NO ALREADY DONE in sort
             t0,
         );
         game.undo_last_move();
@@ -128,6 +127,8 @@ fn alpha_beta_pruning_helper(
     best_h
 }
 
-const fn update_cache_key(cache_key: CacheKey, (x, y): Position) -> CacheKey {
-    (cache_key << BITS_PER_MOVE) | (y * BOARD_SIZE + x + 1) as CacheKey
+const fn update_cache_key(cache_key: CacheKey, depth: u32, (x, y): Position) -> CacheKey {
+    let shift = depth * BITS_PER_MOVE;
+    let bits_to_insert = (y * BOARD_SIZE + x + 1) as CacheKey;
+    cache_key | (bits_to_insert << shift)
 }

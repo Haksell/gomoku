@@ -26,7 +26,7 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
 }
 
 /// Maximizes for the current player, not necessarily black.
-fn leaf_value(game: &Game, heuristic: &Heuristic, depth: usize, max_depth: usize) -> Option<i64> {
+fn leaf_value(game: &Game, heuristic: &Heuristic, depth: u32, max_depth: u32) -> Option<i64> {
     let leaf_value = match game.state {
         GameState::Playing(_) => {
             (depth == max_depth).then(|| (heuristic.fun)(game, heuristic.coeffs.as_ref()))
