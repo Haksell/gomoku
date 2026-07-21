@@ -36,13 +36,10 @@ pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
-            0,
-            max_depth,
-            -i64::MAX,
-            i64::MAX,
+            (0, max_depth),
+            (-i64::MAX, i64::MAX),
+            (&mut cache, 0),
             &mut best_move_at_depth,
-            &mut cache,
-            0,
             t0,
         );
 
@@ -63,17 +60,13 @@ pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
     best_move
 }
 
-#[expect(clippy::too_many_arguments)]
 fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
-    depth: u32,
-    max_depth: u32,
-    mut min_h: i64,
-    max_h: i64,
+    (depth, max_depth): (u32, u32),
+    (mut min_h, max_h): (i64, i64),
+    (cache, key): (&mut Cache, CacheKey),
     best_move: &mut Position,
-    cache: &mut Cache,
-    cache_key: CacheKey,
     t0: Instant,
 ) -> i64 {
     // Only check time limit at low depth to avoid useless syscalls
@@ -82,7 +75,7 @@ fn alpha_beta_pruning_helper(
     }
 
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
-        cache.insert(cache_key, leaf_value);
+        cache.insert(key, leaf_value);
         return leaf_value;
     }
 
@@ -92,24 +85,22 @@ fn alpha_beta_pruning_helper(
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
-            cache.get(&update_cache_key(cache_key, depth, pos)).unwrap_or(&default_h)
+            cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h)
         });
     }
 
     let mut best_h = i64::MIN;
 
     for pos in close_moves {
+        let new_cache_key = update_cache_key(key, depth, pos); // TODO: NO ALREADY DONE in sort
         game.do_move(pos);
         let h = -alpha_beta_pruning_helper(
             game,
             heuristic,
-            depth + 1,
-            max_depth,
-            -max_h,
-            -min_h,
+            (depth + 1, max_depth),
+            (-max_h, -min_h),
+            (cache, new_cache_key),
             best_move,
-            cache,
-            update_cache_key(cache_key, depth, pos), // TODO: NO ALREADY DONE in sort
             t0,
         );
         game.undo_last_move();
@@ -127,8 +118,8 @@ fn alpha_beta_pruning_helper(
     best_h
 }
 
-const fn update_cache_key(cache_key: CacheKey, depth: u32, (x, y): Position) -> CacheKey {
+const fn update_cache_key(key: CacheKey, depth: u32, (x, y): Position) -> CacheKey {
     let shift = depth * BITS_PER_MOVE;
     let bits_to_insert = (y * BOARD_SIZE + x + 1) as CacheKey;
-    cache_key | (bits_to_insert << shift)
+    key | (bits_to_insert << shift)
 }
