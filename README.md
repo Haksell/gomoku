@@ -9,7 +9,6 @@
 - simplify coeffistic and training:
   - put unique coeffs before stencil coeffs to simplify indexing
   - create proper `Coeffs` type instead of jumbled array
-- improve idabp by updating cache keys (TODO comment in `idabp.rs` goes more in depth)
 - update double threes in `do_move` and `undo_move`
 - dynamic heuristic update on `do_move` (each position updates predetermined amount of states BITBOARD)
 - wins by captures or alignment in stats
@@ -22,7 +21,6 @@
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
 - remove most allocations
-- idabp: truncate based on cached heuristic
 - coup force (4 captures...)
 - clock in human vs (human | bot)
 - no depth in leaf_value, if win found in iterative deepening, stop

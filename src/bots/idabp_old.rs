@@ -28,36 +28,28 @@ pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
     let random_move = random_mover(game, heuristic);
     let mut game = game.clone();
     let mut cache = Cache::default();
-    let mut searched_depth = -1;
     let mut best_move = random_move;
 
     for max_depth in 0.. {
-        let mut best_move_at_depth = random_move;
         alpha_beta_pruning_helper(
             &mut game,
             heuristic,
             (0, max_depth),
             (-i64::MAX, i64::MAX),
             (&mut cache, 0),
-            &mut best_move_at_depth,
+            &mut best_move,
             t0,
         );
 
-        // TODO: break if close to time limit (predict time for next depth)
-        if t0.elapsed() > TIME_LIMIT {
-            // TODO: try using best_move_at_depth if possible
-            break;
+        if t0.elapsed() >= TIME_LIMIT {
+            if game.black_player.is_human() || game.white_player.is_human() {
+                println!("IDABP search depth: {}.5", max_depth - 1); // TODO: more precise
+            }
+            return best_move;
         }
-
-        searched_depth = max_depth as i32;
-        best_move = best_move_at_depth;
     }
 
-    if game.black_player.is_human() || game.white_player.is_human() {
-        println!("IDABP search depth: {searched_depth}");
-    }
-
-    best_move
+    unreachable!()
 }
 
 fn alpha_beta_pruning_helper(
@@ -116,6 +108,7 @@ fn alpha_beta_pruning_helper(
         min_h = max(min_h, h);
     }
 
+    cache.insert(key, best_h);
     best_h
 }
 

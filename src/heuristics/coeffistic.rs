@@ -27,19 +27,19 @@ pub const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + N_CAPTURE_COEFFS;
 pub const COEFFS_FILE: &str = match TIME_LIMIT.as_millis() {
     2 => "./coeffs/coeffs_002ms_new.rs",
     8 => "./coeffs/coeffs_008ms_new.rs",
-    32 => "./coeffs/coeffs_032ms_new.rs",
+    32.. => "./coeffs/coeffs_032ms_new.rs",
     _ => unreachable!(),
 };
 pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
     2 => include!("../../coeffs/coeffs_002ms_new.rs"),
     8 => include!("../../coeffs/coeffs_008ms_new.rs"),
-    32 => include!("../../coeffs/coeffs_032ms_new.rs"),
+    32.. => include!("../../coeffs/coeffs_032ms_new.rs"),
     _ => unreachable!(),
 });
 pub static OLD_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
     2 => include!("../../coeffs/coeffs_002ms_old.rs"),
     8 => include!("../../coeffs/coeffs_008ms_old.rs"),
-    32 => include!("../../coeffs/coeffs_032ms_old.rs"),
+    32.. => include!("../../coeffs/coeffs_032ms_old.rs"),
     _ => unreachable!(),
 });
 

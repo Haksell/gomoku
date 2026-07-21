@@ -35,7 +35,8 @@ pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
         "zero" => Ok(Heuristic::ZERO),
         "capturophile" => Ok(Heuristic::CAPTUROPHILE),
         "manual" => Ok(Heuristic::MANUAL),
-        "coeffistic" => Ok(Heuristic::new()),
+        "old" => Ok(Heuristic::old()),
+        "new" => Ok(Heuristic::new()),
         _ => Err(format!("Invalid heuristic: `{s}`")),
     }
 }
