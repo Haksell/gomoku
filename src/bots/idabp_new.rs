@@ -70,7 +70,7 @@ fn alpha_beta_pruning_helper(
     t0: Instant,
 ) -> i64 {
     // Only check time limit at low depth to avoid useless syscalls
-    if depth <= 3 && t0.elapsed() > TIME_LIMIT {
+    if depth <= 3 && t0.elapsed() >= TIME_LIMIT {
         return min_h;
     }
 
@@ -92,7 +92,8 @@ fn alpha_beta_pruning_helper(
     let mut best_h = i64::MIN;
 
     for pos in close_moves {
-        let new_cache_key = update_cache_key(key, depth, pos); // TODO: NO ALREADY DONE in sort
+        let new_cache_key = update_cache_key(key, depth, pos); // TODO: NO (already done in sort)
+
         game.do_move(pos);
         let h = -alpha_beta_pruning_helper(
             game,
