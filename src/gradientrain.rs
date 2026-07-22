@@ -24,9 +24,9 @@ const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 
 const LEARNING_RATE: f64 = 1. / 64.;
-const MUTATION_PROBABILITY: f64 = 1. / 8.;
+const MUTATION_PROBABILITY: f64 = 1. / 4.;
 
-const GAMES_PER_EPOCH: usize = 8;
+const GAMES_PER_EPOCH: usize = 4;
 const EPOCHS_PER_SAVE: u32 = 10;
 const EPOCHS_PER_STATS: u32 = 250;
 
