@@ -4,6 +4,7 @@
 
 ### misc
 
+- walls and forbidden moves in patterns
 - neural heuristic
 - bitboard: min of 4 rotations, 2 flips, and white=-black
 - simplify coeffistic and training:
@@ -39,14 +40,14 @@
 
 ### patterns with forbidden moves
 
-Il faudrait 6 types de cases :
-
+Il faudrait 7 types de cases :
 - noir
 - blanc
 - vide jouable par les deux
 - vide jouable par les noirs
 - vide jouable par les blancs
 - vide jouable par personne
+- mur
 
 ### design
 
