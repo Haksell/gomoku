@@ -4,6 +4,7 @@
 
 ### misc
 
+- neural heuristic
 - bitboard: min of 4 rotations, 2 flips, and white=-black
 - simplify coeffistic and training:
   - put unique coeffs before stencil coeffs to simplify indexing
