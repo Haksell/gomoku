@@ -27,22 +27,22 @@ const LEARNING_RATE: f64 = 1. / 64.;
 const MUTATION_PROBABILITY: f64 = 1. / 8.;
 
 const GAMES_PER_EPOCH: usize = 8;
-const EPOCHS_PER_SAVE: u32 = 25;
+const EPOCHS_PER_SAVE: u32 = 10;
 const EPOCHS_PER_STATS: u32 = 250;
 
 struct Params {
-    coeffs: Vec<f64>,
+    best_coeffs: Vec<f64>,
     epoch: u32,
 }
 
 pub fn run() {
     let params = Arc::new(Mutex::new(Params {
-        coeffs: INITIAL_COEFFS.iter().map(|c| *c as f64).collect_vec(),
+        best_coeffs: INITIAL_COEFFS.iter().map(|c| *c as f64).collect_vec(),
         epoch: 0,
     }));
 
     rayon::iter::repeat(()).for_each(|()| {
-        let best_coeffs = params.lock().unwrap().coeffs.clone();
+        let best_coeffs = params.lock().unwrap().best_coeffs.clone();
 
         let grads = (0..GAMES_PER_EPOCH / 4)
             .map(|_| {
@@ -80,13 +80,13 @@ pub fn run() {
             let mut params = params.lock().unwrap();
             params.epoch += 1;
             for i in 0..N_MUTATIONS {
-                update_coeffs(&mut params.coeffs, i, LEARNING_RATE * grads[i]);
+                update_coeffs(&mut params.best_coeffs, i, LEARNING_RATE * grads[i]);
             }
             params.epoch
         };
 
         if epoch.is_multiple_of(EPOCHS_PER_SAVE) {
-            let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs);
+            let rounded_coeffs = round_coeffs(&params.lock().unwrap().best_coeffs);
             match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
                 Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
@@ -94,7 +94,7 @@ pub fn run() {
         }
 
         if epoch.is_multiple_of(EPOCHS_PER_STATS) {
-            let rounded_coeffs = round_coeffs(&params.lock().unwrap().coeffs).into();
+            let rounded_coeffs = round_coeffs(&params.lock().unwrap().best_coeffs).into();
             stats(rounded_coeffs, 100);
         }
     });

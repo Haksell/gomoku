@@ -5,7 +5,6 @@ mod genetrain; // TODO: remove?
 mod gradientrain;
 mod gui;
 mod heuristics;
-mod incdectrain;
 mod player;
 
 use crate::player::Player;
@@ -14,7 +13,7 @@ use rayon::ThreadPoolBuilder;
 use std::{thread::available_parallelism, time::Duration};
 
 // TODO: flag with default value of 500ms
-const TIME_LIMIT: Duration = Duration::from_millis(2);
+const TIME_LIMIT: Duration = Duration::from_millis(8);
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -27,8 +26,6 @@ struct Args {
     #[arg(long)]
     genetrain: bool,
     #[arg(long)]
-    incdectrain: bool,
-    #[arg(long)]
     gradientrain: bool,
 }
 
@@ -39,10 +36,6 @@ fn main() {
     // TODO: --train flag or put them in a bin
     if args.gradientrain {
         gradientrain::run();
-        return;
-    }
-    if args.incdectrain {
-        incdectrain::run();
         return;
     }
     if args.genetrain {
