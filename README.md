@@ -4,7 +4,6 @@
 
 ### misc
 
-- dynamic heuristic update (each position updates predetermined amount of states BITBOARD)
 - bitboard: min of 4 rotations, 2 flips, and white=-black
 - simplify coeffistic and training:
   - put unique coeffs before stencil coeffs to simplify indexing
@@ -29,7 +28,6 @@
 - better multithreading (rayon -> manual pool?)
 - include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
 - `mod bots` -> `mod search`
-- different heuristics at different depths?
 
 ### self-improving heuristic
 
@@ -152,7 +150,8 @@ Il faudrait 6 types de cases :
 
 ## after push
 
-- remove useless Makefile rules
+- remove useless `Makefile` rules
+- clean this `README.md`
 
 ## evaluation
 
