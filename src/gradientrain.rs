@@ -23,8 +23,8 @@ use std::{
 const MAX_MULTIPLICATIVE_FACTOR: f64 = 0.1;
 const MAX_ADDITIVE_FACTOR: f64 = 10.;
 
-const LEARNING_RATE: f64 = 1. / 32.;
-const MUTATION_PROBABILITY: f64 = 0.041; // not const: 1. / (N_MUTATIONS as f64).sqrt();
+const LEARNING_RATE: f64 = 1. / 64.;
+const MUTATION_PROBABILITY: f64 = 1. / 8.;
 
 const GAMES_PER_EPOCH: usize = 8;
 const EPOCHS_PER_SAVE: u32 = 25;
@@ -190,7 +190,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn games_per_epoch() {
+    fn constants() {
+        assert!(MAX_MULTIPLICATIVE_FACTOR > 0.);
+        assert!(MAX_MULTIPLICATIVE_FACTOR <= 1.);
+        assert!(LEARNING_RATE > 0.);
+        assert!(MUTATION_PROBABILITY > 0.);
+        assert!(MUTATION_PROBABILITY <= 1.);
         assert!(GAMES_PER_EPOCH.is_multiple_of(4));
     }
 }
