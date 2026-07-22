@@ -23,6 +23,7 @@ pub const MAX_THREATS: usize = 4;
 pub const N_CAPTURE_COEFFS: usize = REQUIRED_CAPTURES * (MAX_THREATS + 2);
 pub const N_COEFFS: usize = N_STENCIL_COEFFS + N_CAPTURE_COEFFS;
 pub const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + N_CAPTURE_COEFFS;
+const BUFFER_CAPACITY: usize = 1 << 17; // TODO: compute from STENCIL_SIZE
 
 pub const COEFFS_FILE: &str = match TIME_LIMIT.as_millis() {
     2 => "./coeffs/coeffs_002ms_new.rs",
@@ -142,13 +143,7 @@ pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
         writeln!(buf, "    {num:7}// {comment}")
     }
 
-    const CAPACITY: usize = match STENCIL_SIZE {
-        6 => 1 << 15,
-        7 => 1 << 17,
-        _ => unreachable!(),
-    };
-
-    let mut buf = BufWriter::with_capacity(CAPACITY, Vec::new());
+    let mut buf = BufWriter::with_capacity(BUFFER_CAPACITY, Vec::new());
     writeln!(buf, "vec![")?;
 
     for i in 0..N_STENCIL_COEFFS {
