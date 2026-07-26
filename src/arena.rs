@@ -3,7 +3,7 @@ use crate::{
     player::{Player, PlayerColor},
 };
 use rayon::iter::{IntoParallelIterator as _, ParallelIterator as _};
-use std::sync::Mutex;
+use std::{num::NonZeroUsize, sync::Mutex};
 
 #[derive(Debug, Default, Clone, Copy)]
 struct Stats {
@@ -34,7 +34,7 @@ impl Stats {
     }
 }
 
-pub fn run(black_player: &Player, white_player: &Player, num_games: usize) {
+pub fn run(black_player: &Player, white_player: &Player, num_games: NonZeroUsize) {
     assert!(
         black_player.is_bot() || white_player.is_bot(),
         "`num_games` is reserved for bot vs bot matches."
@@ -42,7 +42,7 @@ pub fn run(black_player: &Player, white_player: &Player, num_games: usize) {
 
     let stats = Mutex::new(Stats::default());
 
-    (1..=num_games / 2).into_par_iter().for_each(|i| {
+    (1..=num_games.get() / 2).into_par_iter().for_each(|i| {
         let mut game = Game::new(black_player, white_player);
         let random_moves = 3 + (i & 1) as u32;
         // TODO: clap args to configure random board (number and distance to center)

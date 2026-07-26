@@ -10,7 +10,7 @@ mod player;
 use crate::player::Player;
 use clap::Parser;
 use rayon::ThreadPoolBuilder;
-use std::{thread::available_parallelism, time::Duration};
+use std::{num::NonZeroUsize, thread::available_parallelism, time::Duration};
 
 // TODO: flag with default value of 500ms
 const TIME_LIMIT: Duration = Duration::from_millis(32);
@@ -19,10 +19,10 @@ const TIME_LIMIT: Duration = Duration::from_millis(32);
 struct Args {
     black_player: Player,
     white_player: Player,
-    #[arg(short('g'), long, default_value_t = 1)] // TODO: clap validate > 0
-    num_games: usize,
-    #[arg(short('t'), long, default_value_t = 1)] // TODO: clap validate > 0
-    num_threads: usize,
+    #[arg(short('g'), long, default_value_t = NonZeroUsize::new(1).unwrap())]
+    num_games: NonZeroUsize,
+    #[arg(short('t'), long, default_value_t = NonZeroUsize::new(1).unwrap())]
+    num_threads: NonZeroUsize,
     #[arg(long)]
     genetrain: bool,
     #[arg(long)]
@@ -43,8 +43,9 @@ fn main() {
         return;
     }
 
-    match args.num_games {
-        0 => panic!("Can't play 0 games."),
+    match args.num_games.get() {
+        // type handled
+        // 0 => panic!("Can't play 0 games."),
         1 => gui::run(),
         n if n.is_multiple_of(4) => {
             arena::run(&args.black_player, &args.white_player, args.num_games);
@@ -53,9 +54,11 @@ fn main() {
     }
 }
 
-fn init_thread_pool(num_threads: usize) {
+fn init_thread_pool(num_threads: NonZeroUsize) {
+    let num_threads = num_threads.get();
     let available_cpus = available_parallelism().unwrap().get();
-    assert!(num_threads > 0, "Can't run with 0 threads.");
+    // type handled
+    // assert!(num_threads > 0, "Can't run with 0 threads.");
     assert!(
         num_threads <= available_cpus,
         "You asked for {num_threads} threads but only {available_cpus} threads are available.",
