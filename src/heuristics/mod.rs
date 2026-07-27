@@ -22,11 +22,11 @@ impl Heuristic {
     pub const MANUAL: Self = Self { fun: manual::manual, coeffs: None };
 
     pub fn new() -> Self {
-        Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.clone()) }
+        Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.get().unwrap().clone()) }
     }
 
     pub fn old() -> Self {
-        Self { fun: coeffistic::coeffistic, coeffs: Some(OLD_COEFFS.clone()) }
+        Self { fun: coeffistic::coeffistic, coeffs: Some(OLD_COEFFS.get().unwrap().clone()) }
     }
 }
 

@@ -7,13 +7,20 @@ mod gui;
 mod heuristics;
 mod player;
 
-use crate::player::Player;
+use crate::{
+    heuristics::coeffistic::{COEFFS_FILE, INITIAL_COEFFS, OLD_COEFFS},
+    player::Player,
+};
 use clap::Parser;
 use rayon::ThreadPoolBuilder;
-use std::{num::NonZeroUsize, thread::available_parallelism, time::Duration};
+use std::{
+    num::{NonZeroU64, NonZeroUsize},
+    sync::OnceLock,
+    thread::available_parallelism,
+    time::Duration,
+};
 
-// TODO: flag with default value of 500ms
-const TIME_LIMIT: Duration = Duration::from_millis(32);
+static TIME_LIMIT: OnceLock<Duration> = OnceLock::new();
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -23,6 +30,8 @@ struct Args {
     num_games: NonZeroUsize,
     #[arg(short('t'), long, default_value_t = NonZeroUsize::new(1).unwrap())]
     num_threads: NonZeroUsize,
+    #[arg(short('l'), long, default_value_t = NonZeroU64::new(500).unwrap())]
+    time_limit_ms: NonZeroU64,
     #[arg(long)]
     genetrain: bool,
     #[arg(long)]
@@ -31,6 +40,8 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+
+    init_time_limit(args.time_limit_ms);
     init_thread_pool(args.num_threads);
 
     // TODO: --train flag or put them in a bin
@@ -51,6 +62,28 @@ fn main() {
             arena::run(&args.black_player, &args.white_player, args.num_games);
         }
         _ => panic!("TODO: good error message pls"), // TODO: warn instead, but run arena anyway
+    }
+}
+
+fn init_time_limit(time_limit_ms: NonZeroU64) {
+    let time_limit_ms = time_limit_ms.get();
+    TIME_LIMIT.set(Duration::from_millis(time_limit_ms)).unwrap();
+    match time_limit_ms {
+        0..=4 => {
+            INITIAL_COEFFS.set(include!("../coeffs/coeffs_002ms_new.rs")).unwrap();
+            OLD_COEFFS.set(include!("../coeffs/coeffs_002ms_old.rs")).unwrap();
+            COEFFS_FILE.set("./coeffs/coeffs_002ms_new.rs").unwrap();
+        }
+        5..=16 => {
+            INITIAL_COEFFS.set(include!("../coeffs/coeffs_008ms_new.rs")).unwrap();
+            OLD_COEFFS.set(include!("../coeffs/coeffs_008ms_old.rs")).unwrap();
+            COEFFS_FILE.set("./coeffs/coeffs_008ms_new.rs").unwrap();
+        }
+        _ => {
+            INITIAL_COEFFS.set(include!("../coeffs/coeffs_032ms_new.rs")).unwrap();
+            OLD_COEFFS.set(include!("../coeffs/coeffs_032ms_old.rs")).unwrap();
+            COEFFS_FILE.set("./coeffs/coeffs_032ms_new.rs").unwrap();
+        }
     }
 }
 

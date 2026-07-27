@@ -1,5 +1,4 @@
 use crate::{
-    TIME_LIMIT,
     game::{
         Game,
         board::{Board, Position},
@@ -11,7 +10,7 @@ use crate::{
 use std::{
     fs::File,
     io::{self, BufWriter, Write as _},
-    sync::LazyLock,
+    sync::OnceLock,
 };
 
 pub type Coeffs = Box<[i64]>;
@@ -25,24 +24,9 @@ pub const N_COEFFS: usize = N_STENCIL_COEFFS + N_CAPTURE_COEFFS;
 pub const N_MUTATIONS: usize = UNIQUE_STENCIL_INDICES + N_CAPTURE_COEFFS;
 const BUFFER_CAPACITY: usize = 1 << 17; // TODO: compute from STENCIL_SIZE
 
-pub const COEFFS_FILE: &str = match TIME_LIMIT.as_millis() {
-    2 => "./coeffs/coeffs_002ms_new.rs",
-    8 => "./coeffs/coeffs_008ms_new.rs",
-    32.. => "./coeffs/coeffs_032ms_new.rs",
-    _ => unreachable!(),
-};
-pub static INITIAL_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
-    2 => include!("../../coeffs/coeffs_002ms_new.rs"),
-    8 => include!("../../coeffs/coeffs_008ms_new.rs"),
-    32.. => include!("../../coeffs/coeffs_032ms_new.rs"),
-    _ => unreachable!(),
-});
-pub static OLD_COEFFS: LazyLock<Coeffs> = LazyLock::new(|| match TIME_LIMIT.as_millis() {
-    2 => include!("../../coeffs/coeffs_002ms_old.rs"),
-    8 => include!("../../coeffs/coeffs_008ms_old.rs"),
-    32.. => include!("../../coeffs/coeffs_032ms_old.rs"),
-    _ => unreachable!(),
-});
+pub static COEFFS_FILE: OnceLock<&str> = OnceLock::new();
+pub static INITIAL_COEFFS: OnceLock<Coeffs> = OnceLock::new();
+pub static OLD_COEFFS: OnceLock<Coeffs> = OnceLock::new();
 
 static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
     let mut res = [usize::MAX; 1 << (2 * STENCIL_SIZE)];
@@ -166,7 +150,7 @@ pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
 
     writeln!(buf, "].into_boxed_slice()")?;
 
-    let mut file = File::create(COEFFS_FILE)?;
+    let mut file = File::create(COEFFS_FILE.get().unwrap())?;
     file.write_all(buf.buffer())
 }
 

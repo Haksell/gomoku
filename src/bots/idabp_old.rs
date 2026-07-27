@@ -24,7 +24,7 @@ pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
         return BOARD_CENTER;
     }
 
-    let t0 = Instant::now();
+    let deadline = Instant::now() + *TIME_LIMIT.get().unwrap();
     let random_move = random_mover(game, heuristic);
     let mut game = game.clone();
     let mut cache = Cache::default();
@@ -38,10 +38,10 @@ pub fn idabp_old(game: &Game, heuristic: &Heuristic) -> Position {
             (-i64::MAX, i64::MAX),
             (&mut cache, 0),
             &mut best_move,
-            t0,
+            deadline,
         );
 
-        if t0.elapsed() >= TIME_LIMIT {
+        if Instant::now() >= deadline {
             if game.black_player.is_human() || game.white_player.is_human() {
                 println!("IDABP search depth: {}.5", max_depth - 1); // TODO: more precise
             }
@@ -59,10 +59,10 @@ fn alpha_beta_pruning_helper(
     (mut min_h, max_h): (i64, i64),
     (cache, key): (&mut Cache, CacheKey),
     best_move: &mut Position,
-    t0: Instant,
+    deadline: Instant,
 ) -> i64 {
     // Only check time limit at low depth to avoid useless syscalls
-    if depth <= 3 && t0.elapsed() >= TIME_LIMIT {
+    if depth <= 3 && Instant::now() >= deadline {
         return 0;
     }
 
@@ -94,12 +94,12 @@ fn alpha_beta_pruning_helper(
             (-max_h, -min_h),
             (cache, new_cache_key),
             best_move,
-            t0,
+            deadline,
         );
         game.undo_last_move();
 
         best_h = max(best_h, h);
-        if depth == 0 && h == best_h && t0.elapsed() < TIME_LIMIT {
+        if depth == 0 && h == best_h && Instant::now() < deadline {
             *best_move = pos;
         }
         if best_h > max_h {

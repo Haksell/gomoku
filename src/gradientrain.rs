@@ -37,7 +37,7 @@ struct Params {
 
 pub fn run() {
     let params = Arc::new(Mutex::new(Params {
-        best_coeffs: INITIAL_COEFFS.iter().map(|c| *c as f64).collect_vec(),
+        best_coeffs: INITIAL_COEFFS.get().unwrap().iter().map(|c| *c as f64).collect_vec(),
         epoch: 0,
     }));
 
@@ -89,7 +89,11 @@ pub fn run() {
             let rounded_coeffs = round_coeffs(&params.lock().unwrap().best_coeffs);
             match write_coeffs(&rounded_coeffs) {
                 Ok(()) => println!("Epoch {epoch} done and saved."),
-                Err(err) => eprintln!("Failed to write coeffs to file {COEFFS_FILE}: `{err}`"),
+                Err(err) => eprintln!(
+                    "Failed to write coeffs to file {}: `{}`",
+                    COEFFS_FILE.get().unwrap(),
+                    err
+                ),
             }
         }
 
@@ -170,7 +174,7 @@ fn stats(best_coeffs: Box<[i64]>, games: u32) {
     assert!(games.is_multiple_of(4));
 
     let new_player = player_from_coeffs(best_coeffs);
-    let initial_player = player_from_coeffs(INITIAL_COEFFS.clone());
+    let initial_player = player_from_coeffs(INITIAL_COEFFS.get().unwrap().clone());
 
     let new_wins: u32 = (0..games / 4).map(|_| play_four_games(&new_player, &initial_player)).sum();
 
