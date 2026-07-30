@@ -21,15 +21,35 @@ impl Heuristic {
     pub const CAPTUROPHILE: Self = Self { fun: capturophile::capturophile, coeffs: None };
     pub const MANUAL: Self = Self { fun: manual::manual, coeffs: None };
 
+    /// # Panics
+    ///
+    /// Will panic if `INITIAL_COEFFS` is not set.
+    #[inline]
+    #[expect(clippy::new_without_default)]
     pub fn new() -> Self {
-        Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.get().unwrap().clone()) }
+        Self {
+            fun: coeffistic::coeffistic,
+            // TODO: clap create it before INITIAL_COEFFS is set
+            coeffs: Some(INITIAL_COEFFS.get().expect("INITIAL_COEFFS not set").clone()),
+        }
     }
 
+    /// # Panics
+    ///
+    /// Will panic if `OLD_COEFFS` is not set.
+    #[inline]
     pub fn old() -> Self {
-        Self { fun: coeffistic::coeffistic, coeffs: Some(OLD_COEFFS.get().unwrap().clone()) }
+        Self {
+            fun: coeffistic::coeffistic,
+            coeffs: Some(OLD_COEFFS.get().expect("OLD_COEFFS not set").clone()),
+        }
     }
 }
 
+/// # Errors
+///
+/// Returns an error if the given heurstic doesn't exists.
+#[inline]
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
         "zero" => Ok(Heuristic::ZERO),

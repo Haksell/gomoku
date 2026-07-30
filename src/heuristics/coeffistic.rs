@@ -52,6 +52,11 @@ static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
     res
 };
 
+/// # Panics
+///
+/// Will panic if `coeffs` is None.
+#[inline]
+#[must_use]
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let coeffs = coeffs.unwrap();
 
@@ -121,6 +126,13 @@ fn evaluate_patterns(
     h
 }
 
+/// # Errors
+///
+/// Returns an error if any write to the `BufWriter` or `COEFFS_FILE` fails.
+/// # Panics
+///
+/// Will panic if `COEFFS_FILE` is not set.
+#[inline]
 pub fn write_coeffs(coeffs: &[i64]) -> io::Result<()> {
     fn write_coeff(buf: &mut BufWriter<Vec<u8>>, coeff: i64, comment: &str) -> io::Result<()> {
         let num = format!("{coeff},");
