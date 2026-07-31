@@ -4,6 +4,8 @@
 
 ### misc
 
+- fix `play_random_moves` with `creates_double_three`
+- screen shake using linear interpolation in `t^x, 0<x<1`
 - walls and forbidden moves in patterns
 - neural heuristic
 - bitboard: min of 4 rotations, 2 flips, and white=-black
@@ -26,10 +28,13 @@
 - clock in human vs (human | bot)
 - no depth in leaf_value, if win found in iterative deepening, stop
 - futility pruning
-- more depth -> smaller radius
+- idabp: show h value in each cell
+- idabp: more depth -> smaller radius
 - better multithreading (rayon -> manual pool?)
 - include border in stencil (train on 13x13 board, otherwise pretty much irrelevant)
 - `mod bots` -> `mod search`
+- mate in n training (from random bot games)
+- find all criss-cross patterns
 
 ### self-improving heuristic
 
