@@ -7,6 +7,7 @@ fn main() {
     init_time_limit(args.common.time_limit_ms);
     init_thread_pool(args.common.num_threads);
 
+    // Must be done after init_time_limit because needs coeffs
     let black_player = args.black_player.as_str().into();
     let white_player = args.white_player.as_str().into();
 
