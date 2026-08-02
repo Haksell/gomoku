@@ -28,8 +28,8 @@ pub struct Args {
 
 #[derive(Debug, Parser)]
 pub struct GomokuArgs {
-    pub black_player: Player,
-    pub white_player: Player,
+    pub black_player: String,
+    pub white_player: String,
     #[arg(short('g'), long, default_value_t = NonZeroUsize::new(1).unwrap())]
     pub num_games: NonZeroUsize,
     #[command(flatten)]

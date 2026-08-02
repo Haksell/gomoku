@@ -29,7 +29,6 @@ impl Heuristic {
     pub fn new() -> Self {
         Self {
             fun: coeffistic::coeffistic,
-            // TODO: clap create it before INITIAL_COEFFS is set
             coeffs: Some(INITIAL_COEFFS.get().expect("INITIAL_COEFFS not set").clone()),
         }
     }

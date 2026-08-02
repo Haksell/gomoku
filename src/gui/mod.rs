@@ -57,7 +57,7 @@ fn app(app: &App) -> Model {
         .build()
         .unwrap();
     init_textures(app);
-    Model::new(&args.black_player, &args.white_player)
+    Model::new(&args.black_player.as_str().into(), &args.white_player.as_str().into())
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {
