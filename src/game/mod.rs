@@ -38,6 +38,8 @@ pub struct Game {
 }
 
 impl Game {
+    #[inline]
+    #[must_use]
     pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
@@ -55,6 +57,7 @@ impl Game {
         }
     }
 
+    #[inline]
     pub fn do_move(&mut self, (x, y): Position) {
         debug_assert!(self.state.is_playing());
         debug_assert!(self.board[y][x].is_none());
@@ -79,6 +82,10 @@ impl Game {
     }
 
     /// Every operation from [`Self::do_move`] in reverse order.
+    /// # Panics
+    ///
+    /// Will panic if no moves have been played.
+    #[inline]
     pub fn undo_last_move(&mut self) {
         let (x, y) = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
@@ -118,6 +125,8 @@ impl Game {
         self.ply -= 1;
     }
 
+    #[inline]
+    #[must_use]
     pub const fn current_player(&self) -> &Player {
         match self.current_color {
             PlayerColor::Black => &self.black_player,
@@ -125,6 +134,10 @@ impl Game {
         }
     }
 
+    /// # Panics
+    ///
+    /// Will panic if any of the two players aren't bots.
+    #[inline]
     pub fn play_game(&mut self) {
         assert!(self.black_player.is_bot());
         assert!(self.white_player.is_bot());
@@ -165,6 +178,8 @@ impl Game {
         }
     }
 
+    #[inline]
+    #[must_use]
     pub fn get_legal_moves(&self, max_dist: Option<usize>) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));
@@ -190,8 +205,13 @@ impl Game {
         legal_moves
     }
 
+    /// TODO: This function may make impossible moves.
+    /// # Panics
+    ///
+    /// Will panic if `n_moves` is greater than 10 (sus).
+    #[inline]
     pub fn play_random_moves(&mut self, n_moves: u32, dist_to_center: usize) {
-        assert!(n_moves <= BOARD_SIZE as u32);
+        assert!(n_moves <= 10);
 
         let mut rng = thread_rng();
         for _ in 0..n_moves {
@@ -211,8 +231,8 @@ impl Game {
     }
 }
 
-#[derive(Clone, Copy)]
 #[repr(i8)]
+#[derive(Clone, Copy)]
 pub enum UpdateSign {
     Positive = 1,
     Negative = -1,

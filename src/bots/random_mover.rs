@@ -4,8 +4,13 @@ use crate::{
 };
 use nannou::rand::{seq::SliceRandom as _, thread_rng};
 
+/// # Panics
+///
+/// Will panic if no legal moves can be played.
+#[inline]
+#[must_use]
 pub fn random_mover(game: &Game, _: &Heuristic) -> Position {
     let legal_moves = game.get_legal_moves(None);
-    assert!(!legal_moves.is_empty()); // TODO (should always be true once draws are implemented)
+    assert!(!legal_moves.is_empty()); // TODO: (should always be true once draws are implemented)
     *legal_moves.choose(&mut thread_rng()).unwrap()
 }

@@ -1,10 +1,13 @@
-use crate::{
+use clap::Parser as _;
+use gomoku::{
+    Args,
     bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
     heuristics::{
         Heuristic,
         coeffistic::{N_COEFFS, coeffistic},
     },
+    init_thread_pool, init_time_limit,
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
@@ -72,13 +75,17 @@ impl Genome {
                 GameState::Draw | GameState::Won(PlayerColor::Black, _) => false,
             };
 
-            score += black_win as i64 + white_win as i64; // TODO guez
+            score += black_win as i64 + white_win as i64; // TODO: guez
         }
 
         self.fitness = Some(score);
     }
 }
 
+/// # Panics
+///
+/// Will panic if `POP_SIZE` is 0.
+#[inline]
 pub fn run() {
     let mut best = Option::<Genome>::None;
     let mut best_score = Option::<i64>::None;
@@ -145,4 +152,13 @@ pub fn run() {
         }
         None => eprintln!("No best individual :c"),
     }
+}
+
+fn main() {
+    let args = Args::parse();
+
+    init_time_limit(args.time_limit_ms);
+    init_thread_pool(args.num_threads);
+
+    run();
 }

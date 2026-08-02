@@ -1,4 +1,6 @@
-use crate::{
+use clap::Parser as _;
+use gomoku::{
+    Args,
     bots::idabp_new::idabp_new,
     game::{Game, state::GameState},
     heuristics::{
@@ -9,6 +11,7 @@ use crate::{
             UNIQUE_STENCIL_INDICES, coeffistic, write_coeffs,
         },
     },
+    init_thread_pool, init_time_limit,
     player::{Player, PlayerColor},
 };
 use itertools::Itertools as _;
@@ -35,6 +38,10 @@ struct Params {
     epoch: u32,
 }
 
+/// # Panics
+///
+/// Will panic if `INITIAL_COEFFS` or `COEFFS_FILE` is not set.
+#[inline]
 pub fn run() {
     let params = Arc::new(Mutex::new(Params {
         best_coeffs: INITIAL_COEFFS.get().unwrap().iter().map(|c| *c as f64).collect_vec(),
@@ -187,6 +194,15 @@ fn stats(best_coeffs: Box<[i64]>, games: u32) {
 
 fn player_from_coeffs(coeffs: Box<[i64]>) -> Player {
     Player::Bot { bot: idabp_new, heuristic: Heuristic { fun: coeffistic, coeffs: Some(coeffs) } }
+}
+
+fn main() {
+    let args = Args::parse();
+
+    init_time_limit(args.time_limit_ms);
+    init_thread_pool(args.num_threads);
+
+    run();
 }
 
 #[cfg(test)]

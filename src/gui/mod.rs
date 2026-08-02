@@ -4,7 +4,7 @@ mod textures;
 mod view;
 
 use crate::{
-    Args,
+    GomokuArgs,
     game::{
         Game,
         board::{BOARD_SIZE, Position},
@@ -26,6 +26,7 @@ pub const WINDOW_MARGIN: f32 = WINDOW_SIZE as f32 * 0.055;
 pub const CELL_SIZE: f32 = (WINDOW_SIZE as f32 - 2.0 * WINDOW_MARGIN) / (BOARD_SIZE - 1) as f32;
 pub const MARKER_DOTS_SPACING: usize = 6;
 
+#[inline]
 pub fn run() {
     nannou::app(app).update(update).view(view).run();
 }
@@ -45,7 +46,7 @@ impl Model {
 
 fn app(app: &App) -> Model {
     // TODO: parse args only once
-    let args = Args::parse();
+    let args = GomokuArgs::parse();
 
     app.new_window()
         .title("ligomoku.org")
@@ -56,7 +57,7 @@ fn app(app: &App) -> Model {
         .build()
         .unwrap();
     init_textures(app);
-    Model::new(&args.black_player, &args.white_player)
+    Model::new(&args.black_player.as_str().into(), &args.white_player.as_str().into())
 }
 
 fn update(app: &App, model: &mut Model, _: Update) {

@@ -22,10 +22,14 @@ pub enum GameState {
 }
 
 impl GameState {
+    #[inline]
+    #[must_use]
     pub fn init() -> Self {
         Self::Playing(ForcedMoves::new())
     }
 
+    #[inline]
+    #[must_use]
     pub const fn is_playing(&self) -> bool {
         matches!(self, Self::Playing(_))
     }
@@ -38,6 +42,8 @@ pub struct WinningWay {
 }
 
 impl Game {
+    #[inline]
+    #[must_use]
     pub fn update_state(&self, pos: Position) -> GameState {
         let captures = match self.current_color {
             PlayerColor::Black => self.black_captures,
