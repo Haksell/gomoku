@@ -1,7 +1,16 @@
 pub mod arena;
 pub mod bots;
 pub mod game;
+#[cfg(feature = "gui")]
 pub mod gui;
+#[cfg(not(feature = "gui"))]
+pub mod gui {
+    #[inline]
+    #[expect(clippy::missing_panics_doc)] // already self explanatory
+    pub fn run() {
+        panic!("GUI feature not enabled. Rebuild with `--features gui` to enable the GUI.");
+    }
+}
 pub mod heuristics;
 pub mod player;
 

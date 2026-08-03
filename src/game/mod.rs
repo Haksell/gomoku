@@ -13,7 +13,7 @@ use crate::{
     player::PlayerColor,
 };
 use board::{BOARD_SIZE, Board, Position};
-use nannou::rand::{Rng as _, thread_rng};
+use rand::{RngExt as _, rng};
 
 const MAX_POSSIBLE_MOVES: usize = BOARD_SIZE * BOARD_SIZE + 4 * (REQUIRED_CAPTURES - 1);
 const MAX_POSSIBLE_CAPTURES: usize = 2 * (REQUIRED_CAPTURES - 1) + 8;
@@ -213,13 +213,15 @@ impl Game {
     pub fn play_random_moves(&mut self, n_moves: u32, dist_to_center: usize) {
         assert!(n_moves <= 10);
 
-        let mut rng = thread_rng();
+        let mut rng = rng();
         for _ in 0..n_moves {
             loop {
-                let rx = rng
-                    .gen_range(HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center);
-                let ry = rng
-                    .gen_range(HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center);
+                let rx = rng.random_range(
+                    HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center,
+                );
+                let ry = rng.random_range(
+                    HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center,
+                );
                 if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
                     && self.board[ry][rx].is_none()
                 {

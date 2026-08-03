@@ -11,7 +11,7 @@ use gomoku::{
     player::{Player, PlayerColor},
 };
 use indicatif::ParallelProgressIterator as _;
-use nannou::rand::{Rng as _, rngs::ThreadRng};
+use rand::{RngExt as _, rng, rngs::ThreadRng};
 use rayon::iter::{IntoParallelRefMutIterator as _, ParallelIterator as _};
 use std::array;
 
@@ -30,7 +30,7 @@ struct Genome {
 
 impl Genome {
     fn random(rng: &mut ThreadRng) -> Self {
-        Self { fitness: None, genes: array::from_fn(|_| rng.gen_range(-2048..=2048)) }
+        Self { fitness: None, genes: array::from_fn(|_| rng.random_range(-2048..=2048)) }
     }
 
     fn as_player(&self) -> Player {
@@ -89,7 +89,7 @@ impl Genome {
 pub fn run() {
     let mut best = Option::<Genome>::None;
     let mut best_score = Option::<i64>::None;
-    let mut rng = nannou::rand::thread_rng();
+    let mut rng = rng();
     let mut pop: [Genome; POP_SIZE] = array::from_fn(|_| Genome::random(&mut rng));
 
     for epoch in 0..EPOCHS {
@@ -118,12 +118,12 @@ pub fn run() {
 
         // crossover
         for i in 0..POP_SIZE - ELITE_COUNT {
-            let a = rng.gen_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
-            let b = rng.gen_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
+            let a = rng.random_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
+            let b = rng.random_range(POP_SIZE - ELITE_COUNT - 1..POP_SIZE);
 
             pop[i].fitness = None;
             for mi in 0..N_COEFFS {
-                if rng.gen_bool(CROSSOVER_PROBABILITY) {
+                if rng.random_bool(CROSSOVER_PROBABILITY) {
                     pop[i].genes[mi] = i16::midpoint(pop[a].genes[mi], pop[b].genes[mi]);
                 }
             }
@@ -135,8 +135,8 @@ pub fn run() {
             let player = &mut pop[i];
             let mut has_mutated = false;
             for mi in 0..N_COEFFS {
-                if rng.gen_bool(MUTATION_PROBABILITY) {
-                    player.genes[mi] += rng.gen_range(-64..=64);
+                if rng.random_bool(MUTATION_PROBABILITY) {
+                    player.genes[mi] += rng.random_range(-64..=64);
                     has_mutated = true;
                 }
             }

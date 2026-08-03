@@ -15,7 +15,7 @@ use gomoku::{
     player::{Player, PlayerColor},
 };
 use itertools::Itertools as _;
-use nannou::rand::{Rng as _, thread_rng};
+use rand::{RngExt as _, rng};
 use rayon::iter::ParallelIterator as _;
 use std::{
     array,
@@ -56,13 +56,13 @@ pub fn run() {
                 let mut coeffs1 = best_coeffs.clone();
                 let mut coeffs2 = best_coeffs.clone();
 
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let updates1: [f64; N_MUTATIONS] = array::from_fn(|i| {
-                    if rng.gen_bool(MUTATION_PROBABILITY) {
+                    if rng.random_bool(MUTATION_PROBABILITY) {
                         let update_range = (get_coeff(&coeffs1, i).abs()
                             * MAX_MULTIPLICATIVE_FACTOR)
                             .max(MAX_ADDITIVE_FACTOR);
-                        rng.gen_range(-update_range..=update_range)
+                        rng.random_range(-update_range..=update_range)
                     } else {
                         0.
                     }

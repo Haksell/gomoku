@@ -19,7 +19,6 @@
 - compute during human time (flag)
 - check rust performance book for better compilation
 - fix buggy open threes `w.xxx.o`
-- feature nannou: don't compile the lib if running headless
 - remove most `usize`s
 - lazy update legal moves for both black and white
 - transposition table for iterative deepening
