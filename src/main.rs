@@ -15,9 +15,11 @@ fn main() {
         // type handled
         // 0 => panic!("Can't play 0 games."),
         1 => gui::run(),
-        n if n.is_multiple_of(4) => {
+        n => {
+            if !n.is_multiple_of(2) {
+                eprintln!("Only {} games will be played", n - 1);
+            }
             arena::run(&black_player, &white_player, args.num_games);
         }
-        _ => panic!("TODO: good error message pls"), // TODO: warn instead, but run arena anyway
     }
 }
