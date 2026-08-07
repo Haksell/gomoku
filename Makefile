@@ -21,14 +21,14 @@ fclean: clean
 re: fclean all
 
 test:
-	cargo test
+	cargo test --features full
 
 fmt:
 	cargo fmt
 
 lint:
-	cargo check
-	cargo clippy -- -D warnings
+	cargo check --features full
+	cargo clippy  --features full -- -D warnings
 
 loc:
 	@find src -name '*.rs' | sort | xargs wc -l
