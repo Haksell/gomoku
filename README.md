@@ -34,6 +34,7 @@
 - `mod bots` -> `mod search`
 - mate in n training (from random bot games)
 - find all criss-cross patterns
+- show depth with fractional value (full depth + explored/legal at next depth)
 
 ### self-improving heuristic
 
