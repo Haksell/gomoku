@@ -7,7 +7,10 @@ use crate::{
     heuristics::Heuristic,
     player::PlayerColor,
 };
-use std::cmp::{max, min};
+use std::{
+    cmp::{max, min},
+    time::Duration,
+};
 
 const MAX_DEPTH: u32 = 4;
 
@@ -16,7 +19,7 @@ const MAX_DEPTH: u32 = 4;
 /// Will panic if no legal moves can be played.
 #[inline]
 #[must_use]
-pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
+pub fn minimax(game: &Game, heuristic: &Heuristic, _: Option<Duration>) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }

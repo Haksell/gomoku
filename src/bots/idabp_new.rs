@@ -2,7 +2,6 @@
 // Then we should be able to use best_move_at_depth, whether the search finished or not
 
 use crate::{
-    TIME_LIMIT,
     bots::{leaf_value, random_mover::random_mover},
     game::{
         Game,
@@ -10,7 +9,10 @@ use crate::{
     },
     heuristics::Heuristic,
 };
-use std::{cmp::max, time::Instant};
+use std::{
+    cmp::max,
+    time::{Duration, Instant},
+};
 
 const BITS_PER_MOVE: u32 = u32::BITS - ((BOARD_SIZE as u32).pow(2) + 1).leading_zeros();
 
@@ -21,15 +23,15 @@ type Cache = fxhash::FxHashMap<CacheKey, i64>;
 
 /// # Panics
 ///
-/// Will panic if `TIME_LIMIT` is not set.
+/// Will panic if `time_limit` is not None.
 #[inline]
-pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
+pub fn idabp_new(game: &Game, heuristic: &Heuristic, time_limit: Option<Duration>) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }
 
-    let deadline = Instant::now() + *TIME_LIMIT.get().unwrap();
-    let random_move = random_mover(game, heuristic);
+    let deadline = Instant::now() + time_limit.unwrap();
+    let random_move = random_mover(game, heuristic, None);
     let mut game = game.clone();
     let mut cache = Cache::default();
     let mut best_move = random_move;

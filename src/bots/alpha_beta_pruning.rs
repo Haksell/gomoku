@@ -6,13 +6,13 @@ use crate::{
     },
     heuristics::Heuristic,
 };
-use std::cmp::max;
+use std::{cmp::max, time::Duration};
 
 const MAX_DEPTH: u32 = 4;
 
 #[inline]
 #[must_use]
-pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic) -> Position {
+pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic, _: Option<Duration>) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }

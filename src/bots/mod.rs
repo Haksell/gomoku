@@ -10,8 +10,9 @@ use crate::{
     heuristics::Heuristic,
     player::PlayerColor,
 };
+use std::time::Duration;
 
-pub type Bot = fn(&Game, &Heuristic) -> Position;
+pub type Bot = fn(&Game, &Heuristic, Option<Duration>) -> Position;
 
 /// # Errors
 ///
@@ -27,6 +28,15 @@ pub fn parse_bot(s: &str) -> Result<Bot, String> {
         "new" => Ok(idabp_new::idabp_new),
         _ => Err(format!("Invalid bot: `{s}`")),
     }
+}
+
+#[inline]
+pub fn uses_time_limit(bot: &Bot) -> bool {
+    let bot_addr = *bot as *const ();
+    let old_addr = idabp_old::idabp_old as *const ();
+    let new_addr = idabp_new::idabp_new as *const ();
+
+    bot_addr == old_addr || bot_addr == new_addr
 }
 
 /// Maximizes for the current player, not necessarily black.

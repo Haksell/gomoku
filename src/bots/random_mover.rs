@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::{
     game::{Game, board::Position},
     heuristics::Heuristic,
@@ -9,7 +11,8 @@ use rand::{rng, seq::IndexedRandom as _};
 /// Will panic if no legal moves can be played.
 #[inline]
 #[must_use]
-pub fn random_mover(game: &Game, _: &Heuristic) -> Position {
+pub fn random_mover(game: &Game, _: &Heuristic, _: Option<Duration>) -> Position {
+    // TODO: assert that time_limit is None ?
     let legal_moves = game.get_legal_moves(None);
     assert!(!legal_moves.is_empty()); // TODO: (should always be true once draws are implemented)
     *legal_moves.choose(&mut rng()).unwrap()

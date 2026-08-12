@@ -22,7 +22,6 @@ use clap::Parser;
 use rayon::ThreadPoolBuilder;
 use std::{
     num::{NonZeroU64, NonZeroUsize},
-    sync::OnceLock,
     thread::available_parallelism,
     time::Duration,
 };
@@ -31,8 +30,6 @@ use std::{
 pub struct Args {
     #[arg(short('t'), long, default_value_t = NonZeroUsize::new(1).unwrap())]
     pub num_threads: NonZeroUsize,
-    #[arg(short('l'), long, default_value_t = NonZeroU64::new(500).unwrap())]
-    pub time_limit_ms: NonZeroU64,
 }
 
 #[derive(Debug, Parser)]
@@ -44,8 +41,6 @@ pub struct GomokuArgs {
     #[command(flatten)]
     pub common: Args,
 }
-
-static TIME_LIMIT: OnceLock<Duration> = OnceLock::new();
 
 /// # Panics
 ///

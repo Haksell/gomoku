@@ -10,7 +10,7 @@ use crate::{
         board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
-    player::PlayerColor,
+    player::{PlayerColor, PlayerKind},
 };
 use board::{BOARD_SIZE, Board, Position};
 use rand::{RngExt as _, rng};
@@ -143,8 +143,12 @@ impl Game {
         assert!(self.white_player.is_bot());
 
         while self.state.is_playing() {
-            let Player::Bot { bot, heuristic } = self.current_player() else { unreachable!() };
-            let pos = bot(self, heuristic);
+            let Player { kind: PlayerKind::Bot { bot, heuristic }, time_limit } =
+                self.current_player()
+            else {
+                unreachable!()
+            };
+            let pos = bot(self, heuristic, *time_limit);
             self.do_move(pos);
         }
     }
@@ -242,6 +246,8 @@ pub enum UpdateSign {
 
 #[cfg(test)]
 mod tests {
+    use crate::player::PlayerKind;
+
     use super::*;
 
     #[test]
@@ -259,8 +265,12 @@ mod tests {
 
             while game.state.is_playing() {
                 game_states.push(game.clone());
-                let Player::Bot { bot, heuristic } = game.current_player() else { unreachable!() };
-                let pos = bot(&game, heuristic);
+                let Player { kind: PlayerKind::Bot { bot, heuristic }, time_limit } =
+                    game.current_player()
+                else {
+                    unreachable!()
+                };
+                let pos = bot(&game, heuristic, *time_limit);
                 game.do_move(pos);
             }
 

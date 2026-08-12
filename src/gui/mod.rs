@@ -9,7 +9,7 @@ use crate::{
         Game,
         board::{BOARD_SIZE, Position},
     },
-    player::Player,
+    player::{Player, PlayerKind},
 };
 use clap::Parser as _;
 use coordinates::mouse_to_board;
@@ -68,11 +68,12 @@ fn update(app: &App, model: &mut Model, _: Update) {
     }
 
     if model.game.state.is_playing()
-        && let Player::Bot { bot, heuristic } = model.game.current_player()
+        && let Player { kind: PlayerKind::Bot { bot, heuristic }, time_limit } =
+            model.game.current_player()
     {
         let start = Instant::now();
         // let bot_thread = std::thread::spawn(|| bot(model., *heuristic));
-        let pos = bot(&model.game, heuristic);
+        let pos = bot(&model.game, heuristic, *time_limit);
         let ai_thinking_duration = start.elapsed().as_millis();
 
         model.game.do_move(pos);
