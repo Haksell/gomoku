@@ -26,20 +26,14 @@ impl Heuristic {
     /// Will panic if `INITIAL_COEFFS` is not set.
     #[expect(clippy::new_without_default)]
     pub fn new() -> Self {
-        Self {
-            fun: coeffistic::coeffistic,
-            coeffs: Some(INITIAL_COEFFS.get().expect("INITIAL_COEFFS not set").clone()),
-        }
+        Self { fun: coeffistic::coeffistic, coeffs: Some(INITIAL_COEFFS.get().unwrap().clone()) }
     }
 
     /// # Panics
     ///
     /// Will panic if `OLD_COEFFS` is not set.
     pub fn old() -> Self {
-        Self {
-            fun: coeffistic::coeffistic,
-            coeffs: Some(OLD_COEFFS.get().expect("OLD_COEFFS not set").clone()),
-        }
+        Self { fun: coeffistic::coeffistic, coeffs: Some(OLD_COEFFS.get().unwrap().clone()) }
     }
 }
 

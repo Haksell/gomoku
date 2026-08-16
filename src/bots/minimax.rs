@@ -9,7 +9,7 @@ use crate::{
 };
 use std::cmp::{max, min};
 
-const MAX_DEPTH: u32 = 4;
+const MAX_DEPTH: u32 = 3;
 
 /// # Panics
 ///
