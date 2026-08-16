@@ -1,6 +1,3 @@
-// TODO: overwrite values of searches at low depth with value of next depth
-// Then we should be able to use best_move_at_depth, whether the search finished or not
-
 use crate::{
     TIME_LIMIT,
     bots::{leaf_value, random_mover::random_mover},

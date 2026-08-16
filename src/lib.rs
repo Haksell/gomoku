@@ -80,8 +80,6 @@ pub fn init_time_limit(time_limit_ms: NonZeroU64) {
 pub fn init_thread_pool(num_threads: NonZeroUsize) {
     let num_threads = num_threads.get();
     let available_cpus = available_parallelism().unwrap().get();
-    // type handled
-    // assert!(num_threads > 0, "Can't run with 0 threads.");
     assert!(
         num_threads <= available_cpus,
         "You asked for {num_threads} threads but only {available_cpus} threads are available.",
