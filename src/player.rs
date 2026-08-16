@@ -25,13 +25,11 @@ impl Player {
         Self::Bot { bot: idabp_old, heuristic: Heuristic::old() }
     }
 
-    #[inline]
     #[must_use]
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
     }
 
-    #[inline]
     #[must_use]
     pub const fn is_bot(&self) -> bool {
         matches!(self, Self::Bot { .. })
@@ -39,7 +37,6 @@ impl Player {
 }
 
 impl PartialEq for Player {
-    #[inline]
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (
@@ -63,7 +60,6 @@ impl PartialEq for Player {
 
 #[expect(clippy::fallible_impl_from)]
 impl From<&str> for Player {
-    #[inline]
     fn from(v: &str) -> Self {
         match v {
             "human" => Self::Human,
@@ -91,7 +87,6 @@ pub enum PlayerColor {
 impl Not for PlayerColor {
     type Output = Self;
 
-    #[inline]
     fn not(self) -> Self::Output {
         match self {
             Self::Black => Self::White,

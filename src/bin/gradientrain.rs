@@ -41,7 +41,6 @@ struct Params {
 /// # Panics
 ///
 /// Will panic if `INITIAL_COEFFS` or `COEFFS_FILE` is not set.
-#[inline]
 pub fn run() {
     let params = Arc::new(Mutex::new(Params {
         best_coeffs: INITIAL_COEFFS.get().unwrap().iter().map(|c| *c as f64).collect_vec(),

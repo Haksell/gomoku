@@ -5,7 +5,6 @@ pub mod game;
 pub mod gui;
 #[cfg(not(feature = "gui"))]
 pub mod gui {
-    #[inline]
     #[expect(clippy::missing_panics_doc)] // already self explanatory
     pub fn run() {
         panic!("GUI feature not enabled. Rebuild with `--features gui` to enable the GUI.");
@@ -50,7 +49,6 @@ static TIME_LIMIT: OnceLock<Duration> = OnceLock::new();
 /// # Panics
 ///
 /// Will panic if `TIME_LIMIT`, `INITIAL_COEFFS`, `OLD_COEFFS` or `COEFFS_FILE` is already set.
-#[inline]
 pub fn init_time_limit(time_limit_ms: NonZeroU64) {
     let time_limit_ms = time_limit_ms.get();
     TIME_LIMIT.set(Duration::from_millis(time_limit_ms)).unwrap();
@@ -76,7 +74,6 @@ pub fn init_time_limit(time_limit_ms: NonZeroU64) {
 /// # Panics
 ///
 /// Will panic if it can't retrieve available cpus or `num_threads` > available cpus.
-#[inline]
 pub fn init_thread_pool(num_threads: NonZeroUsize) {
     let num_threads = num_threads.get();
     let available_cpus = available_parallelism().unwrap().get();

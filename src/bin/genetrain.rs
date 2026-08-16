@@ -85,7 +85,6 @@ impl Genome {
 /// # Panics
 ///
 /// Will panic if `POP_SIZE` is 0.
-#[inline]
 pub fn run() {
     let mut best = Option::<Genome>::None;
     let mut best_score = Option::<i64>::None;

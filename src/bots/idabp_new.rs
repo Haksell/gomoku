@@ -19,7 +19,6 @@ type Cache = fxhash::FxHashMap<CacheKey, i64>;
 /// # Panics
 ///
 /// Will panic if `TIME_LIMIT` is not set.
-#[inline]
 pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;

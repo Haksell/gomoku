@@ -24,7 +24,6 @@ impl Heuristic {
     /// # Panics
     ///
     /// Will panic if `INITIAL_COEFFS` is not set.
-    #[inline]
     #[expect(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {
@@ -36,7 +35,6 @@ impl Heuristic {
     /// # Panics
     ///
     /// Will panic if `OLD_COEFFS` is not set.
-    #[inline]
     pub fn old() -> Self {
         Self {
             fun: coeffistic::coeffistic,
@@ -48,7 +46,6 @@ impl Heuristic {
 /// # Errors
 ///
 /// Returns an error if the given heurstic doesn't exists.
-#[inline]
 pub fn parse_heuristic(s: &str) -> Result<Heuristic, String> {
     match s {
         "zero" => Ok(Heuristic::ZERO),

@@ -37,7 +37,6 @@ impl Stats {
 /// # Panics
 ///
 /// Will panic if `black_player` or `white_player` is human.
-#[inline]
 pub fn run(black_player: &Player, white_player: &Player, num_games: NonZeroUsize) {
     assert!(
         black_player.is_bot() || white_player.is_bot(),

@@ -16,7 +16,6 @@ pub type Bot = fn(&Game, &Heuristic) -> Position;
 /// # Errors
 ///
 /// Returns an error if the given bot doesn't exist.
-#[inline]
 pub fn parse_bot(s: &str) -> Result<Bot, String> {
     match s {
         "random" | "random_mover" => Ok(random_mover::random_mover),

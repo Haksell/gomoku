@@ -13,7 +13,6 @@ const MAX_DEPTH: u32 = 4;
 /// # Panics
 ///
 /// Will panic if no legal moves can be played.
-#[inline]
 #[must_use]
 pub fn negamax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {

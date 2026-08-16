@@ -10,7 +10,6 @@ use crate::{
     player::PlayerColor,
 };
 
-#[inline]
 #[must_use]
 pub fn manual(game: &Game, _: Option<&Coeffs>) -> i64 {
     let mut black_combos = [[0; 3]; 10];

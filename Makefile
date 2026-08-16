@@ -24,7 +24,7 @@ test:
 	cargo test --features full
 
 fmt:
-	cargo fmt
+	cargo fmt --all
 
 lint:
 	cargo check --features full

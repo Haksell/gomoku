@@ -28,7 +28,6 @@ pub const MANHATTAN_TO_CENTER: [[u64; BOARD_SIZE]; BOARD_SIZE] = {
     out
 };
 
-#[inline]
 pub fn print_board(board: &Board) {
     for row in board {
         for player_color in row {
@@ -45,7 +44,6 @@ pub fn print_board(board: &Board) {
     }
 }
 
-#[inline]
 #[must_use]
 pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize, isize)) -> bool {
     x >= 0
@@ -55,7 +53,6 @@ pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize,
         && board[y as usize][x as usize] == player
 }
 
-#[inline]
 #[must_use]
 pub fn is_capture(
     board: &Board,

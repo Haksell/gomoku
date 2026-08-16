@@ -7,7 +7,6 @@ use crate::{
 };
 
 impl Game {
-    #[inline]
     pub fn handle_captures(&mut self, (x, y): Position) {
         for (dx, dy) in DIRECTIONS8 {
             if !is_capture(&self.board, self.current_color, (x, y), (dx, dy)) {

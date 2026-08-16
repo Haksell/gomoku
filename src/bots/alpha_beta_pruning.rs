@@ -10,7 +10,6 @@ use std::cmp::max;
 
 const MAX_DEPTH: u32 = 4;
 
-#[inline]
 #[must_use]
 pub fn alpha_beta_pruning(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
