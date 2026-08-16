@@ -4,7 +4,6 @@ use crate::game::{
 };
 
 impl Game {
-    #[must_use]
     pub fn creates_double_three(&self, pos: Position) -> bool {
         DIRECTIONS8.iter().all(|&dir| !is_capture(&self.board, self.current_color, pos, dir))
             && DIRECTIONS4

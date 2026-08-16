@@ -44,7 +44,6 @@ pub fn print_board(board: &Board) {
     }
 }
 
-#[must_use]
 pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize, isize)) -> bool {
     x >= 0
         && y >= 0
@@ -53,7 +52,6 @@ pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize,
         && board[y as usize][x as usize] == player
 }
 
-#[must_use]
 pub fn is_capture(
     board: &Board,
     player_color: PlayerColor,

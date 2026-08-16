@@ -38,7 +38,6 @@ pub struct Game {
 }
 
 impl Game {
-    #[must_use]
     pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
@@ -122,7 +121,6 @@ impl Game {
         self.ply -= 1;
     }
 
-    #[must_use]
     pub const fn current_player(&self) -> &Player {
         match self.current_color {
             PlayerColor::Black => &self.black_player,
@@ -173,7 +171,6 @@ impl Game {
         }
     }
 
-    #[must_use]
     pub fn get_legal_moves(&self, max_dist: Option<usize>) -> Vec<Position> {
         // TODO: stop hardcoding 2
         debug_assert!(matches!(max_dist, None | Some(2)));

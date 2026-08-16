@@ -14,7 +14,6 @@ const MAX_DEPTH: u32 = 3;
 /// # Panics
 ///
 /// Will panic if no legal moves can be played.
-#[must_use]
 pub fn minimax(game: &Game, heuristic: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;

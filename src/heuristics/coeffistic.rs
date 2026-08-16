@@ -55,7 +55,6 @@ static STENCIL_INDEX_MAPPING: [usize; 1 << (2 * STENCIL_SIZE)] = {
 /// # Panics
 ///
 /// Will panic if `coeffs` is None.
-#[must_use]
 pub fn coeffistic(game: &Game, coeffs: Option<&Coeffs>) -> i64 {
     let coeffs = coeffs.unwrap();
 

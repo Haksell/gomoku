@@ -25,12 +25,10 @@ impl Player {
         Self::Bot { bot: idabp_old, heuristic: Heuristic::old() }
     }
 
-    #[must_use]
     pub const fn is_human(&self) -> bool {
         matches!(self, Self::Human)
     }
 
-    #[must_use]
     pub const fn is_bot(&self) -> bool {
         matches!(self, Self::Bot { .. })
     }
