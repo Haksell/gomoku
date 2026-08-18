@@ -44,7 +44,7 @@ impl MCTSNode {
     }
 
     fn best_child(&self, nodes: &[Self]) -> usize {
-        const EXPLORATION: f64 = std::f64::consts::SQRT_2;
+        const EXPLORATION: f64 = 0.2;
 
         *self
             .children
