@@ -26,8 +26,7 @@ struct MCTSNode {
 
 impl MCTSNode {
     fn new(game: &Game, last_position: Position) -> Self {
-        // TODO: don't limit to manhattan 2
-        let mut untried_positions = game.get_legal_moves(Some(2));
+        let mut untried_positions = game.get_legal_moves(None);
         untried_positions.shuffle(&mut rng());
         Self { last_position, untried_positions, children: Vec::new(), visits: 0, wins: 0. }
     }

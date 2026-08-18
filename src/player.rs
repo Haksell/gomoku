@@ -17,8 +17,8 @@ pub enum Player {
 impl Player {
     pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: Heuristic::ZERO };
     pub const MANUAL: Self = Self::Bot { bot: idabp_new, heuristic: Heuristic::MANUAL };
-    pub const MCTS_OLD: Self = Self::Bot { bot: mcts_old, heuristic: Heuristic::ZERO };
-    pub const MCTS_NEW: Self = Self::Bot { bot: mcts_new, heuristic: Heuristic::ZERO };
+    pub const MCTS_OLD: Self = Self::Bot { bot: mcts_old, heuristic: Heuristic::MANUAL };
+    pub const MCTS_NEW: Self = Self::Bot { bot: mcts_new, heuristic: Heuristic::MANUAL };
 
     fn idabp_new() -> Self {
         Self::Bot { bot: idabp_new, heuristic: Heuristic::new() }
