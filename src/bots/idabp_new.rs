@@ -3,18 +3,31 @@ use crate::{
     bots::{leaf_value, random_mover::random_mover},
     game::{
         Game,
-        board::{BOARD_CENTER, BOARD_SIZE, Position},
+        bitboard::BitBoard,
+        board::{BOARD_CENTER, Position},
     },
     heuristics::Heuristic,
 };
-use std::{cmp::max, time::Instant};
+use std::{
+    cmp::{max, min},
+    time::Instant,
+};
 
-const BITS_PER_MOVE: u32 = u32::BITS - ((BOARD_SIZE as u32).pow(2) + 1).leading_zeros();
+enum NodeType {
+    Cut,
+    All,
+    PV,
+}
 
-type CacheKey = u128;
+struct CacheValue {
+    depth: u32,
+    max_depth: u32,
+    value: i64,
+    node_type: NodeType,
+}
 
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
-type Cache = fxhash::FxHashMap<CacheKey, i64>;
+type Cache = fxhash::FxHashMap<BitBoard, CacheValue>;
 
 /// # Panics
 ///
@@ -36,14 +49,14 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
             heuristic,
             (0, max_depth),
             (-i64::MAX, i64::MAX),
-            (&mut cache, 0),
+            &mut cache,
             &mut best_move,
             deadline,
         );
 
         if Instant::now() >= deadline {
             if game.black_player.is_human() || game.white_player.is_human() {
-                println!("IDABP search depth: {}.5", max_depth - 1); // TODO: more precise
+                println!("NEW IDABP search depth: {}.5", max_depth - 1); // TODO: more precise
             }
             return best_move;
         }
@@ -56,8 +69,8 @@ fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
     (depth, max_depth): (u32, u32),
-    (mut min_h, max_h): (i64, i64),
-    (cache, key): (&mut Cache, CacheKey),
+    (mut alpha, mut beta): (i64, i64),
+    cache: &mut Cache,
     best_move: &mut Position,
     deadline: Instant,
 ) -> i64 {
@@ -66,8 +79,37 @@ fn alpha_beta_pruning_helper(
         return 0;
     }
 
+    if let Some(cache_value) = cache.get(&game.bitboard)
+        && cache_value.depth == depth
+        && cache_value.max_depth == max_depth
+    {
+        let v = cache_value.value;
+        match cache_value.node_type {
+            NodeType::Cut => {
+                if v >= beta {
+                    return v;
+                }
+                alpha = max(alpha, v);
+            }
+            NodeType::All => {
+                if v <= alpha {
+                    return v;
+                }
+                beta = min(beta, v);
+            }
+            NodeType::PV => return v,
+        }
+    }
+
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, max_depth) {
-        cache.insert(key, leaf_value);
+        let node_type = if leaf_value > beta {
+            NodeType::Cut
+        } else if leaf_value > alpha {
+            NodeType::PV
+        } else {
+            NodeType::All
+        };
+        cache.insert(game.bitboard, CacheValue { depth, max_depth, value: leaf_value, node_type });
         return leaf_value;
     }
 
@@ -75,24 +117,26 @@ fn alpha_beta_pruning_helper(
     debug_assert!(!close_moves.is_empty());
 
     if depth + 1 < max_depth {
-        let default_h = max_h / 2; // benchmarked
+        let default_h = beta / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
-            cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h)
+            game.do_move(pos);
+            let cache_value = cache.get(&game.bitboard);
+            game.undo_last_move();
+            cache_value.map_or(default_h, |value| value.value)
         });
     }
 
     let mut best_h = i64::MIN;
+    let mut node_type = NodeType::All;
 
     for pos in close_moves {
-        let new_cache_key = update_cache_key(key, depth, pos); // TODO: NO (already done in sort)
-
         game.do_move(pos);
         let h = -alpha_beta_pruning_helper(
             game,
             heuristic,
             (depth + 1, max_depth),
-            (-max_h, -min_h),
-            (cache, new_cache_key),
+            (-beta, -alpha),
+            cache,
             best_move,
             deadline,
         );
@@ -102,18 +146,16 @@ fn alpha_beta_pruning_helper(
         if depth == 0 && h == best_h && Instant::now() < deadline {
             *best_move = pos;
         }
-        if best_h > max_h {
+        if best_h > beta {
+            node_type = NodeType::Cut;
             break;
         }
-        min_h = max(min_h, h);
+        if best_h > alpha {
+            node_type = NodeType::PV;
+        }
+        alpha = max(alpha, h);
     }
 
-    cache.insert(key, best_h);
+    cache.insert(game.bitboard, CacheValue { depth, max_depth, value: best_h, node_type });
     best_h
-}
-
-const fn update_cache_key(key: CacheKey, depth: u32, (x, y): Position) -> CacheKey {
-    let shift = depth * BITS_PER_MOVE;
-    let bits_to_insert = (y * BOARD_SIZE + x + 1) as CacheKey;
-    key | (bits_to_insert << shift)
 }

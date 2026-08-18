@@ -1,3 +1,4 @@
+pub mod bitboard;
 pub mod board;
 pub mod creates_double_three;
 pub mod handle_captures;
@@ -7,6 +8,7 @@ pub mod state;
 use crate::{
     Player,
     game::{
+        bitboard::{BitBoard, bitboard_set, bitboard_set_captures},
         board::{Direction, HALF_BOARD_SIZE, MANHATTAN_TO_CENTER},
         state::{ForcedMoves, GameState, REQUIRED_CAPTURES},
     },
@@ -23,6 +25,7 @@ const MAX_POSSIBLE_FORCED_POSITIONS: usize = 16; // TODO: find the real value
 pub struct Game {
     pub state: GameState,
     pub board: Board,
+    pub bitboard: BitBoard,
     pub close_moves: [[u8; BOARD_SIZE]; BOARD_SIZE],
     pub current_color: PlayerColor,
     pub black_captures: usize,
@@ -42,6 +45,7 @@ impl Game {
         Self {
             state: GameState::init(),
             board: [[None; BOARD_SIZE]; BOARD_SIZE],
+            bitboard: BitBoard::default(),
             close_moves: [[0; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
@@ -62,6 +66,7 @@ impl Game {
         self.ply += 1;
 
         self.board[y][x] = Some(self.current_color);
+        bitboard_set(&mut self.bitboard, (x, y), Some(self.current_color));
 
         self.update_close_moves((x, y), UpdateSign::Positive);
         self.handle_captures((x, y));
@@ -107,16 +112,20 @@ impl Game {
                     self.white_captures -= 1;
                 }
             }
+            bitboard_set_captures(&mut self.bitboard, self.black_captures, self.white_captures);
 
             self.update_close_moves((x1, y1), UpdateSign::Positive);
             self.update_close_moves((x2, y2), UpdateSign::Positive);
             self.board[y1][x1] = Some(!self.current_color);
             self.board[y2][x2] = Some(!self.current_color);
+            bitboard_set(&mut self.bitboard, (x1, y1), Some(!self.current_color));
+            bitboard_set(&mut self.bitboard, (x2, y2), Some(!self.current_color));
         }
 
         self.update_close_moves((x, y), UpdateSign::Negative);
 
         self.board[y][x] = None;
+        bitboard_set(&mut self.bitboard, (x, y), None);
 
         self.ply -= 1;
     }
