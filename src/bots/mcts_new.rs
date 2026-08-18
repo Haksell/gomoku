@@ -44,24 +44,26 @@ impl MCTSNode {
         child
     }
 
-    // TODO: rewrite
-    fn best_child(&self, c: f64, nodes: &[Self]) -> usize {
-        if self.children.iter().any(|&child| nodes[child].visits == 0) {
-            for &child in &self.children {
-                if nodes[child].visits == 0 {
-                    return child;
-                }
-            }
-        }
+    fn best_child(&self, nodes: &[Self]) -> usize {
+        const EXPLORATION: f64 = std::f64::consts::SQRT_2;
 
         *self
             .children
             .iter()
-            .max_by_key(|&&child| {
-                let node = &nodes[child];
-                let exploit = node.wins / (node.visits as f64);
-                let explore = c * ((self.visits as f64).ln() / node.visits as f64).sqrt();
-                ((exploit + explore) * 1e9) as u64
+            .max_by(|&&a, &&b| {
+                let score = |child: usize| {
+                    let node = &nodes[child];
+                    if node.visits == 0 {
+                        return f64::INFINITY;
+                    }
+
+                    let exploit = 1.0 - node.wins / node.visits as f64;
+                    let explore =
+                        EXPLORATION * ((self.visits as f64).ln() / node.visits as f64).sqrt();
+                    exploit + explore
+                };
+
+                score(a).total_cmp(&score(b))
             })
             .unwrap()
     }
@@ -85,7 +87,7 @@ impl MCTS {
         let mut game = self.game.clone();
 
         while game.state.is_playing() && self.nodes[node_idx].is_fully_expanded() {
-            node_idx = self.nodes[node_idx].best_child(1.4, &self.nodes); // TODO: find best constant
+            node_idx = self.nodes[node_idx].best_child(&self.nodes); // TODO: find best constant
             let position = self.nodes[node_idx].last_position;
             game.do_move(position);
             visited_nodes.push(node_idx);
