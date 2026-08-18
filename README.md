@@ -4,6 +4,7 @@
 
 ### misc
 
+- don't insert invalid values in cache after deadline
 - fix `play_random_moves` with `creates_double_three`
 - screen shake using linear interpolation in `t^x, 0<x<1`
 - walls and forbidden moves in patterns
