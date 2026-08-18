@@ -57,7 +57,7 @@ fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
     (depth, max_depth): (u32, u32),
-    (mut min_h, max_h): (i64, i64),
+    (mut alpha, beta): (i64, i64),
     (cache, key): (&mut Cache, CacheKey),
     best_move: &mut Position,
     deadline: Instant,
@@ -77,7 +77,7 @@ fn alpha_beta_pruning_helper(
 
     // Move ordering (lots of room for improvement)
     if depth + 1 < max_depth {
-        let default_h = max_h / 2; // benchmarked
+        let default_h = beta / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
             game.do_move(pos);
             let value = match &game.state {
@@ -103,7 +103,7 @@ fn alpha_beta_pruning_helper(
             game,
             heuristic,
             (depth + 1, max_depth),
-            (-max_h, -min_h),
+            (-beta, -alpha),
             (cache, new_cache_key),
             best_move,
             deadline,
@@ -114,10 +114,10 @@ fn alpha_beta_pruning_helper(
         if depth == 0 && h == best_h && Instant::now() < deadline {
             *best_move = pos;
         }
-        if best_h > max_h {
+        if best_h > beta {
             break;
         }
-        min_h = max(min_h, h);
+        alpha = max(alpha, h);
     }
 
     cache.insert(key, best_h);

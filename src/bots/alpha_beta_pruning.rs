@@ -25,7 +25,7 @@ fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
     depth: u32,
-    (mut min_h, max_h): (i64, i64),
+    (mut alpha, beta): (i64, i64),
     best_move: &mut Position,
 ) -> i64 {
     if let Some(leaf_value) = leaf_value(game, heuristic, depth, MAX_DEPTH) {
@@ -39,15 +39,15 @@ fn alpha_beta_pruning_helper(
 
     for pos in close_moves {
         game.do_move(pos);
-        let h = -alpha_beta_pruning_helper(game, heuristic, depth + 1, (-max_h, -min_h), best_move);
+        let h = -alpha_beta_pruning_helper(game, heuristic, depth + 1, (-beta, -alpha), best_move);
         game.undo_last_move();
 
         best_h = max(best_h, h);
         if depth == 0 && h == best_h {
             *best_move = pos;
         }
-        min_h = max(min_h, best_h);
-        if best_h > max_h {
+        alpha = max(alpha, best_h);
+        if best_h > beta {
             break;
         }
     }
