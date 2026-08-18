@@ -1,8 +1,8 @@
 use crate::{
     game::{
         Game, UpdateSign,
-        bitboard::{bitboard_set, bitboard_set_captures},
         board::{DIRECTIONS8, Position, is_capture},
+        zobrist::{zobrist_capture, zobrist_move},
     },
     player::PlayerColor,
 };
@@ -24,16 +24,23 @@ impl Game {
 
             self.board[captured_y1][captured_x1] = None;
             self.board[captured_y2][captured_x2] = None;
-            bitboard_set(&mut self.bitboard, captured1, None);
-            bitboard_set(&mut self.bitboard, captured2, None);
+            self.zobrist = zobrist_move(self.zobrist, !self.current_color, captured1);
+            self.zobrist = zobrist_move(self.zobrist, !self.current_color, captured2);
             self.update_close_moves(captured1, UpdateSign::Negative);
             self.update_close_moves(captured2, UpdateSign::Negative);
 
             match self.current_color {
-                PlayerColor::Black => self.black_captures += 1,
-                PlayerColor::White => self.white_captures += 1,
+                PlayerColor::Black => {
+                    self.zobrist =
+                        zobrist_capture(self.zobrist, self.current_color, self.black_captures);
+                    self.black_captures += 1;
+                }
+                PlayerColor::White => {
+                    self.zobrist =
+                        zobrist_capture(self.zobrist, self.current_color, self.white_captures);
+                    self.white_captures += 1;
+                }
             }
-            bitboard_set_captures(&mut self.bitboard, self.black_captures, self.white_captures);
 
             self.captures.push((self.ply, captured1, captured2));
         }

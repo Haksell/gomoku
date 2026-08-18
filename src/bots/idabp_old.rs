@@ -3,7 +3,6 @@ use crate::{
     bots::{leaf_value, random_mover::random_mover},
     game::{
         Game,
-        bitboard::BitBoard,
         board::{BOARD_CENTER, Position},
     },
     heuristics::Heuristic,
@@ -27,7 +26,7 @@ struct CacheValue {
 }
 
 /// Benchmarked against rustc-hash, ahash and nohash-hasher.
-type Cache = fxhash::FxHashMap<BitBoard, CacheValue>;
+type Cache = fxhash::FxHashMap<u64, CacheValue>; // TODO: nohash-hasher for zobrist
 
 /// # Panics
 ///
@@ -79,7 +78,7 @@ fn alpha_beta_pruning_helper(
         return 0;
     }
 
-    if let Some(cache_value) = cache.get(&game.bitboard)
+    if let Some(cache_value) = cache.get(&game.zobrist)
         && cache_value.depth == depth
         && cache_value.max_depth == max_depth
     {
@@ -109,7 +108,7 @@ fn alpha_beta_pruning_helper(
         } else {
             NodeType::All
         };
-        cache.insert(game.bitboard, CacheValue { depth, max_depth, value: leaf_value, node_type });
+        cache.insert(game.zobrist, CacheValue { depth, max_depth, value: leaf_value, node_type });
         return leaf_value;
     }
 
@@ -120,7 +119,7 @@ fn alpha_beta_pruning_helper(
         let default_h = beta / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
             game.do_move(pos);
-            let cache_value = cache.get(&game.bitboard);
+            let cache_value = cache.get(&game.zobrist);
             game.undo_last_move();
             cache_value.map_or(default_h, |value| value.value)
         });
@@ -156,6 +155,6 @@ fn alpha_beta_pruning_helper(
         alpha = max(alpha, h);
     }
 
-    cache.insert(game.bitboard, CacheValue { depth, max_depth, value: best_h, node_type });
+    cache.insert(game.zobrist, CacheValue { depth, max_depth, value: best_h, node_type });
     best_h
 }
