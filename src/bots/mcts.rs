@@ -2,6 +2,7 @@ use crate::{
     TIME_LIMIT,
     game::{Game, board::Position, state::GameState},
     heuristics::Heuristic,
+    player::PlayerColor,
 };
 use rand::{rng, seq::IndexedRandom as _};
 use std::time::Instant;
@@ -103,6 +104,10 @@ impl MCTS {
             }
         };
 
+        self.backpropagate(winner, &visited_nodes);
+    }
+
+    fn backpropagate(&mut self, winner: Option<PlayerColor>, visited_nodes: &[usize]) {
         let mut wins = match winner {
             Some(winner) => {
                 if winner == self.game.current_color {
@@ -113,7 +118,7 @@ impl MCTS {
             }
             None => 0.5,
         };
-        for node_idx in visited_nodes {
+        for &node_idx in visited_nodes {
             self.nodes[node_idx].visits += 1;
             self.nodes[node_idx].wins += wins;
             wins = 1. - wins;
