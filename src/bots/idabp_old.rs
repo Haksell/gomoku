@@ -4,6 +4,7 @@ use crate::{
     game::{
         Game,
         board::{BOARD_CENTER, BOARD_SIZE, Position},
+        state::GameState,
     },
     heuristics::Heuristic,
 };
@@ -74,10 +75,21 @@ fn alpha_beta_pruning_helper(
     let mut close_moves = game.get_legal_moves(Some(2));
     debug_assert!(!close_moves.is_empty());
 
+    // Move ordering (lots of room for improvement)
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
-            cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h)
+            game.do_move(pos);
+            let value = match &game.state {
+                GameState::Playing(forced_moves) => {
+                    let value =
+                        *cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h);
+                    if forced_moves.is_empty() { value } else { i64::midpoint(i64::MIN, value) }
+                }
+                GameState::Draw | GameState::Won(..) => i64::MIN,
+            };
+            game.undo_last_move();
+            value
         });
     }
 
