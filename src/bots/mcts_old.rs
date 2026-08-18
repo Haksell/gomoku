@@ -141,7 +141,7 @@ impl MCTS {
 /// # Panics
 ///
 /// Will panic if `TIME_LIMIT` is not set.
-pub fn mcts(game: &Game, _: &Heuristic) -> Position {
+pub fn mcts_old(game: &Game, _: &Heuristic) -> Position {
     if game.ply == 0 {
         return BOARD_CENTER;
     }

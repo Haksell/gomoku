@@ -1,7 +1,7 @@
 use crate::{
     bots::{
-        Bot, idabp_new::idabp_new, idabp_old::idabp_old, mcts::mcts, parse_bot,
-        random_mover::random_mover,
+        Bot, idabp_new::idabp_new, idabp_old::idabp_old, mcts_new::mcts_new, mcts_old::mcts_old,
+        parse_bot, random_mover::random_mover,
     },
     heuristics::{Heuristic, parse_heuristic},
 };
@@ -17,13 +17,14 @@ pub enum Player {
 impl Player {
     pub const RANDOM: Self = Self::Bot { bot: random_mover, heuristic: Heuristic::ZERO };
     pub const MANUAL: Self = Self::Bot { bot: idabp_new, heuristic: Heuristic::MANUAL };
-    pub const MCTS: Self = Self::Bot { bot: mcts, heuristic: Heuristic::ZERO };
+    pub const MCTS_OLD: Self = Self::Bot { bot: mcts_old, heuristic: Heuristic::ZERO };
+    pub const MCTS_NEW: Self = Self::Bot { bot: mcts_new, heuristic: Heuristic::ZERO };
 
-    fn new() -> Self {
+    fn idabp_new() -> Self {
         Self::Bot { bot: idabp_new, heuristic: Heuristic::new() }
     }
 
-    fn old() -> Self {
+    fn idabp_old() -> Self {
         Self::Bot { bot: idabp_old, heuristic: Heuristic::old() }
     }
 
@@ -65,9 +66,10 @@ impl From<&str> for Player {
             "human" => Self::Human,
             "random" => Self::RANDOM,
             "manual" => Self::MANUAL,
-            "old" => Self::old(),
-            "new" => Self::new(),
-            "mcts" => Self::MCTS,
+            "idabp_old" => Self::idabp_old(),
+            "idabp_new" => Self::idabp_new(),
+            "mcts_old" => Self::MCTS_OLD,
+            "mcts_new" => Self::MCTS_NEW,
             _ => {
                 let words = v.split(':').collect_vec();
                 let [bot_arg, heuristic_arg] = *words else { panic!("Invalid arg: {v}") };

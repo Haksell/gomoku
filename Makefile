@@ -38,6 +38,7 @@ new_to_old:
 	cp coeffs/coeffs_008ms_new.rs coeffs/coeffs_008ms_old.rs
 	cp coeffs/coeffs_032ms_new.rs coeffs/coeffs_032ms_old.rs
 	sed -e 's/pub fn idabp_new/pub fn idabp_old/g' < src/bots/idabp_new.rs > src/bots/idabp_old.rs
+	sed -e 's/pub fn mcts_new/pub fn mcts_old/g' < src/bots/mcts_new.rs > src/bots/mcts_old.rs
 
 setup_git_hooks:
 	@rm -rf .git/hooks
