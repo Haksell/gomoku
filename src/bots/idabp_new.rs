@@ -28,6 +28,7 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
     let random_move = random_mover(game, heuristic);
     let mut game = game.clone();
     let mut cache = Cache::default();
+    let mut killer_moves = [((usize::MAX, usize::MAX), (usize::MAX, usize::MAX)); 16];
     let mut best_move = random_move;
 
     for max_depth in 0.. {
@@ -38,6 +39,7 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
             (-i64::MAX, i64::MAX),
             (&mut cache, 0),
             &mut best_move,
+            &mut killer_moves,
             deadline,
         );
 
@@ -52,6 +54,7 @@ pub fn idabp_new(game: &Game, heuristic: &Heuristic) -> Position {
     unreachable!()
 }
 
+#[expect(clippy::too_many_arguments)]
 fn alpha_beta_pruning_helper(
     game: &mut Game,
     heuristic: &Heuristic,
@@ -59,6 +62,7 @@ fn alpha_beta_pruning_helper(
     (mut min_h, max_h): (i64, i64),
     (cache, key): (&mut Cache, CacheKey),
     best_move: &mut Position,
+    killer_moves: &mut [(Position, Position); 16],
     deadline: Instant,
 ) -> i64 {
     // Only check time limit at low depth to avoid useless syscalls
@@ -77,7 +81,13 @@ fn alpha_beta_pruning_helper(
     if depth + 1 < max_depth {
         let default_h = max_h / 2; // benchmarked
         close_moves.sort_by_cached_key(|&pos| {
-            cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h)
+            if pos == killer_moves[depth as usize].0 {
+                i64::MIN
+            } else if pos == killer_moves[depth as usize].1 {
+                i64::MIN + 1
+            } else {
+                *cache.get(&update_cache_key(key, depth, pos)).unwrap_or(&default_h)
+            }
         });
     }
 
@@ -94,6 +104,7 @@ fn alpha_beta_pruning_helper(
             (-max_h, -min_h),
             (cache, new_cache_key),
             best_move,
+            killer_moves,
             deadline,
         );
         game.undo_last_move();
@@ -103,6 +114,7 @@ fn alpha_beta_pruning_helper(
             *best_move = pos;
         }
         if best_h > max_h {
+            killer_moves[depth as usize] = (pos, killer_moves[depth as usize].1);
             break;
         }
         min_h = max(min_h, h);
