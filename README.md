@@ -21,7 +21,7 @@
 - fix buggy open threes `w.xxx.o`
 - remove most `usize`s
 - lazy update legal moves for both black and white
-- transposition table for iterative deepening
+- transposition table for iterative deepening (wip on branch `transposition_table`)
 - remove most allocations
 - coup force (4 captures...)
 - clock in human vs (human | bot)
