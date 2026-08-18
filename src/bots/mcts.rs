@@ -1,15 +1,22 @@
 use crate::{
     TIME_LIMIT,
-    game::{Game, board::Position, state::GameState},
+    game::{
+        Game,
+        board::{BOARD_CENTER, Position},
+        state::GameState,
+    },
     heuristics::Heuristic,
     player::PlayerColor,
 };
-use rand::{rng, seq::IndexedRandom as _};
+use rand::{
+    rng,
+    seq::{IndexedRandom as _, SliceRandom as _},
+};
 use std::time::Instant;
 
 // TODO: remove redundant fields
 struct MCTSNode {
-    last_position: Option<Position>, // redundant?
+    last_position: Position,
     untried_positions: Vec<Position>,
     children: Vec<usize>,
     // score (TODO: u64, with 1 for draw and 2 for win)
@@ -18,14 +25,11 @@ struct MCTSNode {
 }
 
 impl MCTSNode {
-    fn new(game: &Game, last_position: Option<Position>) -> Self {
-        Self {
-            last_position,
-            untried_positions: game.get_legal_moves(None), // TODO: Some(2) ?
-            children: Vec::new(),
-            visits: 0,
-            wins: 0.,
-        }
+    fn new(game: &Game, last_position: Position) -> Self {
+        // TODO: don't limit to manhattan 2
+        let mut untried_positions = game.get_legal_moves(Some(2));
+        untried_positions.shuffle(&mut rng());
+        Self { last_position, untried_positions, children: Vec::new(), visits: 0, wins: 0. }
     }
 
     const fn is_fully_expanded(&self) -> bool {
@@ -35,7 +39,7 @@ impl MCTSNode {
     fn expand(&mut self, game: &mut Game, index: usize) -> Self {
         let position = self.untried_positions.pop().unwrap();
         game.do_move(position);
-        let child = Self::new(game, Some(position));
+        let child = Self::new(game, position);
         self.children.push(index);
         child
     }
@@ -71,7 +75,7 @@ struct MCTS {
 
 impl MCTS {
     fn new(game: &Game) -> Self {
-        Self { game: game.clone(), nodes: vec![MCTSNode::new(game, None)] }
+        Self { game: game.clone(), nodes: vec![MCTSNode::new(game, (usize::MAX, usize::MAX))] }
     }
 
     fn step(&mut self) {
@@ -82,6 +86,8 @@ impl MCTS {
 
         while game.state.is_playing() && self.nodes[node_idx].is_fully_expanded() {
             node_idx = self.nodes[node_idx].best_child(1.4, &self.nodes); // TODO: find best constant
+            let position = self.nodes[node_idx].last_position;
+            game.do_move(position);
             visited_nodes.push(node_idx);
         }
 
@@ -128,7 +134,7 @@ impl MCTS {
     fn best_move(&self) -> Position {
         let best_idx =
             *self.nodes[0].children.iter().max_by_key(|c| self.nodes[**c].visits).unwrap();
-        self.nodes[best_idx].last_position.unwrap()
+        self.nodes[best_idx].last_position
     }
 }
 
@@ -136,6 +142,10 @@ impl MCTS {
 ///
 /// Will panic if `TIME_LIMIT` is not set.
 pub fn mcts(game: &Game, _: &Heuristic) -> Position {
+    if game.ply == 0 {
+        return BOARD_CENTER;
+    }
+
     let deadline = Instant::now() + *TIME_LIMIT.get().unwrap();
     let mut mcts = MCTS::new(game);
     // TODO: parallelize
