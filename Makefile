@@ -28,7 +28,7 @@ fmt:
 
 lint:
 	cargo check --features full
-	cargo clippy  --features full -- -D warnings
+	cargo clippy --features full -- -D warnings
 
 loc:
 	@find src -name '*.rs' | sort | xargs wc -l
