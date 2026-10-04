@@ -164,6 +164,13 @@ impl Board {
             }
         }
     }
+
+    pub fn has_player(&self, (x, y): Position) -> bool {
+        let cell_idx = BOARD_SIZE * y + x;
+        let (arr_idx, shift) = (cell_idx / 64, cell_idx % 64);
+        let mask = 1 << shift;
+        (self.black_pieces[arr_idx] | self.white_pieces[arr_idx]) & mask != 0
+    }
 }
 
 const fn bubble_sort<const N: usize>(arr: &mut [Position; N]) {

@@ -57,7 +57,7 @@ impl Game {
 
     pub fn do_move(&mut self, pos: Position) {
         debug_assert!(self.state.is_playing());
-        debug_assert!(self.board.get(pos).is_none());
+        debug_assert!(!self.board.has_player(pos));
 
         self.ply += 1;
 
@@ -185,7 +185,7 @@ impl Game {
         for y in 0..BOARD_SIZE {
             for x in 0..BOARD_SIZE {
                 if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                    && self.board.get((x, y)).is_none()
+                    && !self.board.has_player((x, y))
                     && !self.creates_double_three((x, y))
                 {
                     legal_moves.push((x, y));
@@ -213,7 +213,7 @@ impl Game {
                     HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center,
                 );
                 if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
-                    && self.board.get((rx, ry)).is_none()
+                    && !self.board.has_player((rx, ry))
                 {
                     self.do_move((rx, ry));
                     break;
