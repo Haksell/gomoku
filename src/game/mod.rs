@@ -55,18 +55,18 @@ impl Game {
         }
     }
 
-    pub fn do_move(&mut self, (x, y): Position) {
+    pub fn do_move(&mut self, pos: Position) {
         debug_assert!(self.state.is_playing());
-        debug_assert!(self.board.get((x, y)).is_none());
+        debug_assert!(self.board.get(pos).is_none());
 
         self.ply += 1;
 
-        self.board.set((x, y), Some(self.current_color));
+        self.board.set(pos, Some(self.current_color));
 
-        self.update_close_moves((x, y), UpdateSign::Positive);
-        self.handle_captures((x, y));
+        self.update_close_moves(pos, UpdateSign::Positive);
+        self.handle_captures(pos);
 
-        self.state = self.update_state((x, y));
+        self.state = self.update_state(pos);
 
         if let GameState::Playing(forced_moves) = &self.state
             && !forced_moves.is_empty()
@@ -75,7 +75,7 @@ impl Game {
         }
 
         self.current_color = !self.current_color;
-        self.moves.push((x, y));
+        self.moves.push(pos);
     }
 
     /// Every operation from [`Self::do_move`] in reverse order.
@@ -83,7 +83,7 @@ impl Game {
     ///
     /// Will panic if no moves have been played.
     pub fn undo_last_move(&mut self) {
-        let (x, y) = self.moves.pop().unwrap();
+        let pos = self.moves.pop().unwrap();
         self.current_color = !self.current_color;
         self.forced_moves_history.pop_if(|(ply, _)| *ply == self.ply);
 
@@ -97,7 +97,7 @@ impl Game {
 
         // undo capture
         while self.captures.last().is_some_and(|(ply, _, _)| *ply == self.ply) {
-            let (_, (x1, y1), (x2, y2)) = self.captures.pop().unwrap();
+            let (_, pos1, pos2) = self.captures.pop().unwrap();
 
             match self.current_color {
                 PlayerColor::Black => {
@@ -108,15 +108,15 @@ impl Game {
                 }
             }
 
-            self.update_close_moves((x1, y1), UpdateSign::Positive);
-            self.update_close_moves((x2, y2), UpdateSign::Positive);
-            self.board.set((x1, y1), Some(!self.current_color));
-            self.board.set((x2, y2), Some(!self.current_color));
+            self.update_close_moves(pos1, UpdateSign::Positive);
+            self.update_close_moves(pos2, UpdateSign::Positive);
+            self.board.set(pos1, Some(!self.current_color));
+            self.board.set(pos2, Some(!self.current_color));
         }
 
-        self.update_close_moves((x, y), UpdateSign::Negative);
+        self.update_close_moves(pos, UpdateSign::Negative);
 
-        self.board.set((x, y), None);
+        self.board.set(pos, None);
 
         self.ply -= 1;
     }
