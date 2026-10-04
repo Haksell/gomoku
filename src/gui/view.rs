@@ -227,7 +227,7 @@ fn draw_stones(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if let Some(color) = model.game.board[y][x] {
+            if let Some(color) = model.game.board.get((x, y)) {
                 draw_stone(
                     draw,
                     (x, y),
@@ -269,7 +269,7 @@ fn draw_invalid_moves(draw: &Draw, model: &Model) {
 
     for y in 0..BOARD_SIZE {
         for x in 0..BOARD_SIZE {
-            if model.game.board[y][x].is_none() && model.game.creates_double_three((x, y)) {
+            if model.game.board.get((x, y)).is_none() && model.game.creates_double_three((x, y)) {
                 draw_circle(draw, (x, y), STONE_SIZE, COLOR_INVALID_MOVE, NO_SCREEN_SHAKE);
             }
         }

@@ -102,7 +102,7 @@ fn evaluate_patterns(
     let mut h = 0;
 
     for (i, &(x, y)) in line.iter().enumerate() {
-        let player_color = board[y][x];
+        let player_color = board.get((x, y));
         let new_bits = match player_color {
             None => 0b01,
             Some(PlayerColor::Black) => 0b10,

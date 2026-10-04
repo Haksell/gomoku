@@ -19,8 +19,8 @@ impl Game {
             let captured_x2 = (x + 2 * dx) as usize;
             let captured_y2 = (y + 2 * dy) as usize;
 
-            self.board[captured_y1][captured_x1] = None;
-            self.board[captured_y2][captured_x2] = None;
+            self.board.set((captured_x1, captured_y1), None);
+            self.board.set((captured_x2, captured_y2), None);
             self.update_close_moves((captured_x1, captured_y1), UpdateSign::Negative);
             self.update_close_moves((captured_x2, captured_y2), UpdateSign::Negative);
 

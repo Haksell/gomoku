@@ -41,7 +41,7 @@ impl Game {
     pub fn new(black_player: &Player, white_player: &Player) -> Self {
         Self {
             state: GameState::init(),
-            board: [[None; BOARD_SIZE]; BOARD_SIZE],
+            board: Board::default(),
             close_moves: [[0; BOARD_SIZE]; BOARD_SIZE],
             current_color: PlayerColor::Black,
             black_captures: 0,
@@ -57,11 +57,11 @@ impl Game {
 
     pub fn do_move(&mut self, (x, y): Position) {
         debug_assert!(self.state.is_playing());
-        debug_assert!(self.board[y][x].is_none());
+        debug_assert!(self.board.get((x, y)).is_none());
 
         self.ply += 1;
 
-        self.board[y][x] = Some(self.current_color);
+        self.board.set((x, y), Some(self.current_color));
 
         self.update_close_moves((x, y), UpdateSign::Positive);
         self.handle_captures((x, y));
@@ -110,13 +110,13 @@ impl Game {
 
             self.update_close_moves((x1, y1), UpdateSign::Positive);
             self.update_close_moves((x2, y2), UpdateSign::Positive);
-            self.board[y1][x1] = Some(!self.current_color);
-            self.board[y2][x2] = Some(!self.current_color);
+            self.board.set((x1, y1), Some(!self.current_color));
+            self.board.set((x2, y2), Some(!self.current_color));
         }
 
         self.update_close_moves((x, y), UpdateSign::Negative);
 
-        self.board[y][x] = None;
+        self.board.set((x, y), None);
 
         self.ply -= 1;
     }
@@ -185,7 +185,7 @@ impl Game {
         for y in 0..BOARD_SIZE {
             for x in 0..BOARD_SIZE {
                 if (max_dist.is_none() || self.close_moves[y][x] > 0)
-                    && self.board[y][x].is_none()
+                    && self.board.get((x, y)).is_none()
                     && !self.creates_double_three((x, y))
                 {
                     legal_moves.push((x, y));
@@ -213,7 +213,7 @@ impl Game {
                     HALF_BOARD_SIZE - dist_to_center..=HALF_BOARD_SIZE + dist_to_center,
                 );
                 if MANHATTAN_TO_CENTER[ry][rx] as usize <= dist_to_center
-                    && self.board[ry][rx].is_none()
+                    && self.board.get((rx, ry)).is_none()
                 {
                     self.do_move((rx, ry));
                     break;

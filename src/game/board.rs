@@ -4,7 +4,6 @@ use std::{
     ops::{BitAnd, BitOr, Deref, DerefMut},
 };
 
-pub type Board = [[Option<PlayerColor>; BOARD_SIZE]; BOARD_SIZE];
 pub type Position = (usize, usize);
 pub type Direction = (isize, isize);
 
@@ -208,7 +207,7 @@ pub fn is_same_color(board: &Board, player: Option<PlayerColor>, (x, y): (isize,
         && y >= 0
         && x < BOARD_SIZE as isize
         && y < BOARD_SIZE as isize
-        && board[y as usize][x as usize] == player
+        && board.get((x as usize, y as usize)) == player
 }
 
 pub fn is_capture(
