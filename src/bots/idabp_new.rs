@@ -10,7 +10,7 @@ use crate::{
 };
 use std::{cmp::max, time::Instant};
 
-const BITS_PER_MOVE: u32 = u32::BITS - ((BOARD_SIZE as u32).pow(2) + 1).leading_zeros();
+const BITS_PER_MOVE: u32 = ((BOARD_SIZE as u32).pow(2) + 1).bit_width();
 
 type CacheKey = u128;
 
